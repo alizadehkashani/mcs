@@ -1,0 +1,69 @@
+#container{
+	display: grid;
+	grid-template-columns: 200px 1400px;
+	grid-template-rows: 100px 800px; 
+}
+
+#mcslogo{
+	grid-column-start: 1;
+	grid-row-start: 1;
+}
+
+#header{
+	grid-column-start: 2;
+	grid-row-start: 1;
+}
+
+#navigation{
+	padding-top: 25px;
+	padding-left: 20px;
+	padding-right: 5px;
+
+	grid-column-start: 1;
+	grid-row-start: 2;
+
+	display: grid;
+	grid-template-rows: repeat(5, 20px);
+
+	row-gap: 5px;
+}
+
+#maincontent{
+	grid-column-start: 2;
+	grid-row-start: 2;
+}
+
+.navigationbutton{
+	
+}
+
+.navigationbutton:hover{
+	cursor: pointer;
+	color: var(--mcscolor);
+}
+
+.createusercontent{
+	display: grid;
+
+	grid-template-columns: 150px;
+	grid-template-rows: repeat(6, 25px);
+
+	row-gap: 3px;
+}
+
+.createuserlabel{
+	padding-top: 10px;
+}
+
+#createuserbutton{
+	padding-top: 5px;
+	background-color: var(--mcscolor);
+	border-radius: 3px;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+}
+
+#createuserbutton:hover{
+	cursor: pointer;
+}
