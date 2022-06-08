@@ -1,14 +1,16 @@
 <?php
 
 	include('../dbconfig.php');
+	//include('validatelogin.php');
 
 	var_dump($_POST);
 
-	echo("hi");
+	$hashedpassword = password_hash($_POST["userpassword"], PASSWORD_DEFAULT);
 
-	$username = $_POST["username"];
-	$userpassword = $_POST["userpassword"];
+	var_dump($hashedpassword);
 
-	echo($username);
-	echo($userpassword);
+	$sql = $dbconnection->prepare("INSERT INTO user (username, userpassword) VALUES (:username, :userpassword)");
+	$sql->bindParam(':username', $_POST["username"]);
+	$sql->bindParam(':userpassword', $hashedpassword);
+	$sql->execute();
 ?>

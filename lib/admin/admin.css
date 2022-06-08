@@ -51,6 +51,10 @@
 	row-gap: 3px;
 }
 
+.deleteusercontent{
+	display: grid;
+}
+
 .createuserlabel{
 	padding-top: 10px;
 }

@@ -19,7 +19,8 @@
 			</div>
 			<div id="header"></div>
 			<div id="navigation">
-				<div id="createuserdiv"class="navigationbutton">Create User</div>
+                <div id="createuserdiv"class="navigationbutton">Create User</div>
+				<div id="deleteuserdiv"class="navigationbutton">Delete User</div>
 			</div>
 			<div id="maincontent"></div>
         </div>
