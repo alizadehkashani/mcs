@@ -53,9 +53,19 @@
 
 .deleteusercontent{
 	display: grid;
+
+	grid-template-columns: 150px;
+	grid-template-rows: repeat(4, 25px);
+
+	row-gap: 3px;
+
 }
 
 .createuserlabel{
+	padding-top: 10px;
+}
+
+.deleteuserlabel{
 	padding-top: 10px;
 }
 
@@ -68,6 +78,16 @@
 	font-weight: bold;
 }
 
+#delteuserbutton{
+	padding-top: 5px;
+	background-color: var(--mcscolor);
+	border-radius: 3px;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+}
+
 #createuserbutton:hover{
 	cursor: pointer;
 }
+

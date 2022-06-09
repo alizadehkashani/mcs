@@ -1,5 +1,5 @@
 <?php
-	$config = parse_ini_file('C:\xampp\htdocs\memeoff\lib\config.ini');
+	$config = parse_ini_file('C:\xampp\htdocs\mcs\lib\config.ini');
 	
 	$ip = "192.168.0.221";
 
