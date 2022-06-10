@@ -21,7 +21,7 @@
             <div id="container">
                 <div id="header"></div>
                 <div id="formDIV">  
-                    <form id="loginForm" action="lib/login/validateLogin.php" method="post">                        
+                    <form id="loginForm" action="lib/login/validateinitiallogin.php" method="post">                        
                         <img src="lib/login/assets/user.png"></img>
                         <input type="text" name="username" required>
                         <img src="lib/login/assets/lock.png"></img>

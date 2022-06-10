@@ -1,14 +1,10 @@
 <?php
-
+	require('../validatelogin.php');
 	include('../dbconfig.php');
-	//include('validatelogin.php');
-
 	
-
 	$hashedpassword = password_hash($_POST["userpassword"], PASSWORD_DEFAULT);
 
 	$reply = [];
-
 
 	try{
 		$sql = $dbconnection->prepare("INSERT INTO user (username, userpassword) VALUES (:username, :userpassword)");

@@ -1,7 +1,5 @@
 <?php
-
-
-
+    require('lib/validatelogin.php');
 ?>
 
 <html>

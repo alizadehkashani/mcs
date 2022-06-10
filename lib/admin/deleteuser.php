@@ -1,5 +1,5 @@
 <?php
-
+	require('../validatelogin.php');
 	include('../dbconfig.php');
 
 	$reply = [];

@@ -3,8 +3,7 @@
 
     include("config.php");
 
-
     if($_SESSION['loggedin'] != TRUE){
-        die(header("location: http://" . $ip ."/memeoff/login.php"));
+        die(header("location: http://" . $ip ."/mcs/login.php"));
     }
 ?>
