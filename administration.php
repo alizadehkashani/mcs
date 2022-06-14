@@ -5,9 +5,9 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="lib/mcs.css"></script>
-        <link rel="stylesheet" type="text/css" href="lib/admin/admin.css"></script>
+        <link rel="stylesheet" type="text/css" href="lib/administration/administration.css"></script>
         <script src="lib/mcs.js"></script>
-        <script src="lib/admin/admin.js"></script>
+        <script src="lib/administration/administration.js"></script>
         <title>Administration</title>        
     </head>
     <body>
@@ -17,6 +17,7 @@
 			</div>
 			<div id="header"></div>
 			<div id="navigation">
+                <div id="importgroupdiv"class="navigationbutton">Import Groups</div>
                 <div id="createuserdiv"class="navigationbutton">Create User</div>
 				<div id="deleteuserdiv"class="navigationbutton">Delete User</div>
 			</div>

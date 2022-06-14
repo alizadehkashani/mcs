@@ -37,6 +37,27 @@
 	
 }
 
+.importgroupcontent{
+	padding-top: 10px;
+
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 0.1fr 0.1fr 1fr;
+	
+}
+
+#importcsvbutton{
+	width: 100px;
+
+	padding-top: 5px;
+	background-color: var(--mcscolor);
+	border-radius: 3px;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+}
+
 .navigationbutton:hover{
 	cursor: pointer;
 	color: var(--mcscolor);

@@ -19,19 +19,25 @@
     <body>
         <div id="mainContainer">
             <div id="container">
-                <div id="header"></div>
-                <div id="formDIV">  
-                    <form id="loginForm" action="lib/login/validateinitiallogin.php" method="post">                        
-                        <img src="lib/login/assets/user.png"></img>
-                        <input type="text" name="username" required>
-                        <img src="lib/login/assets/lock.png"></img>
-                        <input type="password" name="password" required>      
-                        <label></label>
-                        <input type="submit" value="Log In" id="loginButton">  
-                        <label></label>
-                        <p id="errorMessage"><?php echo($msg); ?></p>         
-                    </form>
-                </div>
+   				<div id="loginleft">
+					<div id="logocontainer">
+						<img id="logo" src="lib/assets/mcslogo_large_no_text.jpg">
+					</div>
+				</div>
+				<div id="formcontainer">
+					<div id="formDIV">
+							<form id="loginForm" action="lib/login/validateinitiallogin.php" method="post">                        
+								<img src="lib/login/assets/user.png"></img>
+								<input type="text" name="username" required>
+								<img src="lib/login/assets/lock.png"></img>
+								<input type="password" name="password" required>      
+								<label></label>
+								<input type="submit" value="Log In" id="loginButton">  
+								<label></label>
+								<p id="errorMessage"><?php echo($msg); ?></p>         
+							</form>
+					</div>
+				</div>
             </div>
         </div>
     </body>
