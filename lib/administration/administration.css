@@ -37,57 +37,9 @@
 	
 }
 
-.importgroupcontent{
-	padding-top: 10px;
-
-	display: grid;
-
-	grid-template-columns: 1fr;
-	grid-template-rows: 0.1fr 0.1fr 1fr;
-	
-}
-
-#importcsvbutton{
-	width: 100px;
-
-	padding-top: 5px;
-	background-color: var(--mcscolor);
-	border-radius: 3px;
-	text-align: center;
-	color: white;
-	font-weight: bold;
-}
-
 .navigationbutton:hover{
 	cursor: pointer;
 	color: var(--mcscolor);
-}
-
-.createusercontent{
-	display: grid;
-
-	grid-template-columns: 150px;
-	grid-template-rows: repeat(6, 25px);
-
-	row-gap: 3px;
-}
-
-.deleteusercontent{
-	display: grid;
-
-	grid-template-columns: 150px;
-	grid-template-rows: repeat(4, 25px);
-
-	row-gap: 3px;
-
-}
-
-.createuserlabel{
-	padding-top: 10px;
-}
-
-.deleteuserlabel{
-	padding-top: 10px;
 }
 
 #createuserbutton{
@@ -108,7 +60,129 @@
 	font-weight: bold;
 }
 
+
+/* create user */
+.createusercontent{
+	display: grid;
+
+	grid-template-columns: 150px;
+	grid-template-rows: repeat(6, 25px);
+
+	row-gap: 3px;
+}
+
+.createuserlabel{
+	padding-top: 10px;
+}
+
 #createuserbutton:hover{
 	cursor: pointer;
 }
 
+/* delete user */
+.deleteusercontent{
+	display: grid;
+
+	grid-template-columns: 150px;
+	grid-template-rows: repeat(4, 25px);
+
+	row-gap: 3px;
+
+}
+
+.deleteuserlabel{
+	padding-top: 10px;
+}
+
+/* import csv */
+.importgroupcontent{
+	padding-top: 10px;
+
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 0.1fr 0.1fr 1fr;
+	
+}
+
+#importcsvbutton{
+	width: 100px;
+
+	padding-top: 5px;
+	background-color: var(--mcscolor);
+	border-radius: 3px;
+	text-align: center;
+	color: white;
+	font-weight: bold;
+}
+/* start groups */
+.trackHeader{
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 2fr 1fr;
+}
+
+#headertrackA{
+	grid-column-start: 1;
+	grid-row-start: 1;
+}
+
+#headertrackB{
+	grid-column-start: 2;
+	grid-row-start: 1;
+}
+
+.tracklabel{
+	text-align: center;
+	font-size: 40px;
+	font-weight: bold;
+}
+
+.trackdescription{
+	text-align: center;
+	font-size: 20px;
+}
+
+.startgroupscontentdiv{
+	display: grid;
+
+	grid-template-columns: 1fr, 1fr;
+	grid-template-rows: 80px 160px 360px;
+}
+
+.trackcontrolcontainer{
+	display: grid;
+
+	grid-template-columns: repeat(3, 1fr);	
+	grid-template-rows: 1fr;
+}
+
+#trackacontrolcontainer{
+	grid-column-start: 1;
+	grid-row-start: 2;
+}
+
+#trackbcontrolcontainer{
+	grid-column-start: 2;
+	grid-row-start: 2;
+}
+
+.groupcontrollbutton{
+	height: 50px;
+	width: 50px;
+}
+
+.groupcontrollbuttoncontainer{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.displaycurrentgroup{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	font-size: 60px;
+	font-weight: bold;
+}

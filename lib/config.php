@@ -1,7 +1,7 @@
 <?php
 	$config = parse_ini_file('C:\xampp\htdocs\mcs\lib\config.ini');
 	
-	$ip = "192.168.0.221";
+	$ip = "127.0.0.1";
 
 	/*
 	header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");

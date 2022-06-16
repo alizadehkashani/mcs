@@ -33,4 +33,10 @@
 		$sql->bindParam(":firstname", $data[$i][4]);
 		$sql->execute();
 	}
+
+	$reply = [];
+	$reply['entries'] = $entries - 1;
+
+	echo(json_encode($reply));
+
 ?>
