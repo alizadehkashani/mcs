@@ -167,6 +167,11 @@
 	grid-row-start: 2;
 }
 
+#trackbcontrolcontainer{
+	grid-column-start: 2;
+	grid-row-start: 2;
+}
+
 .groupcontrollbutton{
 	height: 50px;
 	width: 50px;
@@ -185,4 +190,20 @@
 
 	font-size: 60px;
 	font-weight: bold;
+}
+
+#trackaplayercontainer{
+	grid-column-start: 1;
+	grid-row-start: 3;
+}
+
+#trackbplayercontainer{
+	grid-column-start: 2;
+	grid-row-start: 3;
+}
+
+.trackplayercontainer{
+	display: grid;
+	grid-template-columns: 50px 1fr 1fr;
+	grid-template-rows: repeat(3, 60px);
 }
