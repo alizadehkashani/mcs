@@ -33,3 +33,14 @@ JOIN tracks
 ON tracks.currentgroup = groups.startgroup AND tracks.track = groups.track
 WHERE tracks.track = "B"
 ORDER BY groups.player DESC;
+
+
+$sqlquery = 
+	"
+	SELECT groups.track, groups.startgroup, groups.player, groups.surname, groups.firstname 
+	FROM groups 
+	JOIN tracks 
+	ON tracks.currentgroup = groups.startgroup AND tracks.track = groups.track
+	WHERE tracks.track = :trackid
+	ORDER BY groups.player DESC;
+	";
