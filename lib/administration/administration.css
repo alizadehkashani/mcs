@@ -146,7 +146,7 @@
 .startgroupscontentdiv{
 	display: grid;
 
-	grid-template-columns: 1fr, 1fr;
+	grid-template-columns: 600px 600px;
 	grid-template-rows: 80px 160px 360px;
 }
 
