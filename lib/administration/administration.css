@@ -115,6 +115,7 @@
 	color: white;
 	font-weight: bold;
 }
+
 /* start groups */
 .trackHeader{
 	display: grid;
@@ -148,6 +149,8 @@
 
 	grid-template-columns: 600px 600px;
 	grid-template-rows: 80px 160px 360px;
+
+	grid-column-gap: 20px;
 }
 
 .trackcontrolcontainer{
@@ -177,6 +180,13 @@
 	width: 50px;
 }
 
+.groupcontrollbutton:hover{
+	cursor: pointer;
+	transform: scale(1.2);
+}
+
+
+
 .groupcontrollbuttoncontainer{
 	display: flex;
 	justify-content: center;
@@ -196,6 +206,8 @@
 	grid-column-start: 1;
 	grid-row-start: 3;
 }
+
+
 
 #trackbplayercontainer{
 	grid-column-start: 2;
