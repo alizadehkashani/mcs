@@ -1,3 +1,7 @@
+body{
+	/*background-color: var(--mcscolor);*/
+}
+
 #maincontainer{
 	display: grid;
 
