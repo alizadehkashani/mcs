@@ -22,6 +22,11 @@
 	//init array for data of csv file
 	$data = [];
 
+	//array for reply;
+	$reply = [];
+
+	$reply['status'] = 0;
+
 	//fill array with data from csv
 
 	for($i = 0; $i < $entries; $i++){
@@ -39,7 +44,6 @@
 		WHERE playernumber = :playernumber;
 	";
 
-
 	//insert data from csv file into database
 	for($i = 1; $i < count($csv); $i++){
 		try{
@@ -50,9 +54,11 @@
 			$sql->bindParam(":club", $data[$i][3]);		
 			$sql->execute();
 		}catch(PDOException $error){
-		
+			
+
 			$errorcode =  $error->getCode();
-		
+			$errormessage = $error->getMessage();
+
 			if($errorcode = "23000"){
 				$sql = $dbconnection->prepare($queryupdate);
 				$sql->bindParam(":playernumber", $data[$i][0]);
@@ -60,12 +66,15 @@
 				$sql->bindParam(":firstname", $data[$i][2]);
 				$sql->bindParam(":club", $data[$i][3]);		
 				$sql->execute();
+			}else{
+				$reply['status'] = 1;
+				$reply['errormessage'] = $errormessage;
 			}
 
 		}
 	}
 
-	$reply = [];
+	
 	$reply['entries'] = $entries - 1;
 
 	echo(json_encode($reply));

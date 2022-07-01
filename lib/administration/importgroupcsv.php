@@ -22,19 +22,41 @@
 	for($i = 0; $i < $entries; $i++){
 		$data[$i] = explode(";", $csv[$i]);
 	}	
+
+	//array for result reply
+	$reply = [];
+
+	$reply['status'] = 0;
+
+	$query = "
+		INSERT INTO groups (startorder, track, startgroup, player)
+		VALUES (:startorder, :track, :startgroup, :player)
+	";
 	
 	//insert data from csv file into database
 	for($i = 1; $i < count($csv); $i++){
-		$sql = $dbconnection->prepare("INSERT INTO groups (track, startgroup, player, surname, firstname) VALUES (:track, :startgroup, :player, :surname, :firstname)");
-		$sql->bindParam(":track", $data[$i][0]);
-		$sql->bindParam(":startgroup", $data[$i][1]);
-		$sql->bindParam(":player", $data[$i][2]);
-		$sql->bindParam(":surname", $data[$i][3]);
-		$sql->bindParam(":firstname", $data[$i][4]);
-		$sql->execute();
-	}
+		try{
 
-	$reply = [];
+			$sql = $dbconnection->prepare($query);
+			$sql->bindParam(":startorder", $data[$i][0]);
+			$sql->bindParam(":track", $data[$i][1]);
+			$sql->bindParam(":startgroup", $data[$i][2]);
+			$sql->bindParam(":player", $data[$i][3]);
+			$sql->execute();			
+
+		}catch(PDOException $error){
+			$errorcode =  $error->getCode();
+			$errormessage = $error->getMessage();
+
+			$reply['status'] = 1;
+			
+			$reply['errorcode'] = $errorcode;
+			$reply['errormessage'] = $errormessage; 
+			
+		}
+	}
+		
+
 	$reply['entries'] = $entries - 1;
 
 	echo(json_encode($reply));
