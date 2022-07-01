@@ -18,7 +18,7 @@
 			<div id="header"></div>
 			<div id="navigation">
                 <div id="startgroupsdiv"class="navigationbutton">Startgroups</div>
-                <div id="importgroupdiv"class="navigationbutton">Import Groups</div>
+                <div id="importgroupdiv"class="navigationbutton">Import Data</div>
                 <div id="createuserdiv"class="navigationbutton">Create User</div>
 				<div id="deleteuserdiv"class="navigationbutton">Delete User</div>
 			</div>
