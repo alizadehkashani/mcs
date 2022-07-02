@@ -20,7 +20,6 @@
 	WHERE track = :track
 	";
 	
-
 	$sql = $dbconnection->prepare($sqlquery);
 	$sql->bindParam(":track", $_POST["track"]);
 	$sql->execute();
@@ -28,7 +27,7 @@
 
 	//get last group of track	
 	$sqlquery = "
-	SELECT MAX(startgroup)
+	SELECT MAX(startorder)
 	FROM groups
 	WHERE track = :track
 	";
@@ -38,16 +37,21 @@
 	$sql->execute();
 	$maxgroup = $sql->fetch(PDO::FETCH_ASSOC);
 
+
+	//prevent user from going out of bound
+	//if already on first startorder and want to reduce
 	if($currentgroup["currentgroup"] == 1 && $sign == "-"){
 		$reply['status'] = 1;
 		$reply['message'] = "Current Startgroup is first Startgroup";
 		$reply['sign'] = $sign;
-
-	}elseif($currentgroup["currentgroup"] == $maxgroup["MAX(startgroup)"] && $sign == "+"){
+	
+	//if already on last group and want to increase
+	}elseif($currentgroup["currentgroup"] == $maxgroup["MAX(startorder)"] && $sign == "+"){
 		$reply['status'] = 1;
 		$reply['message'] = "Current Startgroup is last Startgroup";
 		$reply['sign'] = $sign;
-
+	
+	//set new group if change would not go out of bound
 	}else{
 		$sqlquery = "
 		UPDATE tracks 

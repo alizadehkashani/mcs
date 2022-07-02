@@ -4,7 +4,18 @@
 	include('../dbconfig.php');
 
 
-	$sql = $dbconnection->prepare("SELECT currentgroup FROM tracks WHERE track = :track");
+
+	$query = " 
+		SELECT groups.startgroup
+		FROM groups
+		JOIN tracks ON groups.startorder = tracks.currentgroup
+		WHERE tracks.track = :track
+		LIMIT 1
+	";
+
+	echo($query);
+
+	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":track", $_POST['track']);
 	$sql->execute();
 	$currentgroup = $sql->fetch(PDO::FETCH_ASSOC);
