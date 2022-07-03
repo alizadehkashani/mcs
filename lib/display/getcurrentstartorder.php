@@ -5,10 +5,9 @@
 
 
 	$query = " 
-		SELECT groups.startgroup
-		FROM groups
-		JOIN tracks ON groups.startorder = tracks.currentgroup
-		WHERE tracks.track = :trackid
+		SELECT currentgroup
+		FROM tracks
+		WHERE track = :trackid
 		LIMIT 1
 	";
 

@@ -8,7 +8,7 @@
 		
 		$sqlquery = 
 		"
-			SELECT groups.startgroup, players.playernumber, players.surname, players.firstname, players.club
+			SELECT groups.startorder, groups.startgroup, players.playernumber, players.surname, players.firstname, players.club
 			FROM players 
 			JOIN groups
 			ON players.playernumber = groups.player

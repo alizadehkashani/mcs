@@ -2,56 +2,29 @@ body{
 	/*background-color: var(--mcscolor);*/
 }
 
+.flex{
+	display: flex;
+
+	justify-content: center;
+	align-items: center;
+}
+
+#maingroupcontainer{
+	display: grid;
+
+	grid-column-gap: 50px;
+
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+}
+
 #maincontainer{
 	display: grid;
 
-	grid-template-columns: 1fr;
-	grid-template-rows: 100px 150px 300px 100px;
-}
-
-#tracks{
-	display: grid;
-
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr;
-}
-
-#startgroupscontainer{
-	display: grid;
-
-	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 1fr;
-}
-
-.groupheader{
-	display: grid;
+	padding: 20px;
 
 	grid-template-columns: 1fr;
-	grid-template-rows: 1fr 1fr;
-}
-
-.groupdescription{
-	text-align: center;
-	font-weight: bold;
-	font-size: 40px;
-}
-
-.currentgroup{
-	text-align: center;
-	font-weight: bold;
-	font-size: 40px
-}
-
-.playercontainer{
-	padding-left: 50px;
-	padding-right: 50px;
-	padding-top: 50px;
-
-	display: grid;
-	grid-template-columns: 50px 1fr 1fr;
-	grid-template-rows: repeat(3, 50px);
-
-	font-size: 30px;
+	grid-template-rows: 100px 650px 100px;
 }
 
 #footer{
@@ -61,4 +34,44 @@ body{
 
 #mcslogo{
 	height: 100px;	
+}
+
+
+.maintrackcontainer{
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 100px 50px 200px 50px 200px;
+
+	grid-row-gap: 10px;
+}
+
+.trackheadline{
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr 1fr;
+}
+
+.groupheadlinecontainer{
+	display: grid;
+
+	grid-template-columns: 1fr 1fr;
+	grid-template-rows: 1fr;
+
+	background-color: gainsboro;
+}
+
+.mainplayerscontainer{
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(3, 1fr);
+}
+
+.individualplayer{
+	display: grid;
+
+	grid-template-columns: 80px 1fr 1fr;
+	grid-template-rows: 1fr;
 }
