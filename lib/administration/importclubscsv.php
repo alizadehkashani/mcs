@@ -3,8 +3,15 @@
 	
 	include('../dbconfig.php');
 
+
+	/*
+	//delete current data
+	$sql = $dbconnection->prepare("TRUNCATE TABLE groups");
+	$sql->execute();
+	*/
+
 	//file path to csv file
-	$filepath = "../../dev/players.csv";
+	$filepath = "../../dev/clubs.csv";
 	
 	//open csv file
 	$csv = file($filepath);
@@ -26,40 +33,44 @@
 		$data[$i] = explode(";", $csv[$i]);
 	}
 
+	var_dump($data);
+
 	$queryinsert = "
-		INSERT INTO players (playernumber, surname, firstname, club, playerorder)
-		VALUES (:playernumber, :surname, :firstname, :club, :playerorder)
+		INSERT INTO clubs (id, startorder, category, name)
+		VALUES (:id, :startorder, :category, :name)
 	";
 
 	$queryupdate = "
-		UPDATE players
-		SET surname = :surname, firstname = :firstname, club = :club, playerorder = :playerorder
-		WHERE playernumber = :playernumber;
+		UPDATE clubs
+		SET startorder = :startorder, category = :category, name = :name
+		WHERE id = :id;
 	";
 
 	//insert data from csv file into database
-	for($i = 1; $i < count($csv); $i++){
+	for($i = 1; $i < $entries; $i++){
 		try{
+			echo("insert " . $i);
 			$sql = $dbconnection->prepare($queryinsert);
-			$sql->bindParam(":playernumber", $data[$i][0]);
-			$sql->bindParam(":surname", $data[$i][1]);
-			$sql->bindParam(":firstname", $data[$i][2]);
-			$sql->bindParam(":club", $data[$i][3]);		
-			$sql->bindParam(":playerorder", $data[$i][4]);		
+			$sql->bindParam(":id", $data[$i][0]);
+			$sql->bindParam(":startorder", $data[$i][1]);
+			$sql->bindParam(":category", $data[$i][2]);
+			$sql->bindParam(":name", $data[$i][3]);
 			$sql->execute();
-		}catch(PDOException $error){
-			
 
+		}catch(PDOException $error){
+			echo("update " . $i);
+			
 			$errorcode =  $error->getCode();
 			$errormessage = $error->getMessage();
+			
+			echo($errormessage);
 
 			if($errorcode = "23000"){
 				$sql = $dbconnection->prepare($queryupdate);
-				$sql->bindParam(":playernumber", $data[$i][0]);
-				$sql->bindParam(":surname", $data[$i][1]);
-				$sql->bindParam(":firstname", $data[$i][2]);
-				$sql->bindParam(":club", $data[$i][3]);	
-				$sql->bindParam(":playerorder", $data[$i][4]);
+				$sql->bindParam(":id", $data[$i][0]);
+				$sql->bindParam(":startorder", $data[$i][1]);
+				$sql->bindParam(":category", $data[$i][2]);
+				$sql->bindParam(":name", $data[$i][3]);
 				$sql->execute();
 			}else{
 				$reply['status'] = 1;

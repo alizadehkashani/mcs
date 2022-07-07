@@ -8,13 +8,15 @@
 		
 		$sqlquery = 
 		"
-			SELECT groups.startorder, groups.startgroup, players.playernumber, players.surname, players.firstname, players.club
+			SELECT groups.startorder, groups.startgroup, players.playernumber, players.surname, players.firstname, clubs.name
 			FROM players 
 			JOIN groups
 			ON players.playernumber = groups.player
 			JOIN tracks
 			ON tracks.currentgroup = groups.startorder 
 			AND tracks.track = groups.track
+			JOIN clubs
+			ON players.club = clubs.id
 			WHERE tracks.track = :trackid
 			AND tracks.currentgroup = groups.startorder
 		";
@@ -42,10 +44,12 @@
 		
 		$sqlquery = 
 		"
-			SELECT groups.startgroup, players.playernumber, players.surname, players.firstname, players.club
+			SELECT groups.startgroup, players.playernumber, players.surname, players.firstname, clubs.name
 			FROM players 
 			JOIN groups
 			ON players.playernumber = groups.player
+			JOIN clubs
+			ON players.club = clubs.id
 			WHERE groups.track = :trackid
 			AND groups.startorder = :offsetgroup;
 		";

@@ -1,0 +1,20 @@
+#maincontainerimportclubs{
+	display: grid;
+
+	grid-template-columns: 500px;
+	grid-template-rows: 50px 600px;
+}
+
+#clubstable{
+	display: grid;
+
+	grid-auto-flow: row;
+	overflow-y: scroll;
+}
+
+.individualclubcontainer{
+	display: grid;
+
+	grid-template-rows: 25px;
+	grid-template-columns: 50px 50px 50px 300px;
+}

@@ -36,14 +36,19 @@ body{
 	height: 100px;	
 }
 
-
 .maintrackcontainer{
 	display: grid;
 
 	grid-template-columns: 1fr;
-	grid-template-rows: 100px 50px 200px 50px 200px;
-
+	grid-template-rows: 100px 250px 250px;
 	grid-row-gap: 10px;
+}
+
+.groupcontainer{
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 50px 200px;
 }
 
 .trackheadline{
@@ -59,7 +64,20 @@ body{
 	grid-template-columns: 1fr 1fr;
 	grid-template-rows: 1fr;
 
-	background-color: gainsboro;
+	
+	font-weight: bold;
+	font-size: 25px;
+	color: white;
+
+	border-radius: 15px 15px 0px 0px;
+}
+
+.nextgroup{
+	background-color: var(--mcscolor);
+}
+
+.currentgroup{
+	background-color: var(--mcsgrey);
 }
 
 .mainplayerscontainer{
@@ -74,4 +92,9 @@ body{
 
 	grid-template-columns: 80px 1fr 1fr;
 	grid-template-rows: 1fr;
+}
+
+.trackid{
+	font-weight: bold;
+	font-size: 40px;
 }
