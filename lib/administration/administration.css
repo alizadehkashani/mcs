@@ -159,7 +159,7 @@
 .startgroupscontentdiv{
 	display: grid;
 
-	grid-template-columns: 600px 600px;
+	grid-template-columns: 650px 650px;
 	grid-template-rows: 80px 160px 500px;
 
 	grid-column-gap: 20px;
@@ -241,9 +241,7 @@
 
 	grid-row-gap: 10px;
 
-	/*border: 1px solid black;*/
-
-	
+	/*border: 1px solid black;*/	
 }
 
 .playerscontainer{
@@ -314,4 +312,13 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.refreshbutton{
+	height: 35px;
+	width: 35px;
+}
+
+.refreshbutton:hover{
+	cursor: pointer;
 }

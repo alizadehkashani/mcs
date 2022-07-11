@@ -1,7 +1,7 @@
 .maincontainerimportplayers{
 	display: grid;
 
-	grid-template-columns: 900px;
+	grid-template-columns: 1200px;
 	grid-template-rows: 50px 30px 600px;
 }
 
@@ -12,18 +12,18 @@
 	overflow-y: scroll;
 }
 
-.individualplayercontainer{
+.individualplayerplayers{
 	display: grid;
 
 	grid-template-rows: 25px;
-	grid-template-columns: 100px 100px 200px 200px 200px;
+	grid-template-columns: 100px 100px 200px 200px 400px;
 }
 
 #playerstableheadline{
 	display: grid;
 
 	grid-template-rows: 25px;
-	grid-template-columns: 100px 100px 200px 200px 200px;
+	grid-template-columns: 100px 100px 200px 200px 400px;
 
 	font-weight: bold;
 }

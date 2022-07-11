@@ -1,40 +1,85 @@
-﻿playernumber;surname;firstname;club;playerorder
-101;Wurst;Irmler;1;1
-102;Richter;Josef;1;2
-103;Park;Sarah;1;3
-104;Abassian;Hamad;1;4
-105;Lazarowa;Melanie;1;5
-106;Pastuszek;Mbang;2;1
-107;Wnuk;Malhia;2;2
-108;Momuin;Abdulridha;2;3
-109;Duerr;Amine;2;4
-110;Von Und Zu Gilsa;Abdelkader;2;5
-111;Wald;Amine;3;1
-112;Haede;Ahmad;3;2
-113;Seifert;Sabrina;3;3
-114;Peners;David;3;4
-115;D Amato;Julia;3;5
-116;Czonstke;Init;4;1
-117;Koring;Simone;4;2
-118;Wolzenburg;Xionet;4;3
-119;Guezelkaya;Fatima Sultan Rashed Ali;4;4
-120;Trutjov;George;4;5
-121;Bangert;Tamia;5;1
-122;Khimji;Sami;5;2
-123;Witt;Vanessa;5;3
-124;Weidler;Erdogan;5;4
-125;Persson;Rusul;5;5
-126;Lindemann;Saleh Saeed Ali Obaid;6;1
-127;Goehler;Lisa;6;2
-128;Gausepohl;Rafid;6;3
-129;Proost;Sigrid;6;4
-130;Mack;Abdulrahman Darwish;6;5
-131;Heber;Ajelor;7;1
-132;Krebs;Koffi;7;2
-133;Khatib;Cavallaro;7;3
-134;Koenitz;Hafir;7;4
-135;La Runa;Maria;7;5
-136;Perthel;Thomas;7;6
-137;Dankmeyer;Arkadasch;7;7
-138;Kirschnick;Abdulaziz;7;8
-139;Huenneke;Jennifer;7;9
+﻿playernumber;surname;firstname;club;comptype;playerorderteam;playerordersingle;resultsingle
+222;Dickes;Robin;1;3;1;;
+223;Krauss;Silvio;1;3;2;;
+225;Noack;Marcel;1;3;3;;
+226;Neumann;Lukas;1;3;4;;
+227;Stoparic;Miroslav;1;3;5;;
+228;Kobisch;Roman;1;3;6;;
+229;Janßen;Markus;1;3;7;;
+305;Sommer;Reto;1;1;8;;
+237;Kapke;Dennis;2;3;1;;
+238;Heine;Sebastian;2;3;2;;
+239;Hettrich;Robin;2;3;3;;
+241;Bothmann;Patrick;2;3;4;;
+242;Kube;Sebastian;2;3;5;;
+244;Junkermann;Alexander;2;3;6;;
+306;Dorner;Kai;2;1;7;;
+234;Müller;Yannick;3;3;1;;
+240;Piekorz;Sebastian;3;3;2;;
+243;Geist;Alexander;3;3;3;;
+245;Koziol;Michael;3;3;4;;
+246;Erlbruch;Walter;3;3;5;;
+247;Erlbruch;Harald;3;3;6;;
+309;Jecny;Martin;3;1;7;;
+310;Smejkal;Marek;3;1;8;;
+311;Molnár;Karel Jr.;3;1;9;;
+250;Lichtenberg;Jan Peter;4;3;1;;
+251;Lieber;Johannes;4;3;2;;
+252;Spreier;Sascha;4;3;3;;
+253;Gillen;Pascal;4;3;4;;
+207;Blümer;Severin;5;3;1;;
+209;Klassen;Oleg;5;3;2;;
+210;Van Vught;Jan;5;3;3;;
+213;Braungart Zink;Achim;5;3;4;;
+214;Hense;Danny;5;3;5;;
+301;Rhyn;Michel;5;1;6;;
+302;Heipel;Ingmar;5;1;7;;
+303;Lorenz;Patrick;5;1;8;;
+216;Stöckle;Martin;6;3;1;;
+217;Wietz;Florian;6;3;2;;
+218;Stille;Kris;6;3;3;;
+219;Mrohs;Alexander;6;3;4;;
+220;Güth;Benjamin;6;3;5;;
+221;Wendling;Oliver;6;3;6;;
+101;Ebi;Sabine;7;3;1;;
+119;Hammerschmidt;Melanie;7;3;2;;
+120;Raith;Bianca;7;3;3;;
+103;Blendermann;Stefanie;8;3;1;;
+104;Kobisch;Alice;8;3;2;;
+105;Gundert;Nicole;8;3;3;;
+304;Klukas;Yvonne;8;1;4;;
+112;Schumacher;Sarah;9;3;1;;
+115;Bollrich;Anne;9;3;2;;
+116;Peuker;Vanessa;9;3;3;;
+117;Bremicker;Susanne;9;3;4;;
+108;Bothmann;Jasmin;10;3;1;;
+109;Birkelbach;Nicole;10;3;2;;
+110;Zodrow-Wenke;Bianca;10;3;3;;
+111;von dem Knesebeck;Alexandra;10;3;4;;
+233;Zielaff;Christian;10;3;5;;
+113;Krane;Michaela;11;3;1;;
+114;Krane;Melissa;11;3;2;;
+235;Klöckener;Lauro;11;3;3;;
+249;Springob;René;11;3;4;;
+307;Tietz;Marlene;11;1;5;;
+308;Borggraefe;Martina;11;1;6;;
+102;Saft;Chiana;12;2;;;
+106;Kirgasser;Helga;13;2;;;
+232;Schmidt;Frank;13;2;;;
+107;Klaus;Liana;14;2;;;
+118;Klein;Sabine;15;2;;;
+248;Lumma;Dirk;15;2;;;
+201;Fallenbüchel;Martin;16;2;;;
+202;Ritschel;Michael;16;2;;;
+203;Richter;Tobias;17;2;;;
+204;Bäurle;Wolfgang;18;2;;;
+205;Schmidt;Maximilian;18;2;;;
+206;Bollrich;Jens;19;2;;;
+208;Van Diejen;Tom;20;2;;;
+215;Giebenhain;Thomas;20;2;;;
+211;Pester;Magnus;21;2;;;
+212;Drewes;Daniel;21;2;;;
+224;Moosmann;Jan-Niclas;22;2;;;
+230;Grunt;Christoph;23;2;;;
+231;Ulrich;Stefan;23;2;;;
+236;Schmeckenbecher;Kenny Marc;24;2;;;

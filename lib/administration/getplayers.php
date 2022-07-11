@@ -5,7 +5,7 @@
 
 
 	$query = " 
-		SELECT players.playernumber, players.playerorder, players.surname, players.firstname, clubs.name 
+		SELECT players.playernumber, players.playerorderteam, players.surname, players.firstname, clubs.name 
 		FROM players
 		JOIN clubs
 		ON players.club = clubs.id

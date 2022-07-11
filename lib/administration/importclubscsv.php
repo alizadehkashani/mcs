@@ -3,12 +3,10 @@
 	
 	include('../dbconfig.php');
 
-
-	/*
 	//delete current data
-	$sql = $dbconnection->prepare("TRUNCATE TABLE groups");
+	$sql = $dbconnection->prepare("TRUNCATE TABLE clubs");
 	$sql->execute();
-	*/
+	
 
 	//file path to csv file
 	$filepath = "../../dev/clubs.csv";
@@ -28,12 +26,9 @@
 	$reply['status'] = 0;
 
 	//fill array with data from csv
-
 	for($i = 0; $i < $entries; $i++){
 		$data[$i] = explode(";", $csv[$i]);
 	}
-
-	var_dump($data);
 
 	$queryinsert = "
 		INSERT INTO clubs (id, startorder, category, name)
@@ -49,7 +44,6 @@
 	//insert data from csv file into database
 	for($i = 1; $i < $entries; $i++){
 		try{
-			echo("insert " . $i);
 			$sql = $dbconnection->prepare($queryinsert);
 			$sql->bindParam(":id", $data[$i][0]);
 			$sql->bindParam(":startorder", $data[$i][1]);
@@ -58,14 +52,15 @@
 			$sql->execute();
 
 		}catch(PDOException $error){
-			echo("update " . $i);
-			
+						
 			$errorcode =  $error->getCode();
 			$errormessage = $error->getMessage();
 			
+			echo($errorcode);
 			echo($errormessage);
 
-			if($errorcode = "23000"){
+			if($errorcode == 23000){
+
 				$sql = $dbconnection->prepare($queryupdate);
 				$sql->bindParam(":id", $data[$i][0]);
 				$sql->bindParam(":startorder", $data[$i][1]);
@@ -79,7 +74,6 @@
 
 		}
 	}
-
 	
 	$reply['entries'] = $entries - 1;
 
