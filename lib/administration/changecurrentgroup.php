@@ -1,6 +1,6 @@
 <?php
 
-	require('../validatelogin.php');	
+	//require('../validatelogin.php');	
 	include('../dbconfig.php');
 
 	//set sign for sql query
