@@ -2,17 +2,23 @@
 
 	//generate all male club groups and store in array
 	//generate all female club groups and store in array
-	////genrate all male single player groups and store in array
+	//genrate all male single player groups and store in array
 	//generate alle female single groups and store in array
 
 	//require('../validatelogin.php');	
 	include('../dbconfig.php');
 
-	$numbergroupsclubmale = count(buildclubgroups("H"));
-	$numbergroupsclubfemale =count(buildclubgroups("D"));
+	$groupsclubmale = buildclubgroups("H");
+	$groupsclubfemale = buildclubgroups("H");
 
-	$numberofgroupssinglemale = count(buildsinglegroups("H"));
-	$numberofgroupssinglefemale = count(buildsinglegroups("D"));
+	$numbergroupsclubmale = count($groupsclubmale);
+	$numbergroupsclubfemale =count($groupsclubfemale);
+
+	$groupssinglemale = buildsinglegroups("H");
+	$groupssinglefemale = buildsinglegroups("D");
+
+	$numberofgroupssinglemale = count($groupssinglemale);
+	$numberofgroupssinglefemale = count($groupssinglefemale);
 
 	//total number of groups in tournament
 	$totalnumberofgroups = $numbergroupsclubmale + $numbergroupsclubfemale + $numberofgroupssinglemale + $numberofgroupssinglefemale;
@@ -21,9 +27,9 @@
 
 	$maxgroupspertrack = ceil($totalnumberofgroups / 2);
 
-	echo($maxgroupspertrack);
-
 	
+	generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack);
+
 	function buildclubgroups($gender){
 		
 		include('../dbconfig.php');
@@ -219,7 +225,7 @@
 			//echo("<br>");
 			
 			for($j = 0; $j < count($playersingroup); $j++){
-				$groups[$i][$j] = $playersingroup[$j];
+				$groups[$i][$j] = $playersingroup[$j]["playernumber"];
 			}
 
 			
@@ -228,6 +234,100 @@
 		return $groups;
 	}
 
+
+	function generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack){
+		//DONE//insert all male clubs track A
+		//insert male single to track A until maximum number of groups per track reached
+		
+		//inser all female clubs to track B
+		//insert all female single to track B
+		//inser rest of male single to track B
+
+		//
+
+
+		include('../dbconfig.php');
+
+		//variable for track ids
+		$trackA = "A";
+		$trackB = "B";
+
+		//variable for startorder per track
+		$startorderA = 1;
+		$startorderB = 1;
+
+		//number of groups per track
+		$numbergroupstrackA = 0;
+		$numbergroupstrackB = 0;
+
+		//get male club groups and set amount of male club groups
+		$groupsclubmale = buildclubgroups("H");
+		
+		//set variable for startgroup counter
+		$startgroup = 1;
+
+		//loop through male club groups and insert each group into database
+		for($i = 1; $i <= $numbergroupsclubmale; $i++){
+
+			for($j = 0; $j < count($groupsclubmale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+					";
+
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderA);
+				$sql->bindParam(":track", $trackA);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupsclubmale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			$startgroup++;
+			$startorderA++;
+			$numbergroupstrackA++;
+		}
+
+			
+		//insert male groups until max amount of groups per track is reached
+
+		$i = 1;
+
+		$startgroup = 1;
+		
+
+		while($numbergroupstrackA <= $maxgroupspertrack && $i <= $numberofgroupssinglemale){
+
+
+			for($j = 0; $j < count($groupssinglemale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+				";
+
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderA);
+				$sql->bindParam(":track", $trackA);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			$startgroup++;
+			$startorderA++;
+			$numbergroupstrackA++;
+			$i++;
+		}
+
+
+
+	}
 
 	
 
