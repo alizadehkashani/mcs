@@ -8,7 +8,8 @@
 		SELECT groups.startgroup
 		FROM groups
 		JOIN tracks ON groups.startorder = tracks.currentgroup
-		WHERE tracks.track = :trackid
+		WHERE tracks.track = :trackid 
+		AND groups.track = :trackid
 		LIMIT 1
 	";
 

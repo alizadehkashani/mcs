@@ -9,7 +9,7 @@
 	include('../dbconfig.php');
 
 	$groupsclubmale = buildclubgroups("H");
-	$groupsclubfemale = buildclubgroups("H");
+	$groupsclubfemale = buildclubgroups("D");
 
 	$numbergroupsclubmale = count($groupsclubmale);
 	$numbergroupsclubfemale =count($groupsclubfemale);
@@ -298,10 +298,11 @@
 
 		$startgroup = 1;
 		
+		$numberofsinglemaleinserted = 0;
 
-		while($numbergroupstrackA <= $maxgroupspertrack && $i <= $numberofgroupssinglemale){
-
-
+	
+		while($numbergroupstrackA < $maxgroupspertrack && $i <= $numberofgroupssinglemale){
+	
 			for($j = 0; $j < count($groupssinglemale[$i]); $j++){
 
 				$query = "
@@ -319,15 +320,153 @@
 
 			}
 			
+			$numberofsinglemaleinserted++;
 			$startgroup++;
 			$startorderA++;
 			$numbergroupstrackA++;
 			$i++;
 		}
 
+		
+		//set variable for startgroup counter
+		$startgroup = 1;
+
+		
+		//insert all female club groups to track B
+		for($i = 1; $i < $numbergroupsclubfemale; $i++){
+			
+			
+			//$groupsclubfemale
+			
+			for($j = 0; $j < count($groupsclubfemale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+					";
 
 
-	}
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderB);
+				$sql->bindParam(":track", $trackB);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupsclubfemale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			$startgroup++;
+			$startorderB++;
+			$numbergroupstrackB++;
+		}
+
+
+
+		//insert all female single groups to track B
+		$i = 1;
+
+		$startgroup = 1;
+		
+		$numberofsinglefemaleinserted = 0;
+
+		while($numbergroupstrackB < $maxgroupspertrack && $i <= $numberofgroupssinglefemale){
+
+
+			for($j = 0; $j < count($groupssinglefemale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+				";
+
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderB);
+				$sql->bindParam(":track", $trackB);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupssinglefemale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			$startgroup++;
+			$startorderB++;
+			$numbergroupstrackB++;
+			$i++;
+			$numberofsinglefemaleinserted++;
+		}
+
+
+		//insert rest of male single groups
+		$startgroup = 1;
+
+		for($i = $numberofsinglemaleinserted + 1; $i <= $numberofgroupssinglemale; $i++){
+			
+			//echo($numbergroupstrackB. " " . $i . " " . "<br>");
+			
+
+			if($numbergroupstrackB == $maxgroupspertrack){
+				break;
+			}
+
+			for($j = 0; $j < count($groupssinglemale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+				";
+
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderB);
+				$sql->bindParam(":track", $trackB);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			//$numberofsinglemaleinserted++;
+			$startgroup++;
+			$startorderB++;
+			$numbergroupstrackB++;
+		}
+
+		//insert rest of female single groups
+		$startgroup = 1;
+
+		
+		for($i = $numberofsinglefemaleinserted + 1; $i < $numberofgroupssinglefemale; $i++){
+			
+			if($numbergroupstrackA == $maxgroupspertrack){
+				break;
+			}
+
+			for($j = 0; $j < count($groupssinglefemale[$i]); $j++){
+
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+				";
+
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderB);
+				$sql->bindParam(":track", $trackB);
+				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
+				$sql->execute();
+
+			}
+			
+			//$numberofsinglemaleinserted++;
+			$startgroup++;
+			$startorderA++;
+			$numbergroupstrackA++;
+		}
+		
+
+	}	
 
 	
 
