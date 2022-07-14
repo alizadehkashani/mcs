@@ -1,9 +1,19 @@
 <?php
 
-	//generate all male club groups and store in array
-	//generate all female club groups and store in array
-	//genrate all male single player groups and store in array
-	//generate alle female single groups and store in array
+	//DONE	generate all male club groups and store in array
+	//DONE	generate all female club groups and store in array
+	//DONE	genrate all male single player groups and store in array
+	//DONE	generate alle female single groups and store in array
+	
+	//DONE	insert all male clubs to track A
+	//DONE	insert all single male groups or until track is full
+	//DONE	insert all female clubs to track B or until full
+	//DONE	insert all female single groups or until full to track B
+	//DONE	insert rest of male single groups to track B
+	//DONE	insert rest female single groups to track A
+
+	//TODO select all groups from track A and insert into track B
+	//TODO select all groups from track B and insert into track A
 
 	//require('../validatelogin.php');	
 	include('../dbconfig.php');
@@ -23,12 +33,13 @@
 	//total number of groups in tournament
 	$totalnumberofgroups = $numbergroupsclubmale + $numbergroupsclubfemale + $numberofgroupssinglemale + $numberofgroupssinglefemale;
 	
-	//echo($totalnumberofgroups);
-
+	
+	//set maximum number of groups per track
 	$maxgroupspertrack = ceil($totalnumberofgroups / 2);
 
-	
+	//generate initial startgroups
 	generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack);
+
 
 	function buildclubgroups($gender){
 		
@@ -465,189 +476,178 @@
 			$numbergroupstrackA++;
 		}
 		
+		
+		
+
+		// select all groups from track A and insert into track B
+		
+		$query = "
+			SELECT MAX(startorder)
+			FROM groups
+			WHERE track = :track
+		";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":track", $trackB);
+		$sql->execute();
+		$lastgroup = $sql->fetch(PDO::FETCH_ASSOC);
+		$lastgroup = $lastgroup["MAX(startorder)"];
+
+		
+		for($i = 1; $i <= $lastgroup; $i++){
+			$query = "
+				SELECT *
+				FROM groups
+				WHERE track = :track
+				AND startorder = :startorder
+			";
+
+			$sql = $dbconnection->prepare($query);
+			$sql->bindParam(":track", $trackB);
+			$sql->bindParam(":startorder", $i);
+			$sql->execute();
+			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
+			
+			//echo(count($group));
+			
+			for($j = 0; $j < count($group); $j++){
+				
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+
+				";
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderA);
+				$sql->bindParam(":track", $trackA);
+				$sql->bindParam(":startgroup", $group[$j]["startgroup"]);
+				$sql->bindParam(":player", $group[$j]["player"]);
+				$sql->execute();
+			}
+
+			$startorderA++;
+			
+
+		}
+
+
+		
+		// select all groups from track B and insert into track A
+		$query = "
+			SELECT MAX(startorder)
+			FROM groups
+			WHERE track = :track
+		";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":track", $trackA);
+		$sql->execute();
+		$lastgroup = $sql->fetch(PDO::FETCH_ASSOC);
+		$lastgroup = $lastgroup["MAX(startorder)"];
+
+		
+		for($i = 1; $i <= $lastgroup; $i++){
+			$query = "
+				SELECT *
+				FROM groups
+				WHERE track = :track
+				AND startorder = :startorder
+			";
+
+			$sql = $dbconnection->prepare($query);
+			$sql->bindParam(":track", $trackA);
+			$sql->bindParam(":startorder", $i);
+			$sql->execute();
+			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
+			
+			//echo(count($group));
+			
+			for($j = 0; $j < count($group); $j++){
+				
+				$query = "
+					INSERT INTO groups (startorder, track, startgroup, player)
+					VALUES (:startorder, :track, :startgroup, :player)
+
+				";
+
+				$sql = $dbconnection->prepare($query);
+				$sql->bindParam(":startorder", $startorderB);
+				$sql->bindParam(":track", $trackB);
+				$sql->bindParam(":startgroup", $group[$j]["startgroup"]);
+				$sql->bindParam(":player", $group[$j]["player"]);
+				$sql->execute();
+			}
+
+			$startorderB++;
+			
+
+		}
+
+
 
 	}	
 
-	
 
-	/*
+	function getstartgroupsfromtrack($track){
+		
+		include('../dbconfig.php');
 
-
-
-	//variable for startorder
-	$startorder = 1;
-	
-	$variablenamesarrayplayers = ["playersorderedmale", "playersorderedfemale"];
-	$vairablenamesclubs = ["clubsmale", "clubsfemale"];
-	$variablenamescount = ["numberofclubsmale", "numberofclubsfemale"];
-	$track = $_POST["track"];
-	$categories = [$_POST["first"], $_POST["second"]];
-
-	$comptypeclub = 1;
-	$comptypeboth = 3;
-	
-	for($m = 0; $m < 2; $m++){
-
-		//get all male groups and order by startorder
 		$query = "
-			SELECT id
-			FROM clubs
-			WHERE category = :category
+			SELECT MAX(startorder)
+			FROM groups
+			WHERE track = :track
+		";
+		
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":track", $track);
+		$sql->execute();
+		$lastgroup = $sql->fetch(PDO::FETCH_ASSOC);
+
+		
+		$currentgroups = [];
+
+		for($i = 1; $i <= $lastgroup["MAX(startorder)"]; $i++){
+			
+			$query = "
+				SELECT *
+				FROM groups
+				WHERE track = :track
+				AND startorder = :startorder
+			";
+		
+			$sql = $dbconnection->prepare($query);
+			$sql->bindParam(":track", $track);
+			$sql->bindParam(":startorder", $i);
+			$sql->execute();
+			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+			echo(json_encode($group));
+			echo("<br>");
+			/*
+			for($j = 0; $j < count($group); $j++){
+				$currentgroups[$i]
+			}
+			*/
+		}
+
+		/*
+		$query = "
+			SELECT * 
+			FROM groups
+			WHERE track = :track
 			ORDER BY startorder ASC
 		";
 
 		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":category", $categories[$m]);
+		$sql->bindParam(":track", $track);
 		$sql->execute();
-		${$vairablenamesclubs[$m]} = $sql->fetchAll();
+		$currentgroups = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+		return $currentgroups;
+		*/
 
-		${$variablenamescount[$m]} = count(${$vairablenamesclubs[$m]});
+	}
 	
-		
-		//array for storing sorted players
-		${$variablenamesarrayplayers[$m]} = [];
-		
-	
-		//position inside sorted players array
-		$playerordercounter = 0;
-	
-		//vairable storing current player position inside club
-		$playerposition = 1;
-		
-		//variable checking if no player was found for that position
-		$noplayersfound = 0;
 
-
-		//fill array with players ordered
-		while($noplayersfound < ${$variablenamescount[$m]}){
-			
-			//reset number of players not found
-			$noplayersfound = 0;
-			
-			//loop trough clubs a retrieve the player for current position
-			for($i = 0; $i < ${$variablenamescount[$m]}; $i++){
-				
-
-				$query = "
-					SELECT playernumber, club
-					FROM players
-					WHERE playerorderteam = :playerposition
-					AND club = :club
-					AND (comptype = :comptypeclub OR comptype = :comptypesingle) 
-				";
-				
-				$sql = $dbconnection->prepare($query);
-				$sql->bindParam(":playerposition", $playerposition);
-				$sql->bindParam(":club", ${$vairablenamesclubs[$m]}[$i]["id"]);
-				$sql->bindParam(":comptypeclub", $comptypeclub);
-				$sql->bindParam(":comptypesingle", $comptypeboth);
-				$sql->execute();
-				$nextplayer = $sql->fetchAll(PDO::FETCH_ASSOC);
-				
-				//if no player is found for taht position count number of player not found up by one
-				if(count($nextplayer) == 0){
-					$noplayersfound++;
-				}else{
-					//if palyer is found, add it to the array
-					${$variablenamesarrayplayers[$m]}[$playerordercounter]["playernumber"] = $nextplayer[0]["playernumber"];
-					${$variablenamesarrayplayers[$m]}[$playerordercounter]["club"] = $nextplayer[0]["club"];
-					$playerordercounter++;
-				};
-				
-	
-			}
-			
-			//increase player inside club order position by one
-			$playerposition++;
-			
-		}
-		
-		$startgroup = 1;
-		$playerspositioned = 0;
-		
-		//build startgroups
-		$i = 0;
-		
-
-		while($i < count(${$variablenamesarrayplayers[$m]})){
-			
-			
-			$playerrest = count(${$variablenamesarrayplayers[$m]}) - $playerspositioned;
-			
-			//if not players are left, stop loop
-			if($playerrest == 0){
-				break;
-			}
-
-
-			if($playerrest == 4){
-
-				//test if rest ist 4 players
-				//if yes, last two groups will contain two players each
-				for($k = 0; $k < 2; $k++){
-
-					for($j = 1; $j  < 3; $j++){
-												
-						$query = "
-						INSERT INTO groups (startorder, track, startgroup, player)
-						VALUES (:startorder, :track, :startgroup, :player)
-						";
-				
-						$sql = $dbconnection->prepare($query);
-						$sql->bindParam(":startorder", $startorder);
-						$sql->bindParam(":track", $track);
-						$sql->bindParam(":startgroup", $startgroup);
-						$sql->bindParam(":player", ${$variablenamesarrayplayers[$m]}[$i]["playernumber"]);
-						$sql->execute();
-						
-						$i++;
-						$playerspositioned++;
-					}
-									
-					$startgroup++;
-					$startorder++;
-				
-				}
-				
-			}else{
-				
-				//if only two teams are left, last group has only two players
-				//else group has three players
-				if($playerrest == 2){
-					$j = 2;
-				}else{
-					$j = 1;
-				}
-				
-				//build startgroup
-				for($j; $j  < 4; $j++){
-					
-					
-					$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
-					";
-
-
-					$sql = $dbconnection->prepare($query);
-					$sql->bindParam(":startorder", $startorder);
-					$sql->bindParam(":track", $track);
-					$sql->bindParam(":startgroup", $startgroup);
-					$sql->bindParam(":player", ${$variablenamesarrayplayers[$m]}[$i]["playernumber"]);
-					$sql->execute();
-					
-					$i++;
-					$playerspositioned++;
-				}
-
-				$startgroup++;
-				$startorder++;
-			}
-		}
-	
-	}	
-
-	echo(json_encode("hi"));
-	*/
 ?>
