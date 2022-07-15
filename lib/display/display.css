@@ -9,6 +9,13 @@ body{
 	align-items: center;
 }
 
+.verticalcenter{
+	display: flex;
+
+	/*justify-content: center;*/
+	align-items: center;
+}
+
 #maingroupcontainer{
 	display: grid;
 
@@ -24,12 +31,14 @@ body{
 	justify-content: center;
 	/*align-items: center;*/
 
+	padding-bottom: 20px;
+
 }
 
 #logoscontainer{
 	display: grid;
-	grid-template-columns: repeat(8, 200px);
-	grid-template-rows: 100px;
+	grid-template-columns: repeat(4, 400px);
+	grid-template-rows: 200px;
 
 	grid-column-gap: 10px;
 }
@@ -40,7 +49,7 @@ body{
 	padding: 20px;
 
 	grid-template-columns: 1fr;
-	grid-template-rows: 100px 650px 100px;
+	grid-template-rows: 220px 650px 100px;
 }
 
 #footer{
@@ -71,7 +80,7 @@ body{
 	display: grid;
 
 	grid-template-columns: 1fr;
-	grid-template-rows: 1fr 1fr;
+	grid-template-rows: 1fr;
 }
 
 .groupheadlinecontainer{
@@ -106,11 +115,18 @@ body{
 .individualplayer{
 	display: grid;
 
-	grid-template-columns: 80px 1fr 1fr;
+	grid-template-columns: 120px 1fr 1fr;
 	grid-template-rows: 1fr;
+
+	font-size: 25px;
 }
 
-.trackid{
+
+.logos{
+	width: 200px;
+}
+
+.trackdescription{
 	font-weight: bold;
-	font-size: 40px;
+	font-size: 50px;
 }

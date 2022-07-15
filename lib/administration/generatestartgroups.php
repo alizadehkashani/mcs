@@ -12,11 +12,20 @@
 	//DONE	insert rest of male single groups to track B
 	//DONE	insert rest female single groups to track A
 
-	//TODO select all groups from track A and insert into track B
-	//TODO select all groups from track B and insert into track A
+	//DONE select all groups from track A and insert into track B
+	//DONE select all groups from track B and insert into track A
 
 	//require('../validatelogin.php');	
 	include('../dbconfig.php');
+
+	//set startgroup of both tracks to one
+	$query = "
+		UPDATE tracks
+		SET currentgroup = :resetgroup
+	";
+
+	$sql = $dbconnection->prepare($query);~	
+
 
 	$groupsclubmale = buildclubgroups("H");
 	$groupsclubfemale = buildclubgroups("D");
@@ -587,67 +596,5 @@
 
 
 	}	
-
-
-	function getstartgroupsfromtrack($track){
-		
-		include('../dbconfig.php');
-
-		$query = "
-			SELECT MAX(startorder)
-			FROM groups
-			WHERE track = :track
-		";
-		
-		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":track", $track);
-		$sql->execute();
-		$lastgroup = $sql->fetch(PDO::FETCH_ASSOC);
-
-		
-		$currentgroups = [];
-
-		for($i = 1; $i <= $lastgroup["MAX(startorder)"]; $i++){
-			
-			$query = "
-				SELECT *
-				FROM groups
-				WHERE track = :track
-				AND startorder = :startorder
-			";
-		
-			$sql = $dbconnection->prepare($query);
-			$sql->bindParam(":track", $track);
-			$sql->bindParam(":startorder", $i);
-			$sql->execute();
-			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
-
-			echo(json_encode($group));
-			echo("<br>");
-			/*
-			for($j = 0; $j < count($group); $j++){
-				$currentgroups[$i]
-			}
-			*/
-		}
-
-		/*
-		$query = "
-			SELECT * 
-			FROM groups
-			WHERE track = :track
-			ORDER BY startorder ASC
-		";
-
-		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":track", $track);
-		$sql->execute();
-		$currentgroups = $sql->fetchAll(PDO::FETCH_ASSOC);
-
-		return $currentgroups;
-		*/
-
-	}
-	
 
 ?>
