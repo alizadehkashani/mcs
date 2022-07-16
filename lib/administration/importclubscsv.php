@@ -31,13 +31,13 @@
 	}
 
 	$queryinsert = "
-		INSERT INTO clubs (id, startorder, category, resultclub, name)
-		VALUES (:id, :startorder, :category, :resultclub, :name)
+		INSERT INTO clubs (id, startorder, category, resultclub, rounddiff, name)
+		VALUES (:id, :startorder, :category, :resultclub, :rounddiff, :name)
 	";
 
 	$queryupdate = "
 		UPDATE clubs
-		SET startorder = :startorder, category = :category, resultclub = :resultclub, name = :name
+		SET startorder = :startorder, category = :category, resultclub = :resultclub, rounddiff = :rounddiff, name = :name
 		WHERE id = :id;
 	";
 
@@ -49,7 +49,8 @@
 			$sql->bindParam(":startorder", $data[$i][1]);
 			$sql->bindParam(":category", $data[$i][2]);
 			$sql->bindParam(":resultclub", $data[$i][3]);
-			$sql->bindParam(":name", $data[$i][4]);
+			$sql->bindParam(":rounddiff", $data[$i][4]);
+			$sql->bindParam(":name", $data[$i][5]);
 			$sql->execute();
 
 		}catch(PDOException $error){
@@ -67,7 +68,8 @@
 				$sql->bindParam(":startorder", $data[$i][1]);
 				$sql->bindParam(":category", $data[$i][2]);
 				$sql->bindParam(":resultclub", $data[$i][3]);
-				$sql->bindParam(":name", $data[$i][4]);
+				$sql->bindParam(":rounddiff", $data[$i][4]);				
+				$sql->bindParam(":name", $data[$i][5]);
 				$sql->execute();
 			}else{
 				$reply['status'] = 1;

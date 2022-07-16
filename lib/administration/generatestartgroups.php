@@ -15,6 +15,8 @@
 	//DONE select all groups from track A and insert into track B
 	//DONE select all groups from track B and insert into track A
 
+	echo($_POST["day"]);
+
 	//require('../validatelogin.php');	
 	include('../dbconfig.php');
 
@@ -23,26 +25,29 @@
 		UPDATE tracks
 		SET currentgroup = :resetgroup
 	";
+	
+	$sql = $dbconnection->prepare($query);	
 
-	$sql = $dbconnection->prepare($query);~	
 
-
+	//generate club groups per gender
 	$groupsclubmale = buildclubgroups("H");
 	$groupsclubfemale = buildclubgroups("D");
 
+	//number of club groups per gender
 	$numbergroupsclubmale = count($groupsclubmale);
 	$numbergroupsclubfemale =count($groupsclubfemale);
 
+	//generate single groups per gender
 	$groupssinglemale = buildsinglegroups("H");
 	$groupssinglefemale = buildsinglegroups("D");
 
+	//number of single groups per gender
 	$numberofgroupssinglemale = count($groupssinglemale);
 	$numberofgroupssinglefemale = count($groupssinglefemale);
 
 	//total number of groups in tournament
 	$totalnumberofgroups = $numbergroupsclubmale + $numbergroupsclubfemale + $numberofgroupssinglemale + $numberofgroupssinglefemale;
-	
-	
+		
 	//set maximum number of groups per track
 	$maxgroupspertrack = ceil($totalnumberofgroups / 2);
 
@@ -54,13 +59,23 @@
 		
 		include('../dbconfig.php');
 		
-		//get all male groups and order by startorder
-		$query = "
-			SELECT id
-			FROM clubs
-			WHERE category = :category
-			ORDER BY startorder ASC
-		";
+		if($_POST["day"] == 1){
+			//get all male groups and order by startorder
+			$query = "
+				SELECT id
+				FROM clubs
+				WHERE category = :category
+				ORDER BY startorder ASC
+			";
+		}elseif($_POST["day"] == 2){
+			//get all male groups and order by result
+			$query = "
+				SELECT id
+				FROM clubs
+				WHERE category = :category
+				ORDER BY resultclub ASC, rounddiff ASC
+			";
+		}
 
 		$sql = $dbconnection->prepare($query);
 		$sql->bindParam(":category", $gender);
@@ -165,6 +180,24 @@
 				for($k = 0; $k < 2; $k++){
 
 					for($j = 0; $j  < 2; $j++){
+
+						//begin---fill indvgroups table---
+							$query = "
+								INSERT INTO indvgroups (startorder, comptype, gender, playerorder, player)
+								VALUES (:startorder, :comptype, :gender, :playerorder, :player)
+							";
+
+							$sql = $dbconnection->prepare($query);
+							$sql->bindParam(":startorder", $startgroup);
+							$sql->bindParam(":comptype", $comptypeclub);
+							$sql->bindParam(":gender", $gender);
+							$sql->bindParam(":playerorder", $j);
+							$sql->bindParam(":player", $sortedplayers[$i]["playernumber"]);
+							$sql->execute();
+
+							echo("inser new group " . $i . $gender);
+
+						//end---fill indvgroups table---
 						
 						$groups[$startgroup][$j] = $sortedplayers[$i]["playernumber"];
 						
@@ -188,7 +221,23 @@
 				
 				//build startgroup
 				for($j = 0; $j  < $playerspergroup; $j++){
-					
+					//begin---fill indvgroups table---
+						$query = "
+							INSERT INTO indvgroups (startorder, comptype, gender, playerorder, player)
+							VALUES (:startorder, :comptype, :gender, :playerorder, :player)
+						";
+
+						$sql = $dbconnection->prepare($query);
+						$sql->bindParam(":startorder", $startgroup);
+						$sql->bindParam(":comptype", $comptypeclub);
+						$sql->bindParam(":gender", $gender);
+						$sql->bindParam(":playerorder", $j);
+						$sql->bindParam(":player", $sortedplayers[$i]["playernumber"]);
+						$sql->execute();
+
+						echo("inser new group " . $i . $gender);
+
+					//end---fill indvgroups table---
 					
 					$groups[$startgroup][$j] = $sortedplayers[$i]["playernumber"];
 					
@@ -200,6 +249,7 @@
 			}
 		}
 
+		
 		
 		return $groups;
 		
@@ -281,7 +331,7 @@
 		$numbergroupstrackB = 0;
 
 		//get male club groups and set amount of male club groups
-		$groupsclubmale = buildclubgroups("H");
+		//=>//$groupsclubmale = buildclubgroups("H");
 		
 		//set variable for startgroup counter
 		$startgroup = 1;
@@ -292,8 +342,8 @@
 			for($j = 0; $j < count($groupsclubmale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 					";
 
 
@@ -301,6 +351,7 @@
 				$sql->bindParam(":startorder", $startorderA);
 				$sql->bindParam(":track", $trackA);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);
 				$sql->bindParam(":player", $groupsclubmale[$i][$j]);
 				$sql->execute();
 
@@ -326,8 +377,8 @@
 			for($j = 0; $j < count($groupssinglemale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 				";
 
 
@@ -335,6 +386,7 @@
 				$sql->bindParam(":startorder", $startorderA);
 				$sql->bindParam(":track", $trackA);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);				
 				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
 				$sql->execute();
 
@@ -350,7 +402,6 @@
 		
 		//set variable for startgroup counter
 		$startgroup = 1;
-
 		
 		//insert all female club groups to track B
 		for($i = 1; $i < $numbergroupsclubfemale; $i++){
@@ -361,8 +412,8 @@
 			for($j = 0; $j < count($groupsclubfemale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 					";
 
 
@@ -370,6 +421,7 @@
 				$sql->bindParam(":startorder", $startorderB);
 				$sql->bindParam(":track", $trackB);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);
 				$sql->bindParam(":player", $groupsclubfemale[$i][$j]);
 				$sql->execute();
 
@@ -395,8 +447,8 @@
 			for($j = 0; $j < count($groupssinglefemale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 				";
 
 
@@ -404,6 +456,7 @@
 				$sql->bindParam(":startorder", $startorderB);
 				$sql->bindParam(":track", $trackB);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);
 				$sql->bindParam(":player", $groupssinglefemale[$i][$j]);
 				$sql->execute();
 
@@ -432,8 +485,8 @@
 			for($j = 0; $j < count($groupssinglemale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 				";
 
 
@@ -441,6 +494,7 @@
 				$sql->bindParam(":startorder", $startorderB);
 				$sql->bindParam(":track", $trackB);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);
 				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
 				$sql->execute();
 
@@ -465,8 +519,8 @@
 			for($j = 0; $j < count($groupssinglefemale[$i]); $j++){
 
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 				";
 
 
@@ -474,6 +528,7 @@
 				$sql->bindParam(":startorder", $startorderB);
 				$sql->bindParam(":track", $trackB);
 				$sql->bindParam(":startgroup", $startgroup);
+				$sql->bindParam(":playerorder", $j);
 				$sql->bindParam(":player", $groupssinglemale[$i][$j]);
 				$sql->execute();
 
@@ -517,13 +572,11 @@
 			$sql->execute();
 			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
 			
-			//echo(count($group));
-			
 			for($j = 0; $j < count($group); $j++){
 				
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 
 				";
 
@@ -531,6 +584,7 @@
 				$sql->bindParam(":startorder", $startorderA);
 				$sql->bindParam(":track", $trackA);
 				$sql->bindParam(":startgroup", $group[$j]["startgroup"]);
+				$sql->bindParam(":playerorder", $group[$j]["playerorder"]);
 				$sql->bindParam(":player", $group[$j]["player"]);
 				$sql->execute();
 			}
@@ -575,8 +629,8 @@
 			for($j = 0; $j < count($group); $j++){
 				
 				$query = "
-					INSERT INTO groups (startorder, track, startgroup, player)
-					VALUES (:startorder, :track, :startgroup, :player)
+					INSERT INTO groups (startorder, track, startgroup, playerorder, player)
+					VALUES (:startorder, :track, :startgroup, :playerorder, :player)
 
 				";
 
@@ -584,6 +638,7 @@
 				$sql->bindParam(":startorder", $startorderB);
 				$sql->bindParam(":track", $trackB);
 				$sql->bindParam(":startgroup", $group[$j]["startgroup"]);
+				$sql->bindParam(":playerorder", $group[$j]["playerorder"]);
 				$sql->bindParam(":player", $group[$j]["player"]);
 				$sql->execute();
 			}
