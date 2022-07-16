@@ -11,7 +11,7 @@
         <link rel="stylesheet" type="text/css" href="lib/administration/generategroups.css"></script>
         <script src="lib/mcs.js"></script>
         <script src="lib/administration/administration.js"></script>
-        <title>Administration</title>        
+        <title>Administration</title>   
     </head>
     <body>
         <div id="container">

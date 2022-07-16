@@ -12,7 +12,23 @@
 #header{
 	grid-column-start: 2;
 	grid-row-start: 1;
+
+	display: grid;
+	grid-template-columns: repeat(4, 80px);
+	grid-template-rows: 1fr;
 }
+
+.topbuttoncontainer{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.topbuttoncontainer:hover{
+	cursor: pointer;
+}
+
+
 
 #navigation{
 	padding-top: 25px;
