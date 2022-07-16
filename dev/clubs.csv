@@ -1,25 +1,25 @@
-﻿id;startorder;category;name
-1;1;H;Erster Mainzer Minigolf-Club e. V. 1964
-2;2;H;MGC Dormagen - Brechten e. V.
-3;3;H;BGS Hardenberg-Pötter e. V.
-4;4;H;1. Kleingolf Club Homburg-Saar 1967 e. V.
-5;5;H;SG Arheilgen e.V. - Abt. Bahnengolf
-6;6;H;Niendorfer MGC von 1963 e. V.
-7;1;D;SG Ober/Hilz/Hom
-8;2;D;1. Mainzer MGC e. V. 1964
-9;3;D;Minigolfclub Dormagen - Brechten e. V.
-10;4;D;1. MGC 1970 Göttingen e. V.
-11;5;D;MSK Neheim-Hüsten e. V.
-12;;E;Olchinger MSK e. V.
-13;;E;MGC Neuwied e. V.
-14;;E;BGC Bremen e. V.
-15;;E;HMC Büttgen e. V.
-16;;E;MC Schriesheim e. V.
-17;;E;1. MC Weinheim e. V.
-18;;E;1. FMC Lichtenfels 1961 e. V.
-19;;E;1. BGC Leipzig e. V.
-20;;E;MSC Bensheim-Auerbach e. V.
-21;;E;MGC putter Künzell 1970 e. V.
-22;;E;1. BGV Rodalben 1977 e. V.
-23;;E;1. MGC Ludwigshafen 1964 e. V.
-24;;E;MC 62 Lüdenscheid e. V.
+﻿id;startorder;category;resultclub;name
+1;1;H;600;Erster Mainzer Minigolf-Club e. V. 1964
+2;2;H;601;MGC Dormagen - Brechten e. V.
+3;3;H;602;BGS Hardenberg-Pötter e. V.
+4;4;H;603;1. Kleingolf Club Homburg-Saar 1967 e. V.
+5;5;H;604;SG Arheilgen e.V. - Abt. Bahnengolf
+6;6;H;605;Niendorfer MGC von 1963 e. V.
+7;1;D;600;SG Ober/Hilz/Hom
+8;2;D;601;1. Mainzer MGC e. V. 1964
+9;3;D;602;Minigolfclub Dormagen - Brechten e. V.
+10;4;D;603;1. MGC 1970 Göttingen e. V.
+11;5;D;604;MSK Neheim-Hüsten e. V.
+12;;E;;Olchinger MSK e. V.
+13;;E;;MGC Neuwied e. V.
+14;;E;;BGC Bremen e. V.
+15;;E;;HMC Büttgen e. V.
+16;;E;;MC Schriesheim e. V.
+17;;E;;1. MC Weinheim e. V.
+18;;E;;1. FMC Lichtenfels 1961 e. V.
+19;;E;;1. BGC Leipzig e. V.
+20;;E;;MSC Bensheim-Auerbach e. V.
+21;;E;;MGC putter Künzell 1970 e. V.
+22;;E;;1. BGV Rodalben 1977 e. V.
+23;;E;;1. MGC Ludwigshafen 1964 e. V.
+24;;E;;MC 62 Lüdenscheid e. V.
