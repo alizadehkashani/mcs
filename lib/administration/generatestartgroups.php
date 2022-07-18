@@ -15,8 +15,6 @@
 	//DONE select all groups from track A and insert into track B
 	//DONE select all groups from track B and insert into track A
 
-	echo($_POST["day"]);
-
 	//require('../validatelogin.php');	
 	include('../dbconfig.php');
 
@@ -26,34 +24,38 @@
 		SET currentgroup = :resetgroup
 	";
 	
-	$sql = $dbconnection->prepare($query);	
+	$resetgroup = 1;
 
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":resetgroup", $resetgroup);
+	$sql->execute();
 
-	//generate club groups per gender
-	$groupsclubmale = buildclubgroups("H");
-	$groupsclubfemale = buildclubgroups("D");
-
-	//number of club groups per gender
-	$numbergroupsclubmale = count($groupsclubmale);
-	$numbergroupsclubfemale =count($groupsclubfemale);
-
-	//generate single groups per gender
-	$groupssinglemale = buildsinglegroups("H");
-	$groupssinglefemale = buildsinglegroups("D");
-
-	//number of single groups per gender
-	$numberofgroupssinglemale = count($groupssinglemale);
-	$numberofgroupssinglefemale = count($groupssinglefemale);
-
-	//total number of groups in tournament
-	$totalnumberofgroups = $numbergroupsclubmale + $numbergroupsclubfemale + $numberofgroupssinglemale + $numberofgroupssinglefemale;
+	if($_POST["day"] != 3){
+		//generate club groups per gender
+		$groupsclubmale = buildclubgroups("H");
+		$groupsclubfemale = buildclubgroups("D");
 		
-	//set maximum number of groups per track
-	$maxgroupspertrack = ceil($totalnumberofgroups / 2);
-
-	//generate initial startgroups
-	generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack);
-
+		//number of club groups per gender
+		$numbergroupsclubmale = count($groupsclubmale);
+		$numbergroupsclubfemale =count($groupsclubfemale);
+		
+		//generate single groups per gender
+		$groupssinglemale = buildsinglegroups("H");
+		$groupssinglefemale = buildsinglegroups("D");
+		
+		//number of single groups per gender
+		$numberofgroupssinglemale = count($groupssinglemale);
+		$numberofgroupssinglefemale = count($groupssinglefemale);
+		
+		//total number of groups in tournament	
+		$totalnumberofgroups = $numbergroupsclubmale + $numbergroupsclubfemale + $numberofgroupssinglemale + $numberofgroupssinglefemale;
+		//set maximum number of groups per track
+		$maxgroupspertrack = ceil($totalnumberofgroups / 2);
+		
+		generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack);
+	}elseif($_POST["day"] == 3){
+		generatedaythree();		
+	}
 
 	function buildclubgroups($gender){
 		
@@ -84,7 +86,6 @@
 
 		//number of clubs
 		$numberofclubs = count($clubs);
-
 		
 		//array for storing sorted players
 		$sortedplayers = [];
@@ -195,8 +196,6 @@
 							$sql->bindParam(":player", $sortedplayers[$i]["playernumber"]);
 							$sql->execute();
 
-							echo("inser new group " . $i . $gender);
-
 						//end---fill indvgroups table---
 						
 						$groups[$startgroup][$j] = $sortedplayers[$i]["playernumber"];
@@ -234,8 +233,6 @@
 						$sql->bindParam(":playerorder", $j);
 						$sql->bindParam(":player", $sortedplayers[$i]["playernumber"]);
 						$sql->execute();
-
-						echo("inser new group " . $i . $gender);
 
 					//end---fill indvgroups table---
 					
@@ -289,11 +286,6 @@
 			$sql->execute();
 			$playersingroup = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-			//var_dump($playersingroup);
-			
-			//echo(count($playersingroup));
-			//echo("<br>");
-			
 			for($j = 0; $j < count($playersingroup); $j++){
 				$groups[$i][$j] = $playersingroup[$j]["playernumber"];
 			}
@@ -305,17 +297,8 @@
 	}
 
 
-	function generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack){
-		//DONE//insert all male clubs track A
-		//insert male single to track A until maximum number of groups per track reached
-		
-		//inser all female clubs to track B
-		//insert all female single to track B
-		//inser rest of male single to track B
-
-		//
-
-
+	function generatestartgroups(){
+	
 		include('../dbconfig.php');
 
 		//variable for track ids
@@ -475,9 +458,7 @@
 
 		for($i = $numberofsinglemaleinserted + 1; $i <= $numberofgroupssinglemale; $i++){
 			
-			//echo($numbergroupstrackB. " " . $i . " " . "<br>");
 			
-
 			if($numbergroupstrackB == $maxgroupspertrack){
 				break;
 			}
@@ -624,7 +605,6 @@
 			$sql->execute();
 			$group = $sql->fetchAll(PDO::FETCH_ASSOC);
 			
-			//echo(count($group));
 			
 			for($j = 0; $j < count($group); $j++){
 				
@@ -650,6 +630,136 @@
 
 
 
-	}	
+	}
+	
+	function generatedaythree(){
+		include('../dbconfig.php');
+
+		//Tag drei sind nur noch Einzel Spieler die dann in gekehrter Reihen Folge nach den Ergebnisse des tag 2 und 1 starten
+
+		prebuilddaythreegroups("H");
+		prebuilddaythreegroups("D");
+
+		
+
+
+	}
+
+	function prebuilddaythreegroups($gender){
+		include('../dbconfig.php');
+		
+		$comptype2 = 2;
+		$comptype3 = 3;
+		$comptypeclub = 2;
+
+
+		$query = "
+			SELECT *
+			FROM players
+			WHERE gender = :gender
+			AND (comptype = :comptype2 OR comptype = :comptype3)
+			ORDER BY resultsingle ASC
+		";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":gender", $gender);
+		$sql->bindParam(":comptype2", $comptype2);
+		$sql->bindParam(":comptype3", $comptype3);
+		$sql->execute();
+		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$numberofplayers = count($players);
+
+		echo($numberofplayers);
+
+		//array for storing groups
+		$groups = [];
+
+		//variable for startgroup
+		$startgroup = 1;
+
+		//number of players which have been positioned into a group
+		$playerspositioned = 0;
+
+
+		$playerrest;
+
+		$i = 0;
+
+		while($i < $numberofplayers){
+			//number of players left to be placed in groups
+			$playerrest = $numberofplayers - $playerspositioned;
+			
+			//if not players are left, stop loop
+			if($playerrest == 0){
+				break;
+			}
+
+			//test if rest ist 4 players
+			//if yes, last two groups will contain two players each
+			if($playerrest == 4){
+
+				for($k = 0; $k < 2; $k++){
+
+					for($j = 0; $j  < 2; $j++){
+
+						//begin---fill indvgroups table---
+							insertintoindvgroups($startgroup, $comptypeclub, $gender, $j, $players[$i]["playernumber"]);
+						//end---fill indvgroups table---
+												
+						$i++;
+						$playerspositioned++;
+					}
+									
+					$startgroup++;
+				
+				}
+				
+			}else{
+				
+				//if only two players are left, last group has only two players
+				//else group has three players
+				if($playerrest == 2){
+					$playerspergroup = 2;
+				}else{
+					$playerspergroup = 3;
+				}
+				
+				//build startgroup
+				for($j = 0; $j  < $playerspergroup; $j++){
+					//begin---fill indvgroups table---
+						insertintoindvgroups($startgroup, $comptypeclub, $gender, $j, $players[$i]["playernumber"]);
+					//end---fill indvgroups table---
+					
+					$i++;
+					$playerspositioned++;
+				}
+
+				$startgroup++;
+			}
+
+		}
+
+	}
+
+	function insertintoindvgroups($startgroup, $comptypeclub, $gender, $playerorder, $player){
+		include('../dbconfig.php');
+
+		$query = "
+			INSERT INTO indvgroups (startorder, comptype, gender, playerorder, player)
+			VALUES (:startorder, :comptype, :gender, :playerorder, :player)
+		";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":startorder", $startgroup);
+		$sql->bindParam(":comptype", $comptypeclub);
+		$sql->bindParam(":gender", $gender);
+		$sql->bindParam(":playerorder", $playerorder);
+		$sql->bindParam(":player", $player);
+		$sql->execute();		
+	}
+
+
+	echo(json_encode("groups generated"));
 
 ?>
