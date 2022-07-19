@@ -35,15 +35,17 @@
 		VALUES (:id, :startorder, :category, :resultclub, :rounddiff, :name)
 	";
 
+	/*
 	$queryupdate = "
 		UPDATE clubs
 		SET startorder = :startorder, category = :category, resultclub = :resultclub, rounddiff = :rounddiff, name = :name
 		WHERE id = :id;
 	";
+	*/
 
 	//insert data from csv file into database
 	for($i = 1; $i < $entries; $i++){
-		try{
+		//try{
 			$sql = $dbconnection->prepare($queryinsert);
 			$sql->bindParam(":id", $data[$i][0]);
 			$sql->bindParam(":startorder", $data[$i][1]);
@@ -53,8 +55,8 @@
 			$sql->bindParam(":name", $data[$i][5]);
 			$sql->execute();
 
-		}catch(PDOException $error){
-						
+		//}catch(PDOException $error){
+		/*				
 			$errorcode =  $error->getCode();
 			$errormessage = $error->getMessage();
 			
@@ -77,6 +79,7 @@
 			}
 
 		}
+		*/
 	}
 	
 	$reply['entries'] = $entries - 1;
