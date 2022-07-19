@@ -29,8 +29,8 @@
 	$reply['status'] = 0;
 
 	$query = "
-		INSERT INTO groups (startorder, track, startgroup, player)
-		VALUES (:startorder, :track, :startgroup, :player)
+		INSERT INTO groups (startorder, track, startgroup, player, playerorder)
+		VALUES (:startorder, :track, :startgroup, :player, :playerorder)
 	";
 	
 	//insert data from csv file into database
@@ -42,6 +42,7 @@
 			$sql->bindParam(":track", $data[$i][1]);
 			$sql->bindParam(":startgroup", $data[$i][2]);
 			$sql->bindParam(":player", $data[$i][3]);
+			$sql->bindParam(":playerorder", $data[$i][4]);
 			$sql->execute();			
 
 		}catch(PDOException $error){
