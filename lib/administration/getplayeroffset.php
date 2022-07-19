@@ -19,6 +19,7 @@
 			ON players.club = clubs.id
 			WHERE tracks.track = :trackid
 			AND tracks.currentgroup = groups.startorder
+			ORDER BY playerorder ASC;
 		";
 
 		$sql = $dbconnection->prepare($sqlquery);
@@ -51,7 +52,8 @@
 			JOIN clubs
 			ON players.club = clubs.id
 			WHERE groups.track = :trackid
-			AND groups.startorder = :offsetgroup;
+			AND groups.startorder = :offsetgroup
+			ORDER BY playerorder ASC;
 		";
 
 		$sql = $dbconnection->prepare($sqlquery);
