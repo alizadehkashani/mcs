@@ -1,5 +1,5 @@
 <?php
-	require('../validatelogin.php');
+	//require('../validatelogin.php');
 	include('../dbconfig.php');
 
 	//delete current data
@@ -7,7 +7,7 @@
 	$sql->execute();
 	
 	//file path to csv file
-	$filepath = "../../dev/startgroup.csv";
+	$filepath = "../../dev/groups.csv";
 	
 	//open csv file
 	$csv = file($filepath);

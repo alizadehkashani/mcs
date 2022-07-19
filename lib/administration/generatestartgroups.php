@@ -297,7 +297,7 @@
 	}
 
 
-	function generatestartgroups(){
+	function generatestartgroups($groupsclubmale, $numbergroupsclubmale, $groupsclubfemale, $numbergroupsclubfemale, $groupssinglemale, $numberofgroupssinglemale, $groupssinglefemale, $numberofgroupssinglefemale, $maxgroupspertrack){
 	
 		include('../dbconfig.php');
 
@@ -639,9 +639,6 @@
 
 		prebuilddaythreegroups("H");
 		prebuilddaythreegroups("D");
-
-		
-
 
 	}
 
