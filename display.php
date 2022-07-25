@@ -11,12 +11,5 @@
         <title>Display</title>        
     </head>
     <body>
-		<div id="maincontainer">
-			<div id="header"></div>
-			<div id="maingroupcontainer"></div>
-			<div id="footer">
-				<img id="mcslogo" src="lib/assets/mcslogo_large_no_text.jpg">
-			</div>
-		</div>
     </body>
 </html>
