@@ -11,6 +11,6 @@
         <title>Administration</title>   
     </head>
     <body>
-       
+       <div id="administration"></div>
     </body>
 </html>
