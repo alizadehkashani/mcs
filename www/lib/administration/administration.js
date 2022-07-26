@@ -38,7 +38,7 @@ let buildconstantnavigation = (maincontainer) => {
 
 	//settings
 	let settingscontainer = creatediv({
-		divclass: ["navigationitem"],
+		divclass: ["navigationitem", "navigationitemhover"],
 		appendto: navigationconstantcontainer
 	})
 
@@ -68,7 +68,9 @@ let buildsettings = () => {
 }
 
 let setselectednavigation = (div) => {
+	div.classList.remove("navigationitemhover");
 	div.classList.add("selectednavigation");
+
 }
 
 DOMready(buildheader);
