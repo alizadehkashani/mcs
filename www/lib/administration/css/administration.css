@@ -2,7 +2,7 @@
 	display: grid;
 
 	grid-template-rows: 50px 1fr;
-	grid-template-columns: 200px 1fr;
+	grid-template-columns: 250px 1fr;
 
 	height: 100%;
 
@@ -42,7 +42,8 @@
 
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: 1fr minmax(200px 1fr);
+	/*grid-template-rows: 1fr 1fr;*/
+	grid-auto-rows: auto;
 
 	grid-row-gap: 10px;
 
@@ -50,10 +51,6 @@
 	padding-left: 0px;
 	
 	height: 100%;
-}
-
-#navigationheaditem{
-
 }
 
 #navigationconstantcontainer{
@@ -64,6 +61,41 @@
 
 	grid-template-rows: repeat(3, 40px);
 	grid-template-columns: 1fr;
+}
+
+#navigationvariablecontainer{
+	display: grid;
+	
+	grid-row: 1 / 2;
+	grid-column: 1 / 2;
+
+	grid-template-columns: 1fr;
+	grid-auto-rows: 40px;
+}
+
+#administrationworkspace{
+	grid-row: 2 / 3;
+	grid-column: 2 / 3;
+
+	padding: 10px;
+}
+
+
+.navigationitem-0{
+	display: grid;
+	grid-template-columns: 30px 1fr;
+	grid-template-rows: 30px;
+	
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	user-select: none;
+}
+
+.navigationhover:hover{
+	background-color: var(--mcsgreylight);
+	border-radius: 0px 20px 20px 0px;
 }
 
 .navigationitem{
@@ -78,11 +110,14 @@
 	user-select: none;
 }
 
+.navigation-icon-description{
+	display: grid;
+	grid-template-columns: 30px 1fr;
+	grid-template-rows: 1fr;
+}
 
 .navigationitemhover:hover{
 	cursor: pointer;
-	background-color: var(--mcsgreylight);
-	border-radius: 0px 20px 20px 0px;
 }
 
 .navigationicon{
@@ -91,6 +126,14 @@
 
 	opacity: 0.5;
 }
+
+.expandicon{
+	height: 30px;
+	width: 30px;
+
+	opacity: 0.5;
+}
+
 
 .navigationdescription{
 	padding-left: 10px;

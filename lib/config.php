@@ -1,5 +1,5 @@
 <?php
-	$config = parse_ini_file('C:\xampp\htdocs\mcs\lib\config.ini');
+	$config = parse_ini_file('config.ini');
 	
 	$ip = "127.0.0.1";
 
