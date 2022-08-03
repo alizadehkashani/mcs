@@ -11,8 +11,6 @@
         <title>Administration</title>   
     </head>
     <body>
-       <div id="administration">
-        <div id="administrationworkspace"></div>
-       </div>
+       <div id="administration"></div>
     </body>
 </html>

@@ -98,7 +98,8 @@ let buildvariablenavigation = async (maincontainer) => {
 	})
 
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
-		console.log("hi");
+		setselectednavigation(createtournamentcontainer);
+		buildworkspacecreatetournament();
 	})
 
 	//icon for create new tournament
@@ -193,6 +194,17 @@ let buildworkspace = () => {
 	})
 }
 
+let getworkspace = () => {
+	let workspace = document.getElementById("administrationworkspace");
+	return workspace;
+}
+
+let clearworkspace = () => {
+	let workspace = getworkspace();
+	workspace.className = "";
+	cleareelement(workspace);
+}
+
 let setselectednavigation = (div) => {
 
 	let currentselected = document.querySelector(".selectednavigation");
@@ -207,8 +219,21 @@ let setselectednavigation = (div) => {
 
 }
 
+let buildworkspacecreatetournament = () => {
+	
+	buildworkspace();
+	clearworkspace();
+	
+	let workspace = getworkspace();
+
+	workspace.classList.add("workspacecreatetournament");
+
+	console.log(workspace);
+
+
+}
+
 DOMready(buildheader);
 DOMready(buildnavigation);
-DOMready(buildworkspace);
 
 DOMready(addEventListeners);

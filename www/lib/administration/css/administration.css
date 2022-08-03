@@ -42,12 +42,11 @@
 
 	display: grid;
 	grid-template-columns: 1fr;
-	/*grid-template-rows: 1fr 1fr;*/
 	grid-auto-rows: auto;
 
 	grid-row-gap: 10px;
 
-	padding: 10px;
+	padding-right: 10px;
 	padding-left: 0px;
 	
 	height: 100%;
@@ -71,13 +70,24 @@
 
 	grid-template-columns: 1fr;
 	grid-auto-rows: 40px;
+
+	padding-top: 10px;
 }
 
 #administrationworkspace{
 	grid-row: 2 / 3;
 	grid-column: 2 / 3;
 
-	padding: 10px;
+	margin: 10px;
+
+	border-radius: 20px;
+
+	background-color: #f2f2f2;
+
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 40px 1fr;
 }
 
 
@@ -143,4 +153,8 @@
 	background-color: var(--mcscolorlight);
 	border-radius: 0px 20px 20px 0px;
 	/*color: var(--mcscolor);*/
+}
+
+.workspacecreatetournament{
+	height: 150px;
 }
