@@ -98,8 +98,11 @@ let buildvariablenavigation = async (maincontainer) => {
 	})
 
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
+		if(iscurrentlyselected(createtournamentcontainer)){return;}
+		
 		setselectednavigation(createtournamentcontainer);
-		buildworkspacecreatetournament();
+		buildworkspacecreatetournament(createtournamentcontainer);
+		
 	})
 
 	//icon for create new tournament
@@ -186,12 +189,36 @@ let buildsettings = () => {
 }
 
 let buildworkspace = () => {
-	
-
-	creatediv({
+	let workspace = creatediv({
 		appendto: document.getElementById("administration"),
 		divid: ["administrationworkspace"] 
 	})
+
+	let workspacehead = creatediv({
+		appendto: workspace,
+		divid: "administrationworkspacehead"
+	})
+
+	creatediv({
+		appendto: workspace,
+		divid: "administrationworkspacebody"
+	})
+
+	let closebuttoncontainer = creatediv({
+		appendto: workspacehead,
+		divid: "administrationworkspaceclosebuttoncontainer"
+	})
+
+	let closeicon = document.createElement("img");
+	closeicon.setAttribute("src", "lib/assets/close.svg");
+	closeicon.classList.add("workspaceicon");
+	closebuttoncontainer.appendChild(closeicon);
+
+	closebuttoncontainer.addEventListener("click", () =>{
+		setinvisivble(workspace);
+		deselectallnavigation();
+	})
+
 }
 
 let getworkspace = () => {
@@ -202,38 +229,54 @@ let getworkspace = () => {
 let clearworkspace = () => {
 	let workspace = getworkspace();
 	workspace.className = "";
-	cleareelement(workspace);
+	//cleareelement(workspace);
 }
 
 let setselectednavigation = (div) => {
 
-	let currentselected = document.querySelector(".selectednavigation");
-		
-	if(currentselected != null){
-		currentselected.classList.remove("selectednavigation");
-		currentselected.classList.add("navigationhover");
-	}
+	deselectallnavigation();
 	
 	div.classList.remove("navigationhover");
 	div.classList.add("selectednavigation");
 
 }
 
-let buildworkspacecreatetournament = () => {
+let deselectallnavigation = () => {
+	let currentselected = document.querySelector(".selectednavigation");
+
+	if(currentselected != null){
+		currentselected.classList.remove("selectednavigation");
+		currentselected.classList.add("navigationhover");
+	}
+}
+
+let iscurrentlyselected = (div) => {
 	
-	buildworkspace();
-	clearworkspace();
+	let currentselected = document.querySelector(".selectednavigation");
+	
+	if(currentselected == null){return false}
+	
+	if(currentselected.isEqualNode(div)){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+let buildworkspacecreatetournament = (clickeddiv) => {
 	
 	let workspace = getworkspace();
 
+	//clearworkspace();
+	
 	workspace.classList.add("workspacecreatetournament");
-
-	console.log(workspace);
-
-
+	
+	setdivisible(workspace, "grid");
+	
 }
 
 DOMready(buildheader);
 DOMready(buildnavigation);
+DOMready(buildworkspace);
 
 DOMready(addEventListeners);

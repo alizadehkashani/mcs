@@ -62,3 +62,19 @@ let creatediv = (argumentsobject) => {
 	
 	return div;
 };
+
+let toggledisplaydiv = (div, displaytype) => {
+	if(div.style.display === ""){
+		div.style.display = displaytype;
+	}else{
+		div.style.display = "";
+	}
+}
+
+let setdivisible = (div, displaytype) => {
+	div.style.display = displaytype;
+}
+
+let setinvisivble = (div) => {
+	div.style.display = "";
+}

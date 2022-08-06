@@ -78,18 +78,58 @@
 	grid-row: 2 / 3;
 	grid-column: 2 / 3;
 
-	margin: 10px;
+	margin: 15px;
+	margin-left: 10px;
+	margin-right: 40px;
 
 	border-radius: 20px;
 
-	background-color: #f2f2f2;
+	background-color: #e0e0e0;
 
-	display: grid;
+	display: none;
 
-	grid-template-columns: 1fr;
+	grid-template-columns: minmax(400px, 1fr);
 	grid-template-rows: 40px 1fr;
 }
 
+#administrationworkspacehead{
+	display: grid;
+
+	grid-template-columns: repeat(10, 40px) 1fr 40px;
+	grid-template-rows: 1fr;
+
+	border-radius: 20px 20px 0px 0px;
+	background-color: #cecece;
+
+	padding: 5px;
+}
+
+#administrationworkspacebody{
+
+}
+
+#administrationworkspaceclosebuttoncontainer{
+	grid-column: 12 / 13;
+	grid-row: 1 / 2;
+}
+
+.workspaceicon{
+	height: 30px;
+	width: 30px;
+
+	opacity: 0.5;
+
+	border-radius: 15px;
+}
+
+.workspaceicon:hover{
+	cursor: pointer;
+	scale: 1.5;
+
+	background-color: #e0e0e0;
+	opacity: 0.6;
+  	transition: 0.3s;
+}
 
 .navigationitem-0{
 	display: grid;
