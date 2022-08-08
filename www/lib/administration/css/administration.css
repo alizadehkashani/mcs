@@ -84,9 +84,9 @@
 
 	border-radius: 20px;
 
-	background-color: #e0e0e0;
-
 	display: none;
+
+	
 
 	grid-template-columns: minmax(400px, 1fr);
 	grid-template-rows: 40px 1fr;
@@ -95,7 +95,7 @@
 #administrationworkspacehead{
 	display: grid;
 
-	grid-template-columns: repeat(10, 40px) 1fr 40px;
+	grid-template-columns: 1fr 40px;
 	grid-template-rows: 1fr;
 
 	border-radius: 20px 20px 0px 0px;
@@ -104,12 +104,23 @@
 	padding: 5px;
 }
 
+#administrationworkspacevariablehead{
+	grid-column: 1 / 2;
+	grid-row: 1 / 2;
+	
+	display: grid;	
+	grid-template-columns: repeat(10, 40px);
+	grid-template-rows: 1fr;
+}
+
 #administrationworkspacebody{
+	background-color: #e0e0e0;
+	border-radius: 0px 0px 20px 20px;
 
 }
 
 #administrationworkspaceclosebuttoncontainer{
-	grid-column: 12 / 13;
+	grid-column: 2 / 3;
 	grid-row: 1 / 2;
 }
 
@@ -117,11 +128,9 @@
 	height: 30px;
 	width: 30px;
 
-	opacity: 0;
+	opacity: 0.5;
 
 	transition: 0.3s;
-
-	background-color: #e0e0e0;
 
 	border-radius: 15px;
 }
@@ -131,8 +140,7 @@
 	scale: 1.5;
 
 	
-	opacity: 1;
-  	
+	opacity: 1;  	
 }
 
 .navigationitem-0{
@@ -200,5 +208,17 @@
 }
 
 .workspacecreatetournament{
-	height: 150px;
+	height: 100px;
+	
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 200px;
+	grid-template-rows: repeat(3, 25px);
+
+	grid-row-gap: 5px;
+	
 }

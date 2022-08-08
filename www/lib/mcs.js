@@ -36,7 +36,12 @@ let cleareelement = (element) => {
 }
 
 let creatediv = (argumentsobject) => {
-	let div = document.createElement("div");
+	
+	if(argumentsobject["type"] !== undefined){
+		var div = document.createElement(argumentsobject["type"]);
+	}else{
+		var div = document.createElement("div");
+	}
 
 	//class
 	if(argumentsobject["divclass"] !== undefined){

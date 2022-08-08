@@ -189,47 +189,71 @@ let buildsettings = () => {
 }
 
 let buildworkspace = () => {
+	//create workspace container
 	let workspace = creatediv({
 		appendto: document.getElementById("administration"),
 		divid: ["administrationworkspace"] 
 	})
 
+	//create worspace head container
 	let workspacehead = creatediv({
 		appendto: workspace,
 		divid: "administrationworkspacehead"
 	})
 
+	//create container for variable head
 	creatediv({
-		appendto: workspace,
-		divid: "administrationworkspacebody"
+		appendto: workspacehead,
+		divid: "administrationworkspacevariablehead"
 	})
 
+	//create container for close button
 	let closebuttoncontainer = creatediv({
 		appendto: workspacehead,
 		divid: "administrationworkspaceclosebuttoncontainer"
 	})
 
+	//add close button
 	let closeicon = document.createElement("img");
 	closeicon.setAttribute("src", "lib/assets/close.svg");
 	closeicon.classList.add("workspaceicon");
 	closebuttoncontainer.appendChild(closeicon);
 
+	//add eventlistner to close button
 	closebuttoncontainer.addEventListener("click", () =>{
 		setinvisivble(workspace);
 		deselectallnavigation();
 	})
 
+	//create body
+	creatediv({
+		appendto: workspace,
+		divid: "administrationworkspacebody"
+	})
+
 }
 
+
+//returns dom element of workspace
 let getworkspace = () => {
 	let workspace = document.getElementById("administrationworkspace");
 	return workspace;
 }
 
+//returns dom element of workspacebody
+let getworkspacebody = () => {
+	let workspacebody = document.getElementById("administrationworkspacebody");
+	return workspacebody;
+}
+
+//clears variable content of workspace
 let clearworkspace = () => {
-	let workspace = getworkspace();
-	workspace.className = "";
-	//cleareelement(workspace);
+	//clear variable header and body
+	clearid("administrationworkspacevariablehead");
+	clearid("administrationworkspacebody");
+
+	//remove classes from workspacebody
+	document.getElementById("administrationworkspacebody").className = "";
 }
 
 let setselectednavigation = (div) => {
@@ -265,13 +289,40 @@ let iscurrentlyselected = (div) => {
 
 let buildworkspacecreatetournament = (clickeddiv) => {
 	
+	//get elements for workspace and workspace body
 	let workspace = getworkspace();
+	let workspacebody = getworkspacebody();
 
-	//clearworkspace();
+	//clear workspace
+	clearworkspace();
 	
-	workspace.classList.add("workspacecreatetournament");
+	//set new workspacebody class
+	workspacebody.classList.add("workspacecreatetournament");
 	
+	//make workspace visible
 	setdivisible(workspace, "grid");
+
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Beschreibung"
+	})
+
+	creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Austragungsort"
+	})
+
+	creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+
+
 	
 }
 

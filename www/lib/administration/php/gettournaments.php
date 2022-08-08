@@ -1,7 +1,10 @@
 <?php
 	require("../../../../lib/dbconfig.php");
 
-	$sql = $dbconnection->prepare("SELECT * FROM tournaments");
+	$active = 1;
+
+	$sql = $dbconnection->prepare("SELECT * FROM tournaments WHERE active = :active");
+	$sql->bindParam(":active", $active);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
