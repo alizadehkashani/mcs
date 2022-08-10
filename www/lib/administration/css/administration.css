@@ -75,6 +75,7 @@
 }
 
 #administrationworkspace{
+		
 	grid-row: 2 / 3;
 	grid-column: 2 / 3;
 
@@ -86,22 +87,38 @@
 
 	display: none;
 
-	
-
 	grid-template-columns: minmax(400px, 1fr);
-	grid-template-rows: 40px 1fr;
+	grid-template-rows: auto auto auto 1fr;
+	
 }
 
 #administrationworkspacehead{
+	/*height: 40px;*/
+	height: 40px;
+	
 	display: grid;
 
 	grid-template-columns: 1fr 40px;
 	grid-template-rows: 1fr;
 
 	border-radius: 20px 20px 0px 0px;
+	
 	background-color: #cecece;
 
 	padding: 5px;
+}
+
+#administrationworkspacefoot{
+	height: 40px;
+	border-radius: 0px 0px 20px 20px;
+	background-color: #e0e0e0;
+
+	padding: 5px;
+
+	display: grid;
+
+	grid-template-columns: 1fr 40px;
+	grid-template-rows: 1fr;
 }
 
 #administrationworkspacevariablehead{
@@ -115,11 +132,14 @@
 
 #administrationworkspacebody{
 	background-color: #e0e0e0;
-	border-radius: 0px 0px 20px 20px;
-
 }
 
 #administrationworkspaceclosebuttoncontainer{
+	grid-column: 2 / 3;
+	grid-row: 1 / 2;
+}
+
+#administrationworkspacedonecontainer{
 	grid-column: 2 / 3;
 	grid-row: 1 / 2;
 }
@@ -137,10 +157,14 @@
 
 .workspaceicon:hover{
 	cursor: pointer;
-	scale: 1.5;
-
-	
+		
 	opacity: 1;  	
+}
+
+.workspaceicon:active{
+	background-color: var(--mcscolorlight);	
+	opacity: 1;  
+	transition: 0s;	
 }
 
 .navigationitem-0{
@@ -221,4 +245,17 @@
 
 	grid-row-gap: 5px;
 	
+}
+
+.createbutton{
+	background-color: var(--mcscolorlight);
+	border-radius: 20px;
+	padding-left: 10px;
+	padding-top: 3px;
+
+}
+
+.createtournamentbutton{
+	grid-column: 2 / 3;
+	grid-row: 3 / 4;
 }

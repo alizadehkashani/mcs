@@ -230,7 +230,12 @@ let buildworkspace = () => {
 		appendto: workspace,
 		divid: "administrationworkspacebody"
 	})
-
+	
+	//creat foot
+	creatediv({
+		appendto: workspace,
+		divid: "administrationworkspacefoot"
+	})
 }
 
 
@@ -246,11 +251,19 @@ let getworkspacebody = () => {
 	return workspacebody;
 }
 
+//returns dom element of workspacefoot
+let getworkspacefoot = () => {
+	let workspacefoot = document.getElementById("administrationworkspacefoot");
+	return workspacefoot
+}
+
 //clears variable content of workspace
 let clearworkspace = () => {
 	//clear variable header and body
 	clearid("administrationworkspacevariablehead");
 	clearid("administrationworkspacebody");
+	clearid("administrationworkspacefoot");
+
 
 	//remove classes from workspacebody
 	document.getElementById("administrationworkspacebody").className = "";
@@ -292,38 +305,88 @@ let buildworkspacecreatetournament = (clickeddiv) => {
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
 	let workspacebody = getworkspacebody();
+	let workspacefoot = getworkspacefoot();
 
 	//clear workspace
 	clearworkspace();
 	
+	//set workspace width
+	workspace.style.width = "600px";
+
 	//set new workspacebody class
 	workspacebody.classList.add("workspacecreatetournament");
 	
 	//make workspace visible
 	setdivisible(workspace, "grid");
-
+	
+	
+	//div for description off tournmanet description button
 	creatediv({
 		appendto: workspacebody,
 		divtext: "Beschreibung"
 	})
 
-	creatediv({
+	//input for tournament description
+	let tournamentdescriptioninput = creatediv({
 		type: "INPUT",
 		appendto: workspacebody
 	})
 
+	//description for tournament location input
 	creatediv({
 		appendto: workspacebody,
 		divtext: "Austragungsort"
 	})
 
-	creatediv({
+	//input for tournamentlocationinput
+	let tournamentlocationinput = creatediv({
 		type: "INPUT",
 		appendto: workspacebody
 	})
-
-
 	
+	//create container for close button
+	let donebuttoncontainer = creatediv({
+		appendto: workspacefoot,
+		divid: "administrationworkspacedonecontainer"
+	})
+
+	//add close button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	//add eventlistner to close button
+	donebuttoncontainer.addEventListener("click", () =>{
+		createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
+	})
+
+
+}
+
+let createnewtournament = async (description, location) => {
+	if(description.value == "" || location.value == ""){
+		alert("Bitte Beschreibung sowie Austragungsort angeben");
+		return;
+	}
+	
+	let postdata = {description: description.value, location: location.value};
+
+	let response = await fetch("/lib/administration/php/createtournament.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		  },
+		body: JSON.stringify(postdata)
+	});
+	
+	let phpresponse = await response.json();
+
+	if(phpresponse["result"] == 0){
+		description.value = "";
+		location.value = "";
+	}
 }
 
 DOMready(buildheader);
