@@ -48,15 +48,28 @@ let buildvariablenavigation = async (maincontainer) => {
 			divclass: ["navigationitem-0", "navigationhover"],
 			appendto: navigationvariablecontainer
 		})
+				
+		let expandcontainer = creatediv({
+			appendto: tournament
+		})
+		expandcontainer.style.height = "20px";
+		expandcontainer.style.width = "20px";
+		expandcontainer.setAttribute("data-state", "collapsed");
 		
-		let expandicon = document.createElement("img");
-		expandicon.setAttribute("src", "lib/administration/assets/collapsed.svg");
-		expandicon.classList.add("expandicon");
-		expandicon.setAttribute("data-state", "collapsed");
-		tournament.appendChild(expandicon);
 
-		expandicon.addEventListener("click", () => {
-			expandcollapseicon(expandicon)
+		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvg.setAttribute("viewBox", "0 0 20 20");
+		polygonsvg.setAttribute("height", "20px");
+		polygonsvg.setAttribute("width", "20px");
+		expandcontainer.appendChild(polygonsvg);
+
+		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygon.setAttribute("points", "8,5 13,10 8,15");
+		polygon.setAttribute("fill", "#5f6368");	
+		polygonsvg.appendChild(polygon);
+		
+		polygonsvg.addEventListener("click", () => {
+			expandcollapseicon(expandcontainer, polygon)
 		})
 
 		let tournamenticonanddescription = creatediv({
@@ -120,21 +133,19 @@ let buildvariablenavigation = async (maincontainer) => {
 
 }
 
-let expandcollapseicon = (node) => {
+let expandcollapseicon = (container, polygon) => {
 
-	let state = node.getAttribute("data-state");
+	let state = container.getAttribute("data-state");
 	
 	if(state == "collapsed"){
-		node.setAttribute("data-state", "expanded")
-		node.setAttribute("src", "lib/administration/assets/expanded.svg");
+		container.setAttribute("data-state", "expanded")
+		polygon.setAttribute("points", "5,8 10,13 15,8");
 
 	}else{
-		node.setAttribute("data-state", "collapsed")
-		node.setAttribute("src", "lib/administration/assets/collapsed.svg");
+		container.setAttribute("data-state", "collapsed")
+		polygon.setAttribute("points", "8,5 13,10 8,15");
 	}
 	
-	console.log(state);
-
 }
 
 let gettournaments = async () => {
@@ -386,6 +397,7 @@ let createnewtournament = async (description, location) => {
 	if(phpresponse["result"] == 0){
 		description.value = "";
 		location.value = "";
+		alert(phpresponse["message"]);
 	}
 }
 
