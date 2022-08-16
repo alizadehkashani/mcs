@@ -96,7 +96,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", () => {
 			setselectednavigation(tournament);
-			buildtournament();
+			buildtournament(tournaments[i]["id"]);
 		})
 
 		//add icon to tournament
@@ -424,8 +424,10 @@ let createnewtournament = async (description, location) => {
 	}
 }
 
-let buildtournament = async() => {
-	console.log('tournmanet clicked');
+let buildtournament = async(id) => {
+	console.log('tournmanet clicked: ');
+	console.log(id);
+	
 }
 
 DOMready(buildheader);
