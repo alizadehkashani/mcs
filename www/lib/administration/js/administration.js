@@ -179,6 +179,23 @@ let gettournaments = async () => {
 	return tournaments;
 }
 
+let gettournament = async (tournmanetid) => {
+	let requestdata = {tournmanetid: tournmanetid};
+
+	let reponse = await fetch("/lib/administration/php/gettournament.php", {
+		method: 'POST',
+		headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+		body: JSON.stringify(requestdata)
+	});
+
+	let phpresponse = await reponse.json();
+
+	return phpresponse;
+}
+
 let buildconstantnavigation = (maincontainer) => {
 	
 	//create container for constant navigation
@@ -428,6 +445,7 @@ let buildtournament = async(id) => {
 	console.log('tournmanet clicked: ');
 	console.log(id);
 	
+	gettournament(id);
 }
 
 DOMready(buildheader);
