@@ -96,7 +96,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", () => {
 			setselectednavigation(tournament);
-			buildtournament(tournaments[i]["id"]);
+			buildworkspaceviewtournament(tournaments[i]["id"]);
 		})
 
 		//add icon to tournament
@@ -302,6 +302,13 @@ let getworkspacebody = () => {
 	return workspacebody;
 }
 
+//returns dom element of workspacebody
+let getworkspaceheadvariable = () => {
+	let workspaceheadvariable = document.getElementById("administrationworkspacevariablehead");
+	return workspaceheadvariable;
+}
+
+
 //returns dom element of workspacefoot
 let getworkspacefoot = () => {
 	let workspacefoot = document.getElementById("administrationworkspacefoot");
@@ -314,7 +321,6 @@ let clearworkspace = () => {
 	clearid("administrationworkspacevariablehead");
 	clearid("administrationworkspacebody");
 	clearid("administrationworkspacefoot");
-
 
 	//remove classes from workspacebody
 	document.getElementById("administrationworkspacebody").className = "";
@@ -441,11 +447,42 @@ let createnewtournament = async (description, location) => {
 	}
 }
 
-let buildtournament = async(id) => {
-	console.log('tournmanet clicked: ');
-	console.log(id);
+let buildworkspaceviewtournament = async (id) => {
+	let tournamentinformation = await gettournament(id);
+
+	console.log(tournamentinformation);
+
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+	let workspacebody = getworkspacebody();
+	let workspacefoot = getworkspacefoot();
+	let workspaceheadvariable = getworkspaceheadvariable();
+
+	//clear workspace
+	clearworkspace();
+
 	
-	gettournament(id);
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	setdivisible(workspace, "grid");
+
+	//create icon for tournament archive
+	let archiveicon = document.createElement("img");
+	archiveicon.setAttribute("src", "lib/assets/archive.svg");
+	archiveicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(archiveicon);
+
+	//create icon for tournament deletion
+	let deleteicon = document.createElement("img");
+	deleteicon.setAttribute("src", "lib/assets/delete.svg");
+	deleteicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(deleteicon);
+
+
+
+
 }
 
 DOMready(buildheader);
