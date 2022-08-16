@@ -2,14 +2,19 @@ let addEventListeners = () => {
 
 }
 
+//create header for main container
 let buildheader = () => {
+
+	//get main container
 	let administrationcontainer = document.getElementById("administration");
 
+	//create new container for headline text
 	let headercontainer = creatediv({
 		divid: "headcontainer",
 		appendto: administrationcontainer
 	})
 
+	//create new div and set text
 	creatediv({
 		divid: "mcstext",
 		appendto: headercontainer,
@@ -17,14 +22,19 @@ let buildheader = () => {
 	})
 }
 
+//triggers creation for main navigation
 let buildnavigation = () => {
+	
+	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
 	
+	//create new container for navigation
 	let navigationcontainer = creatediv({
 		divid: "navigationcontainer",
 		appendto: administrationcontainer
 	})
 
+	//trigger creation of variable navigation and constant navigation
 	buildvariablenavigation(navigationcontainer);
 	buildconstantnavigation(navigationcontainer);
 
@@ -44,11 +54,14 @@ let buildvariablenavigation = async (maincontainer) => {
 
 	//create a new row for each tournament
 	for(let i = 0; i < tournaments.length; i++){
+
+		//create container for tournament
 		let tournament = creatediv({
 			divclass: ["navigationitem-0", "navigationhover"],
 			appendto: navigationvariablecontainer
 		})
 				
+		//create container for expand/collapse control
 		let expandcontainer = creatediv({
 			appendto: tournament
 		})
@@ -56,37 +69,43 @@ let buildvariablenavigation = async (maincontainer) => {
 		expandcontainer.style.width = "20px";
 		expandcontainer.setAttribute("data-state", "collapsed");
 		
-
+		//create svg for expand/collapse control
 		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
 		polygonsvg.setAttribute("viewBox", "0 0 20 20");
 		polygonsvg.setAttribute("height", "20px");
 		polygonsvg.setAttribute("width", "20px");
 		expandcontainer.appendChild(polygonsvg);
 
+		//create new triangle
 		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
 		polygon.setAttribute("points", "8,5 13,10 8,15");
 		polygon.setAttribute("fill", "#5f6368");	
 		polygonsvg.appendChild(polygon);
 		
+		//add event listener for expand/collapse control
 		polygonsvg.addEventListener("click", () => {
 			expandcollapseicon(expandcontainer, polygon)
 		})
 
+		// add tournament description icon container
 		let tournamenticonanddescription = creatediv({
 			divclass: ["navigation-icon-description", "navigationitemhover"],
 			appendto: tournament
 		})
 
+		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", () => {
 			setselectednavigation(tournament);
+			buildtournament();
 		})
 
-
+		//add icon to tournament
 		let tournamenticon = document.createElement("img");
 		tournamenticon.setAttribute("src", "lib/administration/assets/tournament.svg");
 		tournamenticon.classList.add("navigationicon");
 		tournamenticonanddescription.appendChild(tournamenticon);
 
+		//add tournament name
 		creatediv({
 			divtext: tournaments[i]["description"],
 			divclass: ["flexleft", "navigationdescription"],
@@ -133,10 +152,13 @@ let buildvariablenavigation = async (maincontainer) => {
 
 }
 
+//changes the triangle if item is expanded/collapsed
 let expandcollapseicon = (container, polygon) => {
 
+	//get state from container
 	let state = container.getAttribute("data-state");
 	
+	//set new triangle accordingly
 	if(state == "collapsed"){
 		container.setAttribute("data-state", "expanded")
 		polygon.setAttribute("points", "5,8 10,13 15,8");
@@ -148,6 +170,7 @@ let expandcollapseicon = (container, polygon) => {
 	
 }
 
+//get tournaments from database
 let gettournaments = async () => {
 	let response = await fetch("/lib/administration/php/gettournaments.php");
 
@@ -399,6 +422,10 @@ let createnewtournament = async (description, location) => {
 		location.value = "";
 		alert(phpresponse["message"]);
 	}
+}
+
+let buildtournament = async() => {
+	console.log('tournmanet clicked');
 }
 
 DOMready(buildheader);
