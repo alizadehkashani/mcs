@@ -332,6 +332,13 @@ let clearworkspacebody = () => {
 	document.getElementById("administrationworkspacebody").className = "";
 }
 
+let clearworkspacefoot = () => {
+	clearid("administrationworkspacefoot");
+
+	//remove classes from workspacebody
+	document.getElementById("administrationworkspacefoot").className = "";
+}
+
 let setselectednavigation = (div) => {
 
 	deselectallnavigation();
@@ -513,7 +520,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	clubconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(clubconfig);
 	clubconfig.addEventListener("click", () => {
-		
+		buildworkspaceclubinformation(id);
 	})
 
 	//create icon for player configuration
@@ -547,15 +554,18 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 	//get tournament information from database
 	let tournamentinformation = await gettournament(id);
 
+	//get workspace foot
 	let workspacefoot = getworkspacefoot();
 
-	clearworkspacebody();
-	
+	//get workspace body
 	let workspacebody = getworkspacebody();
-
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//add class to workspace body
 	workspacebody.classList.add("workspaceviewtournamentinformation");
-
-	console.log(tournamentinformation);
 
 	//div for description off tournmanet description button
 	creatediv({
@@ -600,6 +610,36 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
 	})
 
+}
+
+let buildworkspaceclubinformation = async (tid) => {
+	
+	console.log(tid);
+
+	//clear workspace boody and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+
+	let workspacebody = getworkspacebody();
+	
+	let clubs = getclubs(tid);
+} 
+
+let getclubs = async (tid) => {
+	let requestdata = {tid: tid};
+
+	let phpresponse = await fetch("/lib/administration/php/getclubs.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	return response;
 }
 
 DOMready(buildheader);
