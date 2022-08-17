@@ -96,7 +96,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", () => {
 			setselectednavigation(tournament);
-			buildworkspaceviewtournament(tournaments[i]["id"]);
+			buildworkspaceviewtournament(tournaments[i]["tid"]);
 		})
 
 		//add icon to tournament
@@ -326,6 +326,13 @@ let clearworkspace = () => {
 	document.getElementById("administrationworkspacebody").className = "";
 }
 
+let clearworkspacebody = () => {
+	clearid("administrationworkspacebody");
+
+	//remove classes from workspacebody
+	document.getElementById("administrationworkspacebody").className = "";
+}
+
 let setselectednavigation = (div) => {
 
 	deselectallnavigation();
@@ -380,7 +387,7 @@ let buildworkspacecreatetournament = (clickeddiv) => {
 	//div for description off tournmanet description button
 	creatediv({
 		appendto: workspacebody,
-		divtext: "Beschreibung"
+		divtext: "Name"
 	})
 
 	//input for tournament description
@@ -447,10 +454,31 @@ let createnewtournament = async (description, location) => {
 	}
 }
 
-let buildworkspaceviewtournament = async (id) => {
-	let tournamentinformation = await gettournament(id);
+let updatetournament = async (tid, description, location) => {
+	let postdata = {
+		tid: tid,
+		description: description.value, 
+		location: location.value
+	};
 
-	console.log(tournamentinformation);
+	console.log(postdata);
+
+	let response = await fetch("/lib/administration/php/updatetournament.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		  },
+		body: JSON.stringify(postdata)
+	});
+
+	let phpresponse = await response.json();
+
+}
+
+let buildworkspaceviewtournament = async (id) => {
+	
+	console.log(id);
 
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -460,13 +488,21 @@ let buildworkspaceviewtournament = async (id) => {
 
 	//clear workspace
 	clearworkspace();
-
 	
 	//remove width limit
 	workspace.style.width = "";
 
 	//make workspace visible
 	setdivisible(workspace, "grid");
+
+	//create icon for tournament information
+	let tournamentinformationicon = document.createElement("img");
+	tournamentinformationicon.setAttribute("src", "lib/assets/tournamentinfo.svg");
+	tournamentinformationicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(tournamentinformationicon);
+	tournamentinformationicon.addEventListener("click", () => {
+		buildworkspacetournamentinformation(id);
+	})
 
 	//create icon for tournament archive
 	let archiveicon = document.createElement("img");
@@ -476,12 +512,71 @@ let buildworkspaceviewtournament = async (id) => {
 
 	//create icon for tournament deletion
 	let deleteicon = document.createElement("img");
-	deleteicon.setAttribute("src", "lib/assets/delete.svg");
+	deleteicon.setAttribute("src", "lib/assets/deletetournament.svg");
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
 
 
+	buildworkspacetournamentinformation(id)
 
+}
+
+let buildworkspacetournamentinformation = async (id) => {
+	//get tournament information from database
+	let tournamentinformation = await gettournament(id);
+
+	let workspacefoot = getworkspacefoot();
+
+	clearworkspacebody();
+	
+	let workspacebody = getworkspacebody();
+
+	workspacebody.classList.add("workspaceviewtournamentinformation");
+
+	console.log(tournamentinformation);
+
+	//div for description off tournmanet description button
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Name"
+	})
+
+	//input for tournament name
+	let tournamentnameinput = creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+	tournamentnameinput.value = tournamentinformation[0]["description"];
+
+	//description for tournament location input
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Austragungsort"
+	})
+
+	//input for tournamentlocationinput
+	let tournamentlocationinput = creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+	tournamentlocationinput.value = tournamentinformation[0]["location"];
+
+	//create container for close button
+	let donebuttoncontainer = creatediv({
+		appendto: workspacefoot,
+		divid: "administrationworkspacedonecontainer"
+	})
+	
+	//add close button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	//add eventlistner to close button
+	donebuttoncontainer.addEventListener("click", () =>{
+		updatetournament(id, tournamentnameinput, tournamentlocationinput);
+	})
 
 }
 

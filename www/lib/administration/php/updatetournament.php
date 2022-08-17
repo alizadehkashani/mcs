@@ -6,21 +6,26 @@
 
 	$response = [];
 
-	$active = 1;
-	
 	$query = "
-		INSERT INTO tournaments (description, location, active)
-		VALUES (:description, :location, :active)
+		UPDATE tournaments
+		SET description = :description, location = :location
+		WHERE tid = :tid
 	";
-	
+
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":description", $data["description"]);
 	$sql->bindParam(":location", $data["location"]);
-	$sql->bindParam(":active", $active);
+	$sql->bindParam(":tid", $data["tid"]);
 	$sql->execute();
 	
 	$response["result"] = 0;
-	$response["message"] = "Tournament created";
+	$response["message"] = "Tournament changed";
+	
+	//echo(json_encode($response));
 
-	echo(json_encode($response));
+	echo($data["description"]);
+	echo($data["location"]);
+	echo($data["tid"]);
+	//var_dump($query);
+
 ?>

@@ -252,6 +252,21 @@
 	
 }
 
+.workspaceviewtournamentinformation{
+	height: 100px;
+	
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 200px;
+	grid-template-rows: repeat(3, 25px);
+
+	grid-row-gap: 5px;
+}
+
 .createbutton{
 	background-color: var(--mcscolorlight);
 	border-radius: 20px;
