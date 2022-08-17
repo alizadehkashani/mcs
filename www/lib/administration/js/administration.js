@@ -129,10 +129,24 @@ let buildvariablenavigation = async (maincontainer) => {
 	})
 
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
+		
+		//---------------------------------------------------------------------------
+		if(document.getElementById("modal-create-tournament") == undefined){
+			buildmodalcreatetournament();
+		}else{
+			setmodalvisible(document.getElementById("modal-create-tournament"))
+		}
+		//---------------------------------------------------------------------------
+
+		//if create tournament was already clicked, do nothing
 		if(iscurrentlyselected(createtournamentcontainer)){return;}
 		
+		//set create tournamnt as selected button
 		setselectednavigation(createtournamentcontainer);
+		
+		//build workspace to create new tournmant
 		buildworkspacecreatetournament(createtournamentcontainer);
+
 		
 	})
 
@@ -271,7 +285,7 @@ let buildworkspace = () => {
 
 	//add eventlistner to close button
 	closebuttoncontainer.addEventListener("click", () =>{
-		setinvisivble(workspace);
+		setdivinvisivble(workspace);
 		deselectallnavigation();
 	})
 
@@ -387,7 +401,7 @@ let buildworkspacecreatetournament = (clickeddiv) => {
 	workspacebody.classList.add("workspacecreatetournament");
 	
 	//make workspace visible
-	setdivisible(workspace, "grid");
+	setdivisible(workspace);
 	
 	
 	//div for description off tournmanet description button
@@ -503,7 +517,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	workspace.style.width = "";
 
 	//make workspace visible
-	setdivisible(workspace, "grid");
+	setdivisible(workspace);
 
 	//create icon for tournament information
 	let tournamentinformationicon = document.createElement("img");
@@ -640,6 +654,54 @@ let getclubs = async (tid) => {
 	let response = await phpresponse.json();
 
 	return response;
+}
+
+let buildmodalcreatetournament = () => {
+	//get main administration container
+	let administrationcontainer = document.getElementById("administration");
+
+	//create modal container
+	let modalcontainer = creatediv({
+		appendto: administrationcontainer,
+		divclass: ["modal"],
+		divid: "modal-create-tournament"
+	})
+
+	//create modal head 
+	let modalhead = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-head"],
+	})
+
+	//create modal label
+	let modallabel = creatediv({
+		appendto: modalhead,
+		divclass: ["flexleft"],
+		divtext: "Turnier anlegen"
+	})
+
+	//create close button
+	let closeicon = document.createElement("img");
+	closeicon.setAttribute("src", "lib/assets/close.svg");
+	closeicon.classList.add("workspaceicon");
+	modalhead.appendChild(closeicon);
+
+	closeicon.addEventListener("click", () => {
+		setmodalinvisivble(modalcontainer);
+	});
+
+	//create modal body
+	let modalbody = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-body"],
+		divid: "modal-create-tournament-body"
+	})
+
+	//create modal foot
+	let modalfoot = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-foot"],
+	})
 }
 
 DOMready(buildheader);

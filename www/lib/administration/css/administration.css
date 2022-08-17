@@ -75,7 +75,8 @@
 }
 
 #administrationworkspace{
-		
+	transform: scale(0);	
+
 	grid-row: 2 / 3;
 	grid-column: 2 / 3;
 
@@ -86,7 +87,7 @@
 
 	border-radius: 20px;
 
-	display: none;
+	display: grid;
 
 	grid-template-columns: minmax(600px, 1fr);
 	grid-template-rows: auto auto auto 1fr;
@@ -94,7 +95,7 @@
 }
 
 #administrationworkspacehead{
-	/*height: 40px;*/
+
 	height: 30px;
 	
 	display: grid;
@@ -278,4 +279,78 @@
 .createtournamentbutton{
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
+}
+
+.modal{
+	position: fixed;
+	
+	z-index: 10;
+
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	
+	background-color: #e0e0e0;
+
+	border-radius: 20px;
+
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+
+}
+
+.modal-head{
+	height: 30px;
+	
+	display: flex;
+	justify-content: space-between;
+
+	border-radius: 20px 20px 0px 0px;
+	
+	background-color: #cecece;
+		
+	padding: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+	
+}
+
+.modal-body{
+
+}
+
+.modal-foot{
+	height: 30px;
+	border-radius: 0px 0px 20px 20px;
+	background-color: #e0e0e0;
+
+	padding: 5px;
+	padding-left: 10px;
+	padding-bottom: 10px;
+	padding-top: 10px;
+}
+
+#modal-create-tournament{
+	width: 600px;
+	height: 220px;
+}
+
+#modal-create-tournament-body{
+	height: 100px;
+	
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 200px;
+	grid-template-rows: repeat(3, 25px);
+
+	grid-row-gap: 5px;
+
+	
+
 }

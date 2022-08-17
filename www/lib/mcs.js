@@ -76,10 +76,8 @@ let toggledisplaydiv = (div, displaytype) => {
 	}
 }
 
-let setdivisible = (div, displaytype) => {
-	div.style.display = displaytype;
-}
+let setdivisible = (div) => {div.style.transform = "scale(1)"}
+let setmodalvisible = (div) => {div.style.transform = "translate(-50%, -50%) scale(1)"}
 
-let setinvisivble = (div) => {
-	div.style.display = "";
-}
+let setdivinvisivble = (div) => {div.style.transform = "scale(0)"}
+let setmodalinvisivble = (div) => {div.style.transform = "translate(-50%, -50%) scale(0)"}
