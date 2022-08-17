@@ -21,11 +21,6 @@
 	$response["result"] = 0;
 	$response["message"] = "Tournament changed";
 	
-	//echo(json_encode($response));
-
-	echo($data["description"]);
-	echo($data["location"]);
-	echo($data["tid"]);
-	//var_dump($query);
+	echo(json_encode($response));
 
 ?>

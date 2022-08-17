@@ -92,26 +92,25 @@ let buildvariablenavigation = async (maincontainer) => {
 			divclass: ["navigation-icon-description", "navigationitemhover"],
 			appendto: tournament
 		})
-
-		//add event lisnter if tournmant is selected
-		tournamenticonanddescription.addEventListener("click", () => {
-			setselectednavigation(tournament);
-			buildworkspaceviewtournament(tournaments[i]["tid"]);
-		})
-
+		
 		//add icon to tournament
 		let tournamenticon = document.createElement("img");
 		tournamenticon.setAttribute("src", "lib/administration/assets/tournament.svg");
 		tournamenticon.classList.add("navigationicon");
 		tournamenticonanddescription.appendChild(tournamenticon);
-
+		
 		//add tournament name
-		creatediv({
+		let tournamentname = creatediv({
 			divtext: tournaments[i]["description"],
 			divclass: ["flexleft", "navigationdescription"],
 			appendto: tournamenticonanddescription
 		})
-
+		
+		//add event lisnter if tournmant is selected
+		tournamenticonanddescription.addEventListener("click", () => {
+			setselectednavigation(tournament);
+			buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
+		})
 	}
 
 	//add create tournament
@@ -454,7 +453,7 @@ let createnewtournament = async (description, location) => {
 	}
 }
 
-let updatetournament = async (tid, description, location) => {
+let updatetournament = async (tid, description, location, tournamentnamediv) => {
 	let postdata = {
 		tid: tid,
 		description: description.value, 
@@ -474,12 +473,16 @@ let updatetournament = async (tid, description, location) => {
 
 	let phpresponse = await response.json();
 
+	console.log(phpresponse);
+
+	if(phpresponse["result"] == 0){
+		tournamentnamediv.innerText = description.value;
+	}
+
 }
 
-let buildworkspaceviewtournament = async (id) => {
+let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	
-	console.log(id);
-
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
 	let workspacebody = getworkspacebody();
@@ -501,7 +504,25 @@ let buildworkspaceviewtournament = async (id) => {
 	tournamentinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", () => {
-		buildworkspacetournamentinformation(id);
+		buildworkspacetournamentinformation(id, tournamentnamediv);
+	})
+
+	//create icon for club configuration
+	let clubconfig = document.createElement("img");
+	clubconfig.setAttribute("src", "lib/assets/club.svg");
+	clubconfig.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(clubconfig);
+	clubconfig.addEventListener("click", () => {
+		
+	})
+
+	//create icon for player configuration
+	let playerconfig = document.createElement("img");
+	playerconfig.setAttribute("src", "lib/assets/player.svg");
+	playerconfig.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(playerconfig);
+	playerconfig.addEventListener("click", () => {
+		
 	})
 
 	//create icon for tournament archive
@@ -516,12 +537,13 @@ let buildworkspaceviewtournament = async (id) => {
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
 
-
-	buildworkspacetournamentinformation(id)
+	//build standard view, tournament information
+	buildworkspacetournamentinformation(id, tournamentnamediv);
 
 }
 
-let buildworkspacetournamentinformation = async (id) => {
+let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
+		
 	//get tournament information from database
 	let tournamentinformation = await gettournament(id);
 
@@ -575,7 +597,7 @@ let buildworkspacetournamentinformation = async (id) => {
 
 	//add eventlistner to close button
 	donebuttoncontainer.addEventListener("click", () =>{
-		updatetournament(id, tournamentnameinput, tournamentlocationinput);
+		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
 	})
 
 }
