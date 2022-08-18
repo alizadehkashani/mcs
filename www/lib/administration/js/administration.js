@@ -131,22 +131,23 @@ let buildvariablenavigation = async (maincontainer) => {
 	//add event listner to create new tournament button
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
 		
+		/*
 		//if create tournament was already clicked, do nothing
 		if(iscurrentlyselected(createtournamentcontainer)){return;}
 		
 		//set create tournamnt as selected button
 		setselectednavigation(createtournamentcontainer);
+		*/
 
 		//---------------------------------------------------------------------------
 		if(document.getElementById("modal-create-tournament") == undefined){
 			buildmodalcreatetournament();
 		}else{
 			changeelementvisibility(document.getElementById("modal-create-tournament"), true, true);
+			toggleoverlay(true);
 		}
 		//---------------------------------------------------------------------------
 		
-		//build workspace to create new tournmant
-		buildworkspacecreatetournament(createtournamentcontainer);		
 	})
 
 	//icon for create new tournament
@@ -383,69 +384,6 @@ let iscurrentlyselected = (div) => {
 	}
 }
 
-let buildworkspacecreatetournament = (clickeddiv) => {
-	
-	//get elements for workspace and workspace body
-	let workspace = getworkspace();
-	let workspacebody = getworkspacebody();
-	let workspacefoot = getworkspacefoot();
-
-	//clear workspace
-	clearworkspace();
-	
-	//set workspace width
-	workspace.style.width = "600px";
-
-	//set new workspacebody class
-	workspacebody.classList.add("workspacecreatetournament");
-	
-	//make workspace visible
-	changeelementvisibility(workspace, true, false);
-	
-	//div for description off tournmanet description button
-	creatediv({
-		appendto: workspacebody,
-		divtext: "Name"
-	})
-
-	//input for tournament description
-	let tournamentdescriptioninput = creatediv({
-		type: "INPUT",
-		appendto: workspacebody
-	})
-
-	//description for tournament location input
-	creatediv({
-		appendto: workspacebody,
-		divtext: "Austragungsort"
-	})
-
-	//input for tournamentlocationinput
-	let tournamentlocationinput = creatediv({
-		type: "INPUT",
-		appendto: workspacebody
-	})
-	
-	//create container for close button
-	let donebuttoncontainer = creatediv({
-		appendto: workspacefoot,
-		divid: "administrationworkspacedonecontainer"
-	})
-
-	//add close button
-	let doneicon = document.createElement("img");
-	doneicon.setAttribute("src", "lib/assets/done.svg");
-	doneicon.classList.add("workspaceicon");
-	donebuttoncontainer.appendChild(doneicon);
-
-	//add eventlistner to close button
-	donebuttoncontainer.addEventListener("click", () =>{
-		createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
-	})
-
-
-}
-
 let createnewtournament = async (description, location) => {
 	if(description.value == "" || location.value == ""){
 		alert("Bitte Beschreibung sowie Austragungsort angeben");
@@ -469,7 +407,11 @@ let createnewtournament = async (description, location) => {
 		description.value = "";
 		location.value = "";
 		alert(phpresponse["message"]);
+	}else{
+		alert("error");
 	}
+
+
 }
 
 let updatetournament = async (tid, description, location, tournamentnamediv) => {
@@ -687,7 +629,7 @@ let buildmodalcreatetournament = () => {
 	//make modal invsible
 	closeicon.addEventListener("click", () => {
 		changeelementvisibility(modalcontainer, false, true);
-		deselectallnavigation();
+		toggleoverlay(false);
 	});
 
 	//create modal body
@@ -697,11 +639,54 @@ let buildmodalcreatetournament = () => {
 		divid: "modal-create-tournament-body"
 	})
 
+	//div for description off tournmanet description button
+	creatediv({
+		divtext: "Name",
+		appendto: modalbody
+	})
+
+	//input for tournament description
+	let tournamentdescriptioninput = creatediv({
+		type: "INPUT",
+		appendto: modalbody
+	})
+
+	//description for tournament location input
+	creatediv({
+		divtext: "Austragungsort",
+		appendto: modalbody
+	})
+
+	//input for tournamentlocationinput
+	let tournamentlocationinput = creatediv({
+		type: "INPUT",
+		appendto: modalbody
+	})
+
 	//create modal foot
 	let modalfoot = creatediv({
 		appendto: modalcontainer,
 		divclass: ["modal-foot"],
 	})
+
+	//create container for close button
+	let donebuttoncontainer = creatediv({
+		appendto: modalfoot,
+	})
+
+	//add close button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	//add eventlistner to close button
+	donebuttoncontainer.addEventListener("click", () =>{
+		createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
+	})
+
+	
+	toggleoverlay(true);
 }
 
 DOMready(buildheader);

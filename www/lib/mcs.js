@@ -91,3 +91,15 @@ let changeelementvisibility = (div, visible, ismodal) => {
 		}
 	}
 }
+
+let toggleoverlay = (active) => {
+	
+	let overlay = document.getElementById("overlay");
+
+	if(active){
+		overlay.classList.add("active");
+	}else{
+		overlay.classList.remove("active");
+	}
+
+}
