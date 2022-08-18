@@ -13,4 +13,5 @@
     <body>
        <div id="administration"></div>
     </body>
+    <div id="overlay"></div>
 </html>

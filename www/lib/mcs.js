@@ -76,8 +76,18 @@ let toggledisplaydiv = (div, displaytype) => {
 	}
 }
 
-let setdivisible = (div) => {div.style.transform = "scale(1)"}
-let setmodalvisible = (div) => {div.style.transform = "translate(-50%, -50%) scale(1)"}
-
-let setdivinvisivble = (div) => {div.style.transform = "scale(0)"}
-let setmodalinvisivble = (div) => {div.style.transform = "translate(-50%, -50%) scale(0)"}
+let changeelementvisibility = (div, visible, ismodal) => {
+	if(visible){
+		if(ismodal){
+			div.style.transform = "translate(-50%, -50%) scale(1)";
+		}else{
+			div.style.transform = "scale(1)";
+		}
+	}else{
+		if(ismodal){
+			div.style.transform = "translate(-50%, -50%) scale(0)";
+		}else{
+			div.style.transform = "scale(0)";
+		}
+	}
+}

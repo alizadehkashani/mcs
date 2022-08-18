@@ -128,26 +128,25 @@ let buildvariablenavigation = async (maincontainer) => {
 		appendto: createtournamentcontainer
 	})
 
+	//add event listner to create new tournament button
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
 		
-		//---------------------------------------------------------------------------
-		if(document.getElementById("modal-create-tournament") == undefined){
-			buildmodalcreatetournament();
-		}else{
-			setmodalvisible(document.getElementById("modal-create-tournament"))
-		}
-		//---------------------------------------------------------------------------
-
 		//if create tournament was already clicked, do nothing
 		if(iscurrentlyselected(createtournamentcontainer)){return;}
 		
 		//set create tournamnt as selected button
 		setselectednavigation(createtournamentcontainer);
+
+		//---------------------------------------------------------------------------
+		if(document.getElementById("modal-create-tournament") == undefined){
+			buildmodalcreatetournament();
+		}else{
+			changeelementvisibility(document.getElementById("modal-create-tournament"), true, true);
+		}
+		//---------------------------------------------------------------------------
 		
 		//build workspace to create new tournmant
-		buildworkspacecreatetournament(createtournamentcontainer);
-
-		
+		buildworkspacecreatetournament(createtournamentcontainer);		
 	})
 
 	//icon for create new tournament
@@ -285,7 +284,7 @@ let buildworkspace = () => {
 
 	//add eventlistner to close button
 	closebuttoncontainer.addEventListener("click", () =>{
-		setdivinvisivble(workspace);
+		changeelementvisibility(workspace, false, false);
 		deselectallnavigation();
 	})
 
@@ -401,8 +400,7 @@ let buildworkspacecreatetournament = (clickeddiv) => {
 	workspacebody.classList.add("workspacecreatetournament");
 	
 	//make workspace visible
-	setdivisible(workspace);
-	
+	changeelementvisibility(workspace, true, false);
 	
 	//div for description off tournmanet description button
 	creatediv({
@@ -517,7 +515,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	workspace.style.width = "";
 
 	//make workspace visible
-	setdivisible(workspace);
+	changeelementvisibility(workspace, true, false);
 
 	//create icon for tournament information
 	let tournamentinformationicon = document.createElement("img");
@@ -686,8 +684,10 @@ let buildmodalcreatetournament = () => {
 	closeicon.classList.add("workspaceicon");
 	modalhead.appendChild(closeicon);
 
+	//make modal invsible
 	closeicon.addEventListener("click", () => {
-		setmodalinvisivble(modalcontainer);
+		changeelementvisibility(modalcontainer, false, true);
+		deselectallnavigation();
 	});
 
 	//create modal body
