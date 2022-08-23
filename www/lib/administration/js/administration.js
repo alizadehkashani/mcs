@@ -34,20 +34,22 @@ let buildnavigation = () => {
 		appendto: administrationcontainer
 	})
 
+	//create the container for variable navigation and append to the main container
+	let navigationvariablecontainer = creatediv({
+		divid: "navigationvariablecontainer",
+		appendto: navigationcontainer
+	})
+
 	//trigger creation of variable navigation and constant navigation
-	buildvariablenavigation(navigationcontainer);
+	buildvariablenavigation(navigationvariablecontainer);
 	buildconstantnavigation(navigationcontainer);
 
 }
 
 //builds the upper part of the navigation
 let buildvariablenavigation = async (maincontainer) => {
-	
-	//create the container and append to the main container
-	let navigationvariablecontainer = creatediv({
-		divid: "navigationvariablecontainer",
-		appendto: maincontainer
-	})
+
+	cleareelement(maincontainer);
 
 	//get the tournaments from the database
 	let tournaments = await gettournaments();
@@ -58,7 +60,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		//create container for tournament
 		let tournament = creatediv({
 			divclass: ["navigationitem-0", "navigationhover"],
-			appendto: navigationvariablecontainer
+			appendto: maincontainer
 		})
 				
 		//create container for expand/collapse control
@@ -101,7 +103,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		
 		//add tournament name
 		let tournamentname = creatediv({
-			divtext: tournaments[i]["description"],
+			divtext: tournaments[i]["tname"],
 			divclass: ["flexleft", "navigationdescription"],
 			appendto: tournamenticonanddescription
 		})
@@ -116,7 +118,7 @@ let buildvariablenavigation = async (maincontainer) => {
 	//add create tournament
 	let createtournamentcontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationhover"],
-		appendto: navigationvariablecontainer
+		appendto: maincontainer
 	})
 
 	//empty div instead of expand arrow
@@ -404,9 +406,21 @@ let createnewtournament = async (description, location) => {
 	let phpresponse = await response.json();
 
 	if(phpresponse["result"] == 0){
+		
+		//set input fields initial
 		description.value = "";
 		location.value = "";
+
+		//refresh variable navigation
+		buildvariablenavigation(document.getElementById("navigationvariablecontainer"));
+
+		//deactivate modal and overlay
+		changeelementvisibility(document.getElementById("modal-create-tournament"), false, true);
+		toggleoverlay(false);
+
+		//give altert to user, that tournament has been created
 		alert(phpresponse["message"]);
+
 	}else{
 		alert("error");
 	}
@@ -468,6 +482,15 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 		buildworkspacetournamentinformation(id, tournamentnamediv);
 	})
 
+	//create icon for track configuration
+	let trackconfig = document.createElement("img");
+	trackconfig.setAttribute("src", "lib/assets/track.svg");
+	trackconfig.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(trackconfig);
+	trackconfig.addEventListener("click", () => {
+		//TODO config for tracks
+	})
+
 	//create icon for club configuration
 	let clubconfig = document.createElement("img");
 	clubconfig.setAttribute("src", "lib/assets/club.svg");
@@ -483,8 +506,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", () => {
-		
-	})
+		//TODO config for players
+	})	
 
 	//create icon for tournament archive
 	let archiveicon = document.createElement("img");
@@ -499,7 +522,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	workspaceheadvariable.appendChild(deleteicon);
 
 	//build standard view, tournament information
-	buildworkspacetournamentinformation(id, tournamentnamediv);
+	//buildworkspacetournamentinformation(id, tournamentnamediv);
+	buildworkspaceclubinformation(id);
 
 }
 
@@ -532,7 +556,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		type: "INPUT",
 		appendto: workspacebody
 	})
-	tournamentnameinput.value = tournamentinformation[0]["description"];
+	tournamentnameinput.value = tournamentinformation[0]["tname"];
 
 	//description for tournament location input
 	creatediv({
@@ -545,7 +569,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		type: "INPUT",
 		appendto: workspacebody
 	})
-	tournamentlocationinput.value = tournamentinformation[0]["location"];
+	tournamentlocationinput.value = tournamentinformation[0]["tlocation"];
 
 	//create container for close button
 	let donebuttoncontainer = creatediv({
@@ -568,16 +592,64 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 
 let buildworkspaceclubinformation = async (tid) => {
 	
-	console.log(tid);
-
 	//clear workspace boody and foot
 	clearworkspacebody();
 	clearworkspacefoot();
 
 	let workspacebody = getworkspacebody();
 	
-	let clubs = getclubs(tid);
-} 
+	let clubs = await getclubs(tid);
+	console.log(clubs);
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-view-club-information");
+
+
+	//create container for create club button
+	let createclubbuttoncontainer = creatediv({
+		appendto: workspacebody
+	})
+	createclubbuttoncontainer.style.padding = "10px";
+
+	//create icon for tournament information
+	let createclubbutton = document.createElement("img");
+	createclubbutton.setAttribute("src", "lib/assets/clubadd.svg");
+	createclubbutton.classList.add("workspaceicon");
+	createclubbuttoncontainer.appendChild(createclubbutton);
+	createclubbutton.addEventListener("click", () => {
+		//TODO
+	})
+
+	//create container for clubs table
+	let clubstable = creatediv({
+		divid: "clubs-table",
+		appendto: workspacebody
+	})
+
+
+	fillclubstable(clubstable, clubs);
+	fillclubstable(clubstable, clubs);
+
+}
+
+let fillclubstable = (tablecontainer, clubs) => {
+	cleareelement(tablecontainer);
+	
+	//insert data from db into table
+	for(let i = 0; i < clubs.length; i++){
+		
+		//clubname
+		let clubrow = creatediv({
+			divtext: clubs[i]["cname"],
+			divclass: ["clubs-table-row"],
+			appendto: tablecontainer
+		})
+
+		clubrow.addEventListener("click", () =>{
+			console.log(clubs[i]["cid"]);
+		})
+	}
+}
 
 let getclubs = async (tid) => {
 	let requestdata = {tid: tid};

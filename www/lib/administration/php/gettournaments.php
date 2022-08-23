@@ -3,8 +3,8 @@
 
 	$active = 1;
 
-	$sql = $dbconnection->prepare("SELECT * FROM tournaments WHERE active = :active");
-	$sql->bindParam(":active", $active);
+	$sql = $dbconnection->prepare("SELECT * FROM tournaments WHERE tactive = :tactive");
+	$sql->bindParam(":tactive", $active);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 

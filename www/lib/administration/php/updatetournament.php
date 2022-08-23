@@ -8,13 +8,13 @@
 
 	$query = "
 		UPDATE tournaments
-		SET description = :description, location = :location
+		SET tname = :tname, tlocation = :tlocation
 		WHERE tid = :tid
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":description", $data["description"]);
-	$sql->bindParam(":location", $data["location"]);
+	$sql->bindParam(":tname", $data["description"]);
+	$sql->bindParam(":tlocation", $data["location"]);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->execute();
 	

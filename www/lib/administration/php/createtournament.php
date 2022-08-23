@@ -9,14 +9,14 @@
 	$active = 1;
 	
 	$query = "
-		INSERT INTO tournaments (description, location, active)
-		VALUES (:description, :location, :active)
+		INSERT INTO tournaments (tname, tlocation, tactive)
+		VALUES (:tname, :tlocation, :tactive)
 	";
 	
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":description", $data["description"]);
-	$sql->bindParam(":location", $data["location"]);
-	$sql->bindParam(":active", $active);
+	$sql->bindParam(":tname", $data["description"]);
+	$sql->bindParam(":tlocation", $data["location"]);
+	$sql->bindParam(":tactive", $active);
 	$sql->execute();
 	
 	$response["result"] = 0;

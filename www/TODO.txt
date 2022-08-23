@@ -1,0 +1,2 @@
+TODO in tournament overview show current day and current round
+

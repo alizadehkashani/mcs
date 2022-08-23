@@ -6,7 +6,7 @@
 	
 
 
-	$sql = $dbconnection->prepare("SELECT * FROM clubs WHERE tid = :tid");
+	$sql = $dbconnection->prepare("SELECT * FROM clubs WHERE tid = :tid ORDER BY cname ASC");
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
