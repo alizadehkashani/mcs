@@ -445,8 +445,7 @@ let createnewclub = async (tid, clubnameinput) => {
 	//create object for php script
 	let postdata = {tid: tid, cname: clubnameinput.value};
 	
-	console.log(postdata);
-
+	
 	//call php script
 	let response = await fetch("/lib/administration/php/createclub.php", {
 		method: 'POST',
@@ -478,8 +477,6 @@ let createnewclub = async (tid, clubnameinput) => {
 	}else{
 		alert("error");
 	}
-
-
 
 }
 
@@ -703,9 +700,79 @@ let fillclubstable = async (tid) => {
 		})
 
 		clubrow.addEventListener("click", () =>{
-			console.log(clubs[i]["cid"]);
+			buildmodalviewclub(tid, clubs[i]["cid"]);
 		})
 	}
+}
+
+let buildmodalviewclub = async (tid, clubid) => {
+
+	let club = await getclub(tid, clubid);
+
+	console.log(club);
+
+	
+	let modal = createbasicmodal(
+		"modal-view-club", 
+		"Verein anzeigen", 
+		"modal-view-club-body"
+	);
+	
+	//div for description off tournmanet description button
+	creatediv({
+		divtext: "Name",
+		appendto: modal["modalbody"]
+	})
+
+	//input for tournament description
+	let clubname = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	})
+	//set input value current club name
+	clubname.value = club[0]["cname"];
+
+	//create container for deletion button
+	let deleteclubcuttoncontainer = creatediv({
+		appendto: modal.modalbody,
+		divclass: ["flexright"]
+	})
+
+	//add club deletion button
+	let deleteclubbutton = document.createElement("img");
+	deleteclubbutton.setAttribute("src", "lib/assets/clubremove.svg");
+	deleteclubbutton.classList.add("workspaceicon");
+	deleteclubcuttoncontainer.appendChild(deleteclubbutton);
+
+	deleteclubcuttoncontainer.addEventListener("click", () => {
+		//TODO
+		console.log("hi");
+	})	
+
+	modal.acceptbutton.addEventListener("click", () => {
+		//TODO
+		console.log("hi");
+	})
+
+	toggleoverlay(true);
+	
+}
+
+let getclub = async (tid, cid) => {
+	let requestdata = {tid: tid, cid: cid};
+
+	let phpresponse = await fetch("/lib/administration/php/getclub.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	return response;
 }
 
 let getclubs = async (tid) => {

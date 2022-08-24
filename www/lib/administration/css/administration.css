@@ -290,12 +290,8 @@
 	left: 50%;
 	transform: translate(-50%, -50%);
 	
-	background-color: #e0e0e0;
-
-	border-radius: 20px;
-
 	display: grid;
-	grid-template-rows: auto 1fr auto;
+	grid-template-rows: 50px 1fr 50px;
 
 }
 
@@ -309,16 +305,12 @@
 	
 	background-color: #cecece;
 		
-	padding: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 10px;
-	padding-top: 10px;
+	padding: 10px;
 	
 }
 
 .modal-body{
-
+	background-color: #e0e0e0;
 }
 
 .modal-foot{
@@ -326,12 +318,8 @@
 	border-radius: 0px 0px 20px 20px;
 	background-color: #e0e0e0;
 
-	padding: 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	padding-bottom: 10px;
-	padding-top: 10px;
-
+	padding: 10px;
+	
 	display: flex;
 	justify-content: right;
 }
@@ -343,7 +331,6 @@
 
 #modal-create-club{
 	width: 600px;
-	height: 120px;
 }
 
 #modal-create-club-body{
@@ -360,7 +347,7 @@
 }
 
 #modal-create-tournament-body{
-	height: 100px;
+	height: 50px;
 	
 	display: grid;
 
@@ -372,8 +359,6 @@
 	grid-template-rows: repeat(3, 25px);
 
 	grid-row-gap: 5px;
-
-	
 
 }
 
@@ -424,4 +409,22 @@
 	cursor: pointer;
 	/*box-shadow: 1px 1px;*/
 	border-bottom: 1px var(--mcscolorlight)
+}
+
+#modal-view-club{
+	width: 600px;
+	height: 120px;
+}
+
+#modal-view-club-body{
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 200px 100px;
+	grid-template-rows: 25px;
+
+	grid-row-gap: 5px;
 }
