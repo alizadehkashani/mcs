@@ -20,7 +20,7 @@
 	$sql->execute();
 	
 	$response["result"] = 0;
-	$response["message"] = "Tournament created";
+	$response["message"] = "Turnier angelegt";
 
 	echo(json_encode($response));
 ?>

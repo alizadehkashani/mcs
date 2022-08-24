@@ -387,13 +387,17 @@ let iscurrentlyselected = (div) => {
 }
 
 let createnewtournament = async (description, location) => {
+	
+	//test if input fields are filled, if not abort
 	if(description.value == "" || location.value == ""){
 		alert("Bitte Beschreibung sowie Austragungsort angeben");
 		return;
 	}
 	
+	//create object for php script
 	let postdata = {description: description.value, location: location.value};
 
+	//call php script
 	let response = await fetch("/lib/administration/php/createtournament.php", {
 		method: 'POST',
 		headers: {
@@ -403,7 +407,9 @@ let createnewtournament = async (description, location) => {
 		body: JSON.stringify(postdata)
 	});
 	
+	//response of php script
 	let phpresponse = await response.json();
+
 
 	if(phpresponse["result"] == 0){
 		
@@ -424,6 +430,55 @@ let createnewtournament = async (description, location) => {
 	}else{
 		alert("error");
 	}
+
+
+}
+
+let createnewclub = async (tid, clubnameinput) => {
+	
+	//test if input field is filled
+	if(clubnameinput.value == ""){
+		alert("Bitte Name angeben");
+		return;
+	}
+	
+	//create object for php script
+	let postdata = {tid: tid, cname: clubnameinput.value};
+	
+	console.log(postdata);
+
+	//call php script
+	let response = await fetch("/lib/administration/php/createclub.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		  },
+		body: JSON.stringify(postdata)
+	});
+
+	//response of php script
+	let phpresponse = await response.json();
+
+	if(phpresponse["result"] == 0){
+		
+		//set input fields initial
+		clubnameinput.value = "";
+		
+		//rebuild clubs table
+		fillclubstable(tid);
+
+		//deactivate modal and overlay
+		changeelementvisibility(document.getElementById("modal-create-club"), false, true);
+		toggleoverlay(false);
+
+		//give altert to user, that tournament has been created
+		alert(phpresponse["message"]);
+
+	}else{
+		alert("error");
+	}
+
 
 
 }
@@ -598,9 +653,6 @@ let buildworkspaceclubinformation = async (tid) => {
 
 	let workspacebody = getworkspacebody();
 	
-	let clubs = await getclubs(tid);
-	console.log(clubs);
-
 	//add class to workspace body
 	workspacebody.classList.add("workspace-view-club-information");
 
@@ -617,7 +669,7 @@ let buildworkspaceclubinformation = async (tid) => {
 	createclubbutton.classList.add("workspaceicon");
 	createclubbuttoncontainer.appendChild(createclubbutton);
 	createclubbutton.addEventListener("click", () => {
-		//TODO
+		buildmodalcreateclub(tid);
 	})
 
 	//create container for clubs table
@@ -627,12 +679,17 @@ let buildworkspaceclubinformation = async (tid) => {
 	})
 
 
-	fillclubstable(clubstable, clubs);
-	fillclubstable(clubstable, clubs);
+	fillclubstable(tid);
+	
 
 }
 
-let fillclubstable = (tablecontainer, clubs) => {
+let fillclubstable = async (tid) => {
+	
+	let clubs = await getclubs(tid);
+
+	let tablecontainer = document.getElementById("clubs-table");
+	
 	cleareelement(tablecontainer);
 	
 	//insert data from db into table
@@ -741,12 +798,12 @@ let buildmodalcreatetournament = () => {
 		divclass: ["modal-foot"],
 	})
 
-	//create container for close button
+	//create container for accept button
 	let donebuttoncontainer = creatediv({
 		appendto: modalfoot,
 	})
 
-	//add close button
+	//add accept button
 	let doneicon = document.createElement("img");
 	doneicon.setAttribute("src", "lib/assets/done.svg");
 	doneicon.classList.add("workspaceicon");
@@ -759,6 +816,99 @@ let buildmodalcreatetournament = () => {
 
 	
 	toggleoverlay(true);
+}
+
+let buildmodalcreateclub = (tid) => {
+	
+	let modal = createbasicmodal(
+		"modal-create-club", 
+		"Verein anlegen", 
+		"modal-create-club-body"
+	);
+
+	//div for description off tournmanet description button
+	creatediv({
+		divtext: "Name",
+		appendto: modal["modalbody"]
+	})
+
+	//input for tournament description
+	let clubname = creatediv({
+		type: "INPUT",
+		appendto: modal["modalbody"]
+	})
+
+	modal.acceptbutton.addEventListener("click", () => {
+		createnewclub(tid, clubname);
+	})
+
+	toggleoverlay(true);
+}
+
+let createbasicmodal = (mainid, labeltext, bodyid) => {
+	//get main administration container
+	let administrationcontainer = document.getElementById("administration");
+
+	//create modal container
+	let modalcontainer = creatediv({
+		appendto: administrationcontainer,
+		divclass: ["modal"],
+		divid: mainid
+	})
+
+	//create modal head 
+	let modalhead = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-head"],
+	})
+
+	//create modal label
+	let modallabel = creatediv({
+		appendto: modalhead,
+		divclass: ["flexleft"],
+		divtext: labeltext
+	})
+
+	//create close button
+	let closeicon = document.createElement("img");
+	closeicon.setAttribute("src", "lib/assets/close.svg");
+	closeicon.classList.add("workspaceicon");
+	modalhead.appendChild(closeicon);
+
+	//make modal invsible
+	closeicon.addEventListener("click", () => {
+		changeelementvisibility(modalcontainer, false, true);
+		toggleoverlay(false);
+	});
+
+	//create modal body
+	let modalbody = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-body"],
+		divid: bodyid
+	})
+
+	//create modal foot
+	let modalfoot = creatediv({
+		appendto: modalcontainer,
+		divclass: ["modal-foot"],
+	})
+
+	//create container for accept button
+	let donebuttoncontainer = creatediv({
+		appendto: modalfoot,
+	})
+
+	//add accept button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	return {
+		modalbody: modalbody,
+		acceptbutton: donebuttoncontainer
+	}
 }
 
 DOMready(buildheader);
