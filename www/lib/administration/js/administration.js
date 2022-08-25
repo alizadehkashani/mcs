@@ -708,9 +708,6 @@ let fillclubstable = async (tid) => {
 let buildmodalviewclub = async (tid, clubid) => {
 
 	let club = await getclub(tid, clubid);
-
-	console.log(club);
-
 	
 	let modal = createbasicmodal(
 		"modal-view-club", 
@@ -745,8 +742,9 @@ let buildmodalviewclub = async (tid, clubid) => {
 	deleteclubcuttoncontainer.appendChild(deleteclubbutton);
 
 	deleteclubcuttoncontainer.addEventListener("click", () => {
-		//TODO
-		console.log("hi");
+		deleteclub(tid, clubid);
+		changeelementvisibility(modal.modalcontainer, false, true);
+		toggleoverlay(false);
 	})	
 
 	modal.acceptbutton.addEventListener("click", () => {
@@ -758,9 +756,29 @@ let buildmodalviewclub = async (tid, clubid) => {
 }
 
 
+let deleteclub = async (tid, cid) => {
+	let requestdata = {tid: tid, cid: cid};
+
+	let phpresponse = await fetch("/lib/administration/php/deleteclub.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	if(response.result == 0){
+		fillclubstable(tid);
+		alert("Verein gelöscht");
+	}else{
+		alert("Error");
+	}
+}
 
 let updateclub = async (tid, cid, cname) => {
-
 
 	let requestdata = {tid: tid, cid: cid, cname: cname};
 
@@ -998,6 +1016,7 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	donebuttoncontainer.appendChild(doneicon);
 
 	return {
+		modalcontainer: modalcontainer,
 		modalbody: modalbody,
 		acceptbutton: donebuttoncontainer
 	}
