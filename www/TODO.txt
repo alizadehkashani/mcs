@@ -1,2 +1,2 @@
 TODO in tournament overview show current day and current round
-
+TODO when deleting club, also delete players?

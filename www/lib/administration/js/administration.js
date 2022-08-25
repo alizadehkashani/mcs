@@ -750,12 +750,37 @@ let buildmodalviewclub = async (tid, clubid) => {
 	})	
 
 	modal.acceptbutton.addEventListener("click", () => {
-		//TODO
-		console.log("hi");
+		updateclub(tid, clubid, clubname.value);
 	})
 
 	toggleoverlay(true);
 	
+}
+
+
+
+let updateclub = async (tid, cid, cname) => {
+
+
+	let requestdata = {tid: tid, cid: cid, cname: cname};
+
+	let phpresponse = await fetch("/lib/administration/php/updateclub.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	if(response.result == 0){
+		fillclubstable(tid);
+		alert("Verein geändert");
+	}else{
+		alert("Error");
+	}
 }
 
 let getclub = async (tid, cid) => {

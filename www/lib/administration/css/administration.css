@@ -293,6 +293,9 @@
 	display: grid;
 	grid-template-rows: 50px 1fr 50px;
 
+	border-radius: 20px;
+	
+	background-color: #cecece;
 }
 
 .modal-head{
@@ -413,7 +416,6 @@
 
 #modal-view-club{
 	width: 600px;
-	height: 120px;
 }
 
 #modal-view-club-body{
