@@ -1,2 +1,4 @@
-TODO in tournament overview show current day and current round
-TODO when deleting club, also delete players?
+TODO	in tournament overview show current day and current round
+TODO	when deleting club, also delete players?
+TODO	user should have to confirm again if he wants to delete club
+TODO 	create backups when deleting something?

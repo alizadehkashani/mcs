@@ -92,6 +92,10 @@ let changeelementvisibility = (div, visible, ismodal) => {
 	}
 }
 
+let changeelementdisplay = (div, display) => {
+	div.style.display = display;
+}
+
 let toggleoverlay = (active) => {
 	
 	let overlay = document.getElementById("overlay");

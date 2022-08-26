@@ -65,10 +65,9 @@ let buildvariablenavigation = async (maincontainer) => {
 				
 		//create container for expand/collapse control
 		let expandcontainer = creatediv({
-			appendto: tournament
+			appendto: tournament,
+			divclass: ["expandcontainer", "flexcenter"]
 		})
-		expandcontainer.style.height = "20px";
-		expandcontainer.style.width = "20px";
 		expandcontainer.setAttribute("data-state", "collapsed");
 		
 		//create svg for expand/collapse control
@@ -84,11 +83,6 @@ let buildvariablenavigation = async (maincontainer) => {
 		polygon.setAttribute("fill", "#5f6368");	
 		polygonsvg.appendChild(polygon);
 		
-		//add event listener for expand/collapse control
-		polygonsvg.addEventListener("click", () => {
-			expandcollapseicon(expandcontainer, polygon)
-		})
-
 		// add tournament description icon container
 		let tournamenticonanddescription = creatediv({
 			divclass: ["navigation-icon-description", "navigationitemhover"],
@@ -113,8 +107,107 @@ let buildvariablenavigation = async (maincontainer) => {
 			setselectednavigation(tournament);
 			buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
 		})
+
+		//-------------------------------BUILD MATCHDAYS--------------------------------	
+		let matchdays = await getmatchdays(tournaments[i]["tid"])
+
+		console.log(matchdays);
+		//create maincontainer for matchdays
+
+		let maincontainermatchdays = creatediv({
+			appendto: maincontainer
+		})
+		//set container hidden
+		maincontainermatchdays.style.display = "none";
+		//set data state to hidedn
+		maincontainermatchdays.setAttribute("data-state", "hidden");
+
+		//loop through matchdays
+		for(let j = 0; j < matchdays.length; j++){
+			let matchdaycontainer = creatediv({
+				divclass: ["navigationitem-1", "navigationhover"],
+				appendto: maincontainermatchdays,
+			})
+
+			//create filler div
+			creatediv({appendto: matchdaycontainer});
+			
+			//create container for expand/collapse control
+			let expandcontainer = creatediv({
+				appendto: matchdaycontainer,
+				divclass: ["expandcontainer", "flexcenter"]
+			})
+			expandcontainer.setAttribute("data-state", "collapsed");
+
+			//create svg for expand/collapse control
+			let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+			polygonsvg.setAttribute("viewBox", "0 0 20 20");
+			polygonsvg.setAttribute("height", "20px");
+			polygonsvg.setAttribute("width", "20px");
+			expandcontainer.appendChild(polygonsvg);
+
+			//create new triangle
+			let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+			polygon.setAttribute("points", "8,5 13,10 8,15");
+			polygon.setAttribute("fill", "#5f6368");	
+			polygonsvg.appendChild(polygon);
+
+			// add matchday description icon container
+			let matchdayiconanddescription = creatediv({
+				divclass: ["navigation-icon-description", "navigationitemhover"],
+				appendto: matchdaycontainer
+			})
+
+			//add icon to matchday
+			let matchdayicon = document.createElement("img");
+			matchdayicon.setAttribute("src", "lib/assets/matchday.svg");
+			matchdayicon.classList.add("navigationicon");
+			matchdayiconanddescription.appendChild(matchdayicon);
+
+			//add matchday name
+			let matchdaynumber = creatediv({
+				divtext: "Spieltag " + matchdays[j]["mdnumber"],
+				divclass: ["flexleft", "navigationdescription"],
+				appendto: matchdayiconanddescription
+			})
+
+			//add event lisnter if tournmant is selected
+			matchdayiconanddescription.addEventListener("click", () => {
+				setselectednavigation(matchdaycontainer);
+				
+				//TODO build workspace view matchday
+				//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+			})
+
+
+		}
+
+		//------------------------------------------------------------------------------
+
+
+		//add event listener for expand/collapse control
+		polygonsvg.addEventListener("click", () => {
+			
+			//change polygon
+			expandcollapseicon(expandcontainer, polygon);
+			
+			let matchdaysstate = maincontainermatchdays.getAttribute("data-state");
+
+			if(matchdaysstate == "hidden"){
+				//make matchdays invsible
+				changeelementdisplay(maincontainermatchdays, "block");
+				maincontainermatchdays.setAttribute("data-state", "visible");
+			}else{
+				changeelementdisplay(maincontainermatchdays, "none");
+				maincontainermatchdays.setAttribute("data-state", "hidden");
+			}
+			
+		})
+
 	}
 
+	//-------------------------------BUILD CREATE TOURNAMENT BUTTON---------------------
+	
 	//add create tournament
 	let createtournamentcontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationhover"],
@@ -165,7 +258,13 @@ let buildvariablenavigation = async (maincontainer) => {
 		appendto: createtournamenticonanddescriptioncontainer
 	})
 
+	//-------------filler row-----
+	//let fillerrow = creatediv({appendto: maincontainer})
+	//-------------filler row-----
+
+
 }
+
 
 //changes the triangle if item is expanded/collapsed
 let expandcollapseicon = (container, polygon) => {
@@ -434,7 +533,7 @@ let createnewtournament = async (description, location) => {
 
 }
 
-let createnewclub = async (tid, clubnameinput) => {
+let createnewclub = async (tid, clubnameinput, modalcontainer) => {
 	
 	//test if input field is filled
 	if(clubnameinput.value == ""){
@@ -443,8 +542,7 @@ let createnewclub = async (tid, clubnameinput) => {
 	}
 	
 	//create object for php script
-	let postdata = {tid: tid, cname: clubnameinput.value};
-	
+	let postdata = {tid: tid, cname: clubnameinput.value};	
 	
 	//call php script
 	let response = await fetch("/lib/administration/php/createclub.php", {
@@ -466,13 +564,15 @@ let createnewclub = async (tid, clubnameinput) => {
 		
 		//rebuild clubs table
 		fillclubstable(tid);
+		
+		
 
 		//deactivate modal and overlay
-		changeelementvisibility(document.getElementById("modal-create-club"), false, true);
+		changeelementvisibility(modalcontainer, false, true);
 		toggleoverlay(false);
 
-		//give altert to user, that tournament has been created
-		alert(phpresponse["message"]);
+		//alert user, that club was deleted
+		alert("Verein gelöscht");
 
 	}else{
 		alert("error");
@@ -487,8 +587,6 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 		location: location.value
 	};
 
-	console.log(postdata);
-
 	let response = await fetch("/lib/administration/php/updatetournament.php", {
 		method: 'POST',
 		headers: {
@@ -498,10 +596,10 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 		body: JSON.stringify(postdata)
 	});
 
+	//get data from response
 	let phpresponse = await response.json();
 
-	console.log(phpresponse);
-
+	//update tournament name in navigation
 	if(phpresponse["result"] == 0){
 		tournamentnamediv.innerText = description.value;
 	}
@@ -675,10 +773,8 @@ let buildworkspaceclubinformation = async (tid) => {
 		appendto: workspacebody
 	})
 
-
 	fillclubstable(tid);
 	
-
 }
 
 let fillclubstable = async (tid) => {
@@ -835,6 +931,23 @@ let getclubs = async (tid) => {
 	return response;
 }
 
+let getmatchdays = async (tid) => {
+	let requestdata = {tid: tid};
+
+	let phpresponse = await fetch("/lib/administration/php/getmatchdays.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	return response;
+}
+
 let buildmodalcreatetournament = () => {
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -929,13 +1042,13 @@ let buildmodalcreatetournament = () => {
 }
 
 let buildmodalcreateclub = (tid) => {
-	
+		
 	let modal = createbasicmodal(
 		"modal-create-club", 
 		"Verein anlegen", 
 		"modal-create-club-body"
 	);
-
+	
 	//div for description off tournmanet description button
 	creatediv({
 		divtext: "Name",
@@ -949,7 +1062,7 @@ let buildmodalcreateclub = (tid) => {
 	})
 
 	modal.acceptbutton.addEventListener("click", () => {
-		createnewclub(tid, clubname);
+		createnewclub(tid, clubname, modal.modalcontainer);
 	})
 
 	toggleoverlay(true);
