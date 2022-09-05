@@ -179,8 +179,51 @@ let buildvariablenavigation = async (maincontainer) => {
 				//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
 			})
 
+			
+
+
+			//-------------------------------BUILD ROUNDS-----------------------------------
+
+
+			
+
+			//------------------------------------------------------------------------------
+
+
 
 		}
+
+		//--------create button to create new matchday--------
+		let creatematchdaycontainer = creatediv({
+			divclass: ["navigationitem-1", "navigationhover"],
+			appendto: maincontainermatchdays,
+		})
+
+		//create filler div
+		creatediv({appendto: creatematchdaycontainer});
+		creatediv({appendto: creatematchdaycontainer});
+
+		// add matchday description icon container
+		let creatematchdayiconanddescription = creatediv({
+			divclass: ["navigation-icon-description", "navigationitemhover"],
+			appendto: creatematchdaycontainer
+		})
+
+		//add icon to matchday
+		let creatematchdayicon = document.createElement("img");
+		creatematchdayicon.setAttribute("src", "lib/assets/addcircle.svg");
+		creatematchdayicon.classList.add("navigationicon");
+		creatematchdayiconanddescription.appendChild(creatematchdayicon);
+
+		//add matchday name
+		let creatematchdaydescription = creatediv({
+			divtext: "Neu",
+			divclass: ["flexleft", "navigationdescription"],
+			appendto: creatematchdayiconanddescription
+		})
+
+
+
 
 		//------------------------------------------------------------------------------
 
@@ -572,7 +615,7 @@ let createnewclub = async (tid, clubnameinput, modalcontainer) => {
 		toggleoverlay(false);
 
 		//alert user, that club was deleted
-		alert("Verein gelöscht");
+		alert("Verein angelegt");
 
 	}else{
 		alert("error");
