@@ -194,6 +194,18 @@
 	user-select: none;
 }
 
+.navigationitem-2{
+	display: grid;
+	grid-template-columns: 30px 30px 30px 1fr;
+	grid-template-rows: 30px;
+	
+	padding-left: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+
+	user-select: none;
+}
+
 .navigationhover:hover{
 	background-color: var(--mcsgreylight);
 	border-radius: 0px 20px 20px 0px;

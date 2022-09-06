@@ -109,16 +109,17 @@ let buildvariablenavigation = async (maincontainer) => {
 		})
 
 		//-------------------------------BUILD MATCHDAYS--------------------------------	
+		//get matchdays
 		let matchdays = await getmatchdays(tournaments[i]["tid"])
 
-		console.log(matchdays);
 		//create maincontainer for matchdays
-
 		let maincontainermatchdays = creatediv({
 			appendto: maincontainer
 		})
+
 		//set container hidden
 		maincontainermatchdays.style.display = "none";
+		
 		//set data state to hidedn
 		maincontainermatchdays.setAttribute("data-state", "hidden");
 
@@ -171,7 +172,7 @@ let buildvariablenavigation = async (maincontainer) => {
 				appendto: matchdayiconanddescription
 			})
 
-			//add event lisnter if tournmant is selected
+			//add event lisnter if matchday is selected
 			matchdayiconanddescription.addEventListener("click", () => {
 				setselectednavigation(matchdaycontainer);
 				
@@ -181,10 +182,137 @@ let buildvariablenavigation = async (maincontainer) => {
 
 			
 
-
+			
 			//-------------------------------BUILD ROUNDS-----------------------------------
+			
+			//get rounds
+			let rounds = await getrounds(tournaments[i]["tid"], matchdays[j]["mdnumber"]);
+			
+			//create maincontainer for matchdays
+			let maincontainerrounds = creatediv({
+				appendto: maincontainermatchdays
+			})
+
+			//set container hidden
+			maincontainerrounds.style.display = "none";
+		
+			//set data state to hidedn
+			maincontainerrounds.setAttribute("data-state", "hidden");
+			
+			//loop through rounds of matchday
+			for(let k = 0; k < rounds.length; k++){
+				let roundcontainer = creatediv({
+					divclass: ["navigationitem-2", "navigationhover"],
+					appendto: maincontainerrounds,
+				})
+
+				//create filler div
+				creatediv({appendto: roundcontainer});
+
+				//create filler div
+				creatediv({appendto: roundcontainer});
+
+				//create container for expand/collapse control
+				let expandcontainer = creatediv({
+					appendto: roundcontainer,
+					divclass: ["expandcontainer", "flexcenter"]
+				})
+				expandcontainer.setAttribute("data-state", "collapsed");
+
+				//create svg for expand/collapse control
+				let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+				polygonsvg.setAttribute("viewBox", "0 0 20 20");
+				polygonsvg.setAttribute("height", "20px");
+				polygonsvg.setAttribute("width", "20px");
+				expandcontainer.appendChild(polygonsvg);
+
+				//create new triangle
+				let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+				polygon.setAttribute("points", "8,5 13,10 8,15");
+				polygon.setAttribute("fill", "#5f6368");	
+				polygonsvg.appendChild(polygon);	
+				
+				
+				// add matchday description icon container
+				let roundiconanddescription = creatediv({
+					divclass: ["navigation-icon-description", "navigationitemhover"],
+					appendto: roundcontainer
+				})
+
+				//add icon to matchday
+				let roundicon = document.createElement("img");
+				roundicon.setAttribute("src", "lib/assets/round.svg");
+				roundicon.classList.add("navigationicon");
+				roundiconanddescription.appendChild(roundicon);
+
+				//add matchday name
+				let matchdaynumber = creatediv({
+					divtext: "Runde " + rounds[k]["rnumber"],
+					divclass: ["flexleft", "navigationdescription"],
+					appendto: roundiconanddescription
+				})
+
+				//add event lisnter if tournmant is selected
+				roundiconanddescription.addEventListener("click", () => {
+					setselectednavigation(roundcontainer);
+					
+					//TODO build workspace view matchday
+					//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+				})				
+
+			}
+
+			//--------create button to create new round--------
+			let createroundcontainer = creatediv({
+				divclass: ["navigationitem-2", "navigationhover"],
+				appendto: maincontainerrounds,
+			})
+
+			//create filler div
+			creatediv({appendto: createroundcontainer});
+			creatediv({appendto: createroundcontainer});
+			creatediv({appendto: createroundcontainer});
+
+			// add matchday description icon container
+			let createroundiconanddescription = creatediv({
+				divclass: ["navigation-icon-description", "navigationitemhover"],
+				appendto: createroundcontainer
+			})
+
+			//add icon to round
+			let createroundicon = document.createElement("img");
+			createroundicon.setAttribute("src", "lib/assets/addcircle.svg");
+			createroundicon.classList.add("navigationicon");
+			createroundiconanddescription.appendChild(createroundicon);
+
+			//add description to create matchday button
+			let creatematchdaydescription = creatediv({
+				divtext: "Neu",
+				divclass: ["flexleft", "navigationdescription"],
+				appendto: createroundiconanddescription
+			})
 
 
+			//add event listener for expand/collapse control
+			polygonsvg.addEventListener("click", () => {
+			
+			//change polygon
+			expandcollapseicon(expandcontainer, polygon);
+			
+			//get visiblity state of container
+			let roundsstate = maincontainerrounds.getAttribute("data-state");
+			
+			if(roundsstate == "hidden"){
+				//make rounds vsible
+				changeelementdisplay(maincontainerrounds, "block");
+				maincontainerrounds.setAttribute("data-state", "visible");
+			}else{
+				//make rounds invisible
+				changeelementdisplay(maincontainerrounds, "none");
+				maincontainerrounds.setAttribute("data-state", "hidden");
+			}
+			
+		})
 			
 
 			//------------------------------------------------------------------------------
@@ -215,19 +343,13 @@ let buildvariablenavigation = async (maincontainer) => {
 		creatematchdayicon.classList.add("navigationicon");
 		creatematchdayiconanddescription.appendChild(creatematchdayicon);
 
-		//add matchday name
+		//add description to create matchday button
 		let creatematchdaydescription = creatediv({
 			divtext: "Neu",
 			divclass: ["flexleft", "navigationdescription"],
 			appendto: creatematchdayiconanddescription
 		})
-
-
-
-
-		//------------------------------------------------------------------------------
-
-
+		
 		//add event listener for expand/collapse control
 		polygonsvg.addEventListener("click", () => {
 			
@@ -235,7 +357,7 @@ let buildvariablenavigation = async (maincontainer) => {
 			expandcollapseicon(expandcontainer, polygon);
 			
 			let matchdaysstate = maincontainermatchdays.getAttribute("data-state");
-
+			
 			if(matchdaysstate == "hidden"){
 				//make matchdays invsible
 				changeelementdisplay(maincontainermatchdays, "block");
@@ -246,6 +368,8 @@ let buildvariablenavigation = async (maincontainer) => {
 			}
 			
 		})
+		
+		//------------------------------------------------------------------------------
 
 	}
 
@@ -978,6 +1102,23 @@ let getmatchdays = async (tid) => {
 	let requestdata = {tid: tid};
 
 	let phpresponse = await fetch("/lib/administration/php/getmatchdays.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	let response = await phpresponse.json();
+
+	return response;
+}
+
+let getrounds = async (tid, mdnumber) => {
+	let requestdata = {tid: tid, mdnumber: mdnumber};
+
+	let phpresponse = await fetch("/lib/administration/php/getrounds.php", {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/jsono',
