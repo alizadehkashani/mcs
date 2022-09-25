@@ -178,6 +178,7 @@ let buildvariablenavigation = async (maincontainer) => {
 				
 				//TODO build workspace view matchday
 				//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+				createnewmatchday(tournaments[i]["tid"]);
 			})
 
 			
@@ -252,7 +253,7 @@ let buildvariablenavigation = async (maincontainer) => {
 					appendto: roundiconanddescription
 				})
 
-				//add event lisnter if tournmant is selected
+				//add event lisnter if matchday is selected
 				roundiconanddescription.addEventListener("click", () => {
 					setselectednavigation(roundcontainer);
 					
@@ -349,7 +350,14 @@ let buildvariablenavigation = async (maincontainer) => {
 			divclass: ["flexleft", "navigationdescription"],
 			appendto: creatematchdayiconanddescription
 		})
+
+		//add event listner to create matchday
+		creatematchdayiconanddescription.addEventListener("click", () =>{
+			//create additional matchday for tournamen
+			//tournaments[i]["tid"]
+		})
 		
+
 		//add event listener for expand/collapse control
 		polygonsvg.addEventListener("click", () => {
 			
@@ -392,24 +400,14 @@ let buildvariablenavigation = async (maincontainer) => {
 
 	//add event listner to create new tournament button
 	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
-		
-		/*
-		//if create tournament was already clicked, do nothing
-		if(iscurrentlyselected(createtournamentcontainer)){return;}
-		
-		//set create tournamnt as selected button
-		setselectednavigation(createtournamentcontainer);
-		*/
 
-		//---------------------------------------------------------------------------
 		if(document.getElementById("modal-create-tournament") == undefined){
 			buildmodalcreatetournament();
 		}else{
 			changeelementvisibility(document.getElementById("modal-create-tournament"), true, true);
 			toggleoverlay(true);
-		}
-		//---------------------------------------------------------------------------
-		
+		}		
+
 	})
 
 	//icon for create new tournament
@@ -1226,7 +1224,8 @@ let buildmodalcreatetournament = () => {
 }
 
 let buildmodalcreateclub = (tid) => {
-		
+	
+	//create modal
 	let modal = createbasicmodal(
 		"modal-create-club", 
 		"Verein anlegen", 
@@ -1251,6 +1250,38 @@ let buildmodalcreateclub = (tid) => {
 
 	toggleoverlay(true);
 }
+
+let createnewmatchday = async (tid) => {
+	
+	//create object for php script
+	let postdata = {tid: tid};	
+	
+	//call php script
+	let response = await fetch("/lib/administration/php/creatematchday.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		  },
+		body: JSON.stringify(postdata)
+	});
+
+	//response of php script
+	let phpresponse = await response.json();
+
+	if(phpresponse["result"] == 0){
+		
+
+		//alert user, that club was deleted
+		alert("Spieltag angelegt");
+
+	}else{
+		//give alert with error message
+		alert("error");
+	}
+
+}
+
 
 let createbasicmodal = (mainid, labeltext, bodyid) => {
 	//get main administration container
