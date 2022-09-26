@@ -178,7 +178,7 @@ let buildvariablenavigation = async (maincontainer) => {
 				
 				//TODO build workspace view matchday
 				//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
-				createnewmatchday(tournaments[i]["tid"]);
+				//createnewmatchday(tournaments[i]["tid"]);
 			})
 
 			
@@ -354,7 +354,8 @@ let buildvariablenavigation = async (maincontainer) => {
 		//add event listner to create matchday
 		creatematchdayiconanddescription.addEventListener("click", () =>{
 			//create additional matchday for tournamen
-			//tournaments[i]["tid"]
+		//tournaments[i]["tid"]
+			createnewmatchday(tournaments[i]["tid"]);
 		})
 		
 
@@ -1252,7 +1253,10 @@ let buildmodalcreateclub = (tid) => {
 }
 
 let createnewmatchday = async (tid) => {
-	
+
+	//console.log(tid);
+
+
 	//create object for php script
 	let postdata = {tid: tid};	
 	
