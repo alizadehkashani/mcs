@@ -1613,7 +1613,7 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	maincontainerrounds.setAttribute("id", "mc-r-tid-" + tid + "-md-" + md);
 
 	//set container hidden
-	//maincontainermatchdays.style.display = "none";
+	maincontainerrounds.style.display = "none";
 
 	//set data state to hidden 
 	maincontainerrounds.setAttribute("data-state", "hidden");
@@ -1627,6 +1627,36 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	containerrounds.setAttribute("id", "rounds-" + tid + "-" + md);
 
 	await buildrounds(containerrounds, tid, md);
+
+	//create button to create new round
+	let createroundcontainer = creatediv({
+		divclass: ["navigationitem-2", "navigationhover"],
+		appendto: maincontainerrounds,
+	})
+
+	//create filler div
+	creatediv({appendto: createroundcontainer});
+	creatediv({appendto: createroundcontainer});
+	creatediv({appendto: createroundcontainer});
+
+	// add matchday description icon container
+	let createroundiconanddescription = creatediv({
+		divclass: ["navigation-icon-description", "navigationitemhover"],
+		appendto: createroundcontainer
+	})
+
+	//add icon to round
+	let createroundicon = document.createElement("img");
+	createroundicon.setAttribute("src", "lib/assets/addcircle.svg");
+	createroundicon.classList.add("navigationicon");
+	createroundiconanddescription.appendChild(createroundicon);
+
+	//add description to create matchday button
+	let creatematchdaydescription = creatediv({
+		divtext: "Neu",
+		divclass: ["flexleft", "navigationdescription"],
+		appendto: createroundiconanddescription
+	})
 
 }
 
