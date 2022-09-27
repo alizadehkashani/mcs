@@ -1548,10 +1548,10 @@ let buildrounds = async (container, tid, md, rebuild) => {
 
 		//create filler div
 		creatediv({appendto: roundcontainer});
-
-		//create filler div
+		creatediv({appendto: roundcontainer});
 		creatediv({appendto: roundcontainer});
 
+		/*
 		//create container for expand/collapse control
 		let expandcontainer = creatediv({
 			appendto: roundcontainer,
@@ -1571,7 +1571,8 @@ let buildrounds = async (container, tid, md, rebuild) => {
 		polygon.setAttribute("points", "8,5 13,10 8,15");
 		polygon.setAttribute("fill", "#5f6368");	
 		polygonsvg.appendChild(polygon);	
-		
+		*/
+
 		//add matchday description icon container
 		let roundiconanddescription = creatediv({
 			divclass: ["navigation-icon-description", "navigationitemhover"],
