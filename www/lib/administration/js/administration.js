@@ -51,392 +51,7 @@ let buildvariablenavigation = async (maincontainer) => {
 
 	cleareelement(maincontainer);
 
-	//get the tournaments from the database
-	let tournaments = await gettournaments();
-
-	//create a new row for each tournament
-	for(let i = 0; i < tournaments.length; i++){
-
-		//create container for tournament
-		let tournament = creatediv({
-			divclass: ["navigationitem-0", "navigationhover"],
-			appendto: maincontainer
-		})
-				
-		//create container for expand/collapse control
-		let expandcontainer = creatediv({
-			appendto: tournament,
-			divclass: ["expandcontainer", "flexcenter"]
-		})
-		expandcontainer.setAttribute("data-state", "collapsed");
-		
-		//create svg for expand/collapse control
-		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		polygonsvg.setAttribute("viewBox", "0 0 20 20");
-		polygonsvg.setAttribute("height", "20px");
-		polygonsvg.setAttribute("width", "20px");
-		expandcontainer.appendChild(polygonsvg);
-
-		//create new triangle
-		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		polygon.setAttribute("points", "8,5 13,10 8,15");
-		polygon.setAttribute("fill", "#5f6368");	
-		polygonsvg.appendChild(polygon);
-		
-		// add tournament description icon container
-		let tournamenticonanddescription = creatediv({
-			divclass: ["navigation-icon-description", "navigationitemhover"],
-			appendto: tournament
-		})
-		
-		//add icon to tournament
-		let tournamenticon = document.createElement("img");
-		tournamenticon.setAttribute("src", "lib/administration/assets/tournament.svg");
-		tournamenticon.classList.add("navigationicon");
-		tournamenticonanddescription.appendChild(tournamenticon);
-		
-		//add tournament name
-		let tournamentname = creatediv({
-			divtext: tournaments[i]["tname"],
-			divclass: ["flexleft", "navigationdescription"],
-			appendto: tournamenticonanddescription
-		})
-		
-		//add event lisnter if tournmant is selected
-		tournamenticonanddescription.addEventListener("click", () => {
-			setselectednavigation(tournament);
-			buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
-		})
-
-		//-------------------------------BUILD MATCHDAYS--------------------------------	
-		//build matchdays
-		await buildmatchdaysinit(maincontainer, tournaments[i]["tid"]);
-
-		/*
-		//get matchdays
-		let matchdays = await getmatchdays(tournaments[i]["tid"])
-
-		//create maincontainer for matchdays
-		let maincontainermatchdays = creatediv({
-			appendto: maincontainer
-		})
-
-		//set container hidden
-		maincontainermatchdays.style.display = "none";
-		
-		//set data state to hidedn
-		maincontainermatchdays.setAttribute("data-state", "hidden");
-
-		//loop through matchdays
-		for(let j = 0; j < matchdays.length; j++){
-			let matchdaycontainer = creatediv({
-				divclass: ["navigationitem-1", "navigationhover"],
-				appendto: maincontainermatchdays,
-			})
-
-			//create filler div
-			creatediv({appendto: matchdaycontainer});
-			
-			//create container for expand/collapse control
-			let expandcontainer = creatediv({
-				appendto: matchdaycontainer,
-				divclass: ["expandcontainer", "flexcenter"]
-			})
-			expandcontainer.setAttribute("data-state", "collapsed");
-
-			//create svg for expand/collapse control
-			let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-			polygonsvg.setAttribute("viewBox", "0 0 20 20");
-			polygonsvg.setAttribute("height", "20px");
-			polygonsvg.setAttribute("width", "20px");
-			expandcontainer.appendChild(polygonsvg);
-
-			//create new triangle
-			let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-			polygon.setAttribute("points", "8,5 13,10 8,15");
-			polygon.setAttribute("fill", "#5f6368");	
-			polygonsvg.appendChild(polygon);
-
-			// add matchday description icon container
-			let matchdayiconanddescription = creatediv({
-				divclass: ["navigation-icon-description", "navigationitemhover"],
-				appendto: matchdaycontainer
-			})
-
-			//add icon to matchday
-			let matchdayicon = document.createElement("img");
-			matchdayicon.setAttribute("src", "lib/assets/matchday.svg");
-			matchdayicon.classList.add("navigationicon");
-			matchdayiconanddescription.appendChild(matchdayicon);
-
-			//add matchday name
-			let matchdaynumber = creatediv({
-				divtext: "Spieltag " + matchdays[j]["mdnumber"],
-				divclass: ["flexleft", "navigationdescription"],
-				appendto: matchdayiconanddescription
-			})
-
-			//add event lisnter if matchday is selected
-			matchdayiconanddescription.addEventListener("click", () => {
-				setselectednavigation(matchdaycontainer);
-				
-				//TODO build workspace view matchday
-				//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
-				//createnewmatchday(tournaments[i]["tid"]);
-			})
-
-			
-
-			
-			//-------------------------------BUILD ROUNDS-----------------------------------
-			
-			//get rounds
-			let rounds = await getrounds(tournaments[i]["tid"], matchdays[j]["mdnumber"]);
-			
-			//create maincontainer for matchdays
-			let maincontainerrounds = creatediv({
-				appendto: maincontainermatchdays
-			})
-
-			//set container hidden
-			maincontainerrounds.style.display = "none";
-		
-			//set data state to hidedn
-			maincontainerrounds.setAttribute("data-state", "hidden");
-			
-			//loop through rounds of matchday
-			for(let k = 0; k < rounds.length; k++){
-				let roundcontainer = creatediv({
-					divclass: ["navigationitem-2", "navigationhover"],
-					appendto: maincontainerrounds,
-				})
-
-				//create filler div
-				creatediv({appendto: roundcontainer});
-
-				//create filler div
-				creatediv({appendto: roundcontainer});
-
-				//create container for expand/collapse control
-				let expandcontainer = creatediv({
-					appendto: roundcontainer,
-					divclass: ["expandcontainer", "flexcenter"]
-				})
-				expandcontainer.setAttribute("data-state", "collapsed");
-
-				//create svg for expand/collapse control
-				let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-				polygonsvg.setAttribute("viewBox", "0 0 20 20");
-				polygonsvg.setAttribute("height", "20px");
-				polygonsvg.setAttribute("width", "20px");
-				expandcontainer.appendChild(polygonsvg);
-
-				//create new triangle
-				let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-				polygon.setAttribute("points", "8,5 13,10 8,15");
-				polygon.setAttribute("fill", "#5f6368");	
-				polygonsvg.appendChild(polygon);	
-				
-				
-				// add matchday description icon container
-				let roundiconanddescription = creatediv({
-					divclass: ["navigation-icon-description", "navigationitemhover"],
-					appendto: roundcontainer
-				})
-
-				//add icon to matchday
-				let roundicon = document.createElement("img");
-				roundicon.setAttribute("src", "lib/assets/round.svg");
-				roundicon.classList.add("navigationicon");
-				roundiconanddescription.appendChild(roundicon);
-
-				//add matchday name
-				let matchdaynumber = creatediv({
-					divtext: "Runde " + rounds[k]["rnumber"],
-					divclass: ["flexleft", "navigationdescription"],
-					appendto: roundiconanddescription
-				})
-
-				//add event lisnter if matchday is selected
-				roundiconanddescription.addEventListener("click", () => {
-					setselectednavigation(roundcontainer);
-					
-					//TODO build workspace view matchday
-					//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
-				})				
-
-			}
-
-			//--------create button to create new round--------
-			let createroundcontainer = creatediv({
-				divclass: ["navigationitem-2", "navigationhover"],
-				appendto: maincontainerrounds,
-			})
-
-			//create filler div
-			creatediv({appendto: createroundcontainer});
-			creatediv({appendto: createroundcontainer});
-			creatediv({appendto: createroundcontainer});
-
-			// add matchday description icon container
-			let createroundiconanddescription = creatediv({
-				divclass: ["navigation-icon-description", "navigationitemhover"],
-				appendto: createroundcontainer
-			})
-
-			//add icon to round
-			let createroundicon = document.createElement("img");
-			createroundicon.setAttribute("src", "lib/assets/addcircle.svg");
-			createroundicon.classList.add("navigationicon");
-			createroundiconanddescription.appendChild(createroundicon);
-
-			//add description to create matchday button
-			let creatematchdaydescription = creatediv({
-				divtext: "Neu",
-				divclass: ["flexleft", "navigationdescription"],
-				appendto: createroundiconanddescription
-			})
-
-
-			//add event listener for expand/collapse control
-			polygonsvg.addEventListener("click", () => {
-			
-			//change polygon
-			expandcollapseicon(expandcontainer, polygon);
-			
-			//get visiblity state of container
-			let roundsstate = maincontainerrounds.getAttribute("data-state");
-			
-			if(roundsstate == "hidden"){
-				//make rounds vsible
-				changeelementdisplay(maincontainerrounds, "block");
-				maincontainerrounds.setAttribute("data-state", "visible");
-			}else{
-				//make rounds invisible
-				changeelementdisplay(maincontainerrounds, "none");
-				maincontainerrounds.setAttribute("data-state", "hidden");
-			}
-			
-		})
-			
-
-			//------------------------------------------------------------------------------
-
-
-		}
-		*/
-
-		/*
-		//--------create button to create new matchday--------
-		let creatematchdaycontainer = creatediv({
-			divclass: ["navigationitem-1", "navigationhover"],
-			appendto: maincontainermatchdays,
-		})
-
-		//create filler div
-		creatediv({appendto: creatematchdaycontainer});
-		creatediv({appendto: creatematchdaycontainer});
-
-		// add matchday description icon container
-		let creatematchdayiconanddescription = creatediv({
-			divclass: ["navigation-icon-description", "navigationitemhover"],
-			appendto: creatematchdaycontainer
-		})
-
-		//add icon to matchday
-		let creatematchdayicon = document.createElement("img");
-		creatematchdayicon.setAttribute("src", "lib/assets/addcircle.svg");
-		creatematchdayicon.classList.add("navigationicon");
-		creatematchdayiconanddescription.appendChild(creatematchdayicon);
-
-		//add description to create matchday button
-		let creatematchdaydescription = creatediv({
-			divtext: "Neu",
-			divclass: ["flexleft", "navigationdescription"],
-			appendto: creatematchdayiconanddescription
-		})
-
-		//add event listner to create matchday
-		creatematchdayiconanddescription.addEventListener("click", () =>{
-			//create additional matchday for tournamen
-		//tournaments[i]["tid"]
-			createnewmatchday(tournaments[i]["tid"]);
-		})
-		
-		*/
-		//add event listener for expand/collapse control for matchday
-		polygonsvg.addEventListener("click", () => {
-			
-			//change polygon
-			expandcollapseicon(expandcontainer, polygon);
-			
-			//get matchday container
-			let matchdaycontainer = document.getElementById("mc-md-" + tournaments[i]["tid"]);
-
-			//get matchdaycontainer sate
-			let matchdaysstate = matchdaycontainer.getAttribute("data-state");
-			
-			if(matchdaysstate == "hidden"){
-				//make matchdays invsible
-				changeelementdisplay(matchdaycontainer, "block");
-				matchdaycontainer.setAttribute("data-state", "visible");
-			}else{
-				changeelementdisplay(matchdaycontainer, "none");
-				matchdaycontainer.setAttribute("data-state", "hidden");
-			}
-			
-		})
-		
-		//------------------------------------------------------------------------------
-	}
-
-	//-------------------------------BUILD CREATE TOURNAMENT BUTTON---------------------
-	
-	//add create tournament
-	let createtournamentcontainer = creatediv({
-		divclass: ["navigationitem-0", "navigationhover"],
-		appendto: maincontainer
-	})
-
-	//empty div instead of expand arrow
-	creatediv({appendto: createtournamentcontainer});
-
-	//container for icon and description
-	let createtournamenticonanddescriptioncontainer = creatediv({
-		divclass: ["navigation-icon-description", "navigationitemhover"],
-		appendto: createtournamentcontainer
-	})
-
-	//add event listner to create new tournament button
-	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
-
-		if(document.getElementById("modal-create-tournament") == undefined){
-			buildmodalcreatetournament();
-		}else{
-			changeelementvisibility(document.getElementById("modal-create-tournament"), true, true);
-			toggleoverlay(true);
-		}		
-
-	})
-
-	//icon for create new tournament
-	let createtournamenticon = document.createElement("img");
-	createtournamenticon.setAttribute("src", "lib/administration/assets/createtournament.svg");
-	createtournamenticon.classList.add("navigationicon");
-	createtournamenticonanddescriptioncontainer.appendChild(createtournamenticon);
-
-	//text for create new tournament
-	creatediv({
-		divtext: "Neu",
-		divclass: ["flexleft", "navigationdescription"],
-		appendto: createtournamenticonanddescriptioncontainer
-	})
-
-	//-------------filler row-----
-	//let fillerrow = creatediv({appendto: maincontainer})
-	//-------------filler row-----
-
-
+	buildtournamentsinit(maincontainer);
 }
 
 
@@ -1360,6 +975,144 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 		modalbody: modalbody,
 		acceptbutton: donebuttoncontainer
 	}
+}
+
+let buildtournamentsinit = async (maincontainer) => {
+
+	//get the tournaments from the database
+	let tournaments = await gettournaments();
+
+	//create a new row for each tournament
+	for(let i = 0; i < tournaments.length; i++){
+
+		//create container for tournament
+		let tournament = creatediv({
+			divclass: ["navigationitem-0", "navigationhover"],
+			appendto: maincontainer
+		})
+				
+		//create container for expand/collapse control
+		let expandcontainer = creatediv({
+			appendto: tournament,
+			divclass: ["expandcontainer", "flexcenter"]
+		})
+		expandcontainer.setAttribute("data-state", "collapsed");
+		
+		//create svg for expand/collapse control
+		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvg.setAttribute("viewBox", "0 0 20 20");
+		polygonsvg.setAttribute("height", "20px");
+		polygonsvg.setAttribute("width", "20px");
+		expandcontainer.appendChild(polygonsvg);
+
+		//create new triangle
+		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygon.setAttribute("points", "8,5 13,10 8,15");
+		polygon.setAttribute("fill", "#5f6368");	
+		polygonsvg.appendChild(polygon);
+		
+		// add tournament description icon container
+		let tournamenticonanddescription = creatediv({
+			divclass: ["navigation-icon-description", "navigationitemhover"],
+			appendto: tournament
+		})
+		
+		//add icon to tournament
+		let tournamenticon = document.createElement("img");
+		tournamenticon.setAttribute("src", "lib/administration/assets/tournament.svg");
+		tournamenticon.classList.add("navigationicon");
+		tournamenticonanddescription.appendChild(tournamenticon);
+		
+		//add tournament name
+		let tournamentname = creatediv({
+			divtext: tournaments[i]["tname"],
+			divclass: ["flexleft", "navigationdescription"],
+			appendto: tournamenticonanddescription
+		})
+		
+		//add event lisnter if tournmant is selected
+		tournamenticonanddescription.addEventListener("click", () => {
+			setselectednavigation(tournament);
+			buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
+		})
+
+		//-------------------------------BUILD MATCHDAYS--------------------------------	
+		//build matchdays
+		await buildmatchdaysinit(maincontainer, tournaments[i]["tid"]);
+
+		//add event listener for expand/collapse control for matchday
+		polygonsvg.addEventListener("click", () => {
+			
+			//change polygon
+			expandcollapseicon(expandcontainer, polygon);
+			
+			//get matchday container
+			let matchdaycontainer = document.getElementById("mc-md-" + tournaments[i]["tid"]);
+
+			//get matchdaycontainer sate
+			let matchdaysstate = matchdaycontainer.getAttribute("data-state");
+			
+			if(matchdaysstate == "hidden"){
+				//make matchdays invsible
+				changeelementdisplay(matchdaycontainer, "block");
+				matchdaycontainer.setAttribute("data-state", "visible");
+			}else{
+				changeelementdisplay(matchdaycontainer, "none");
+				matchdaycontainer.setAttribute("data-state", "hidden");
+			}
+			
+		})
+		
+		//------------------------------------------------------------------------------
+	}
+
+	//-------------------------------BUILD CREATE TOURNAMENT BUTTON---------------------
+	
+	//add create tournament
+	let createtournamentcontainer = creatediv({
+		divclass: ["navigationitem-0", "navigationhover"],
+		appendto: maincontainer
+	})
+
+	//empty div instead of expand arrow
+	creatediv({appendto: createtournamentcontainer});
+
+	//container for icon and description
+	let createtournamenticonanddescriptioncontainer = creatediv({
+		divclass: ["navigation-icon-description", "navigationitemhover"],
+		appendto: createtournamentcontainer
+	})
+
+	//add event listner to create new tournament button
+	createtournamenticonanddescriptioncontainer.addEventListener("click", () => {
+
+		if(document.getElementById("modal-create-tournament") == undefined){
+			buildmodalcreatetournament();
+		}else{
+			changeelementvisibility(document.getElementById("modal-create-tournament"), true, true);
+			toggleoverlay(true);
+		}		
+
+	})
+
+	//icon for create new tournament
+	let createtournamenticon = document.createElement("img");
+	createtournamenticon.setAttribute("src", "lib/administration/assets/createtournament.svg");
+	createtournamenticon.classList.add("navigationicon");
+	createtournamenticonanddescriptioncontainer.appendChild(createtournamenticon);
+
+	//text for create new tournament
+	creatediv({
+		divtext: "Neu",
+		divclass: ["flexleft", "navigationdescription"],
+		appendto: createtournamenticonanddescriptioncontainer
+	})
+
+	//-------------filler row-----
+	//let fillerrow = creatediv({appendto: maincontainer})
+	//-------------filler row-----
+
+
 }
 
 let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
