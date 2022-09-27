@@ -109,7 +109,9 @@ let buildvariablenavigation = async (maincontainer) => {
 		})
 
 		//-------------------------------BUILD MATCHDAYS--------------------------------	
+		//build matchdays
 		await buildmatchdaysinit(maincontainer, tournaments[i]["tid"]);
+
 		/*
 		//get matchdays
 		let matchdays = await getmatchdays(tournaments[i]["tid"])
@@ -362,7 +364,7 @@ let buildvariablenavigation = async (maincontainer) => {
 		})
 		
 		*/
-		//add event listener for expand/collapse control
+		//add event listener for expand/collapse control for matchday
 		polygonsvg.addEventListener("click", () => {
 			
 			//change polygon
@@ -1360,7 +1362,7 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	}
 }
 
-let buildmatchdays = async (container, tid, rebuild) => {
+let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 	
 	//check if matchdays should be rebuild
 	if(rebuild == 1){
@@ -1427,15 +1429,45 @@ let buildmatchdays = async (container, tid, rebuild) => {
 			//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
 			//createnewmatchday(tournaments[i]["tid"]);
 		})
+		
+		await buildroundsinit(container, tid, matchdays[j]["mdnumber"]);
+
+
+		//add event listener for expand/collapse control of rounds
+		polygonsvg.addEventListener("click", () => {
+		
+			//change polygon
+			expandcollapseicon(expandcontainer, polygon);
+			
+			//id of mainer container of rounds
+			let mainconterroundsids = "mc-r-tid-" + tid + "-md-" + matchdays[j]["mdnumber"];
+
+			//get container of rounds
+			let maincontainerrounds = document.getElementById(mainconterroundsids);
+			
+			//get visiblity state of container
+			let roundsstate = maincontainerrounds.getAttribute("data-state");
+			
+			if(roundsstate == "hidden"){
+				//make rounds vsible
+				changeelementdisplay(maincontainerrounds, "block");
+				maincontainerrounds.setAttribute("data-state", "visible");
+			}else{
+				//make rounds invisible
+				changeelementdisplay(maincontainerrounds, "none");
+				maincontainerrounds.setAttribute("data-state", "hidden");
+			}
+			
+		})
 
 	}
 }
 
-let buildmatchdaysinit = async (maincontainer, tid) => {
+let buildmatchdaysinit = async (navigationcontainer, tid) => {
 
 	//create maincontainer for matchdays
 	let maincontainermatchdays = creatediv({
-		appendto: maincontainer
+		appendto: navigationcontainer 
 	})
 
 	//set id of matchday maincontainer
@@ -1444,7 +1476,7 @@ let buildmatchdaysinit = async (maincontainer, tid) => {
 	//set container hidden
 	maincontainermatchdays.style.display = "none";
 
-	//set data state to hidedn
+	//set data state to hidden 
 	maincontainermatchdays.setAttribute("data-state", "hidden");
 
 	//create container for days
@@ -1456,7 +1488,7 @@ let buildmatchdaysinit = async (maincontainer, tid) => {
 	containerdays.setAttribute("id", "matchdays-" + tid);
 	
 	//build matchdays for tournament
-	await buildmatchdays(containerdays, tid, 0);
+	await buildmatchdays(navigationcontainer, containerdays, tid, 0);
 
 	//--------create button to create new matchday--------
 	let creatematchdaycontainer = creatediv({
@@ -1492,6 +1524,110 @@ let buildmatchdaysinit = async (maincontainer, tid) => {
 		await createnewmatchday(tid);
 		buildmatchdays(containerdays, tid, 1);
 	})
+}
+
+let buildrounds = async (container, tid, md, rebuild) => {
+
+	//check if rounds should be rebuild
+	if(rebuild == 1){
+		cleareelement(container);
+	}
+
+
+	//get rounds
+	let rounds = await getrounds(tid, md); 
+	
+	//loop through rounds of matchday
+	for(let k = 0; k < rounds.length; k++){
+
+		//create container for round
+		let roundcontainer = creatediv({
+			divclass: ["navigationitem-2", "navigationhover"],
+			appendto: container,
+		})
+
+		//create filler div
+		creatediv({appendto: roundcontainer});
+
+		//create filler div
+		creatediv({appendto: roundcontainer});
+
+		//create container for expand/collapse control
+		let expandcontainer = creatediv({
+			appendto: roundcontainer,
+			divclass: ["expandcontainer", "flexcenter"]
+		})
+		expandcontainer.setAttribute("data-state", "collapsed");
+
+		//create svg for expand/collapse control
+		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvg.setAttribute("viewBox", "0 0 20 20");
+		polygonsvg.setAttribute("height", "20px");
+		polygonsvg.setAttribute("width", "20px");
+		expandcontainer.appendChild(polygonsvg);
+
+		//create new triangle
+		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygon.setAttribute("points", "8,5 13,10 8,15");
+		polygon.setAttribute("fill", "#5f6368");	
+		polygonsvg.appendChild(polygon);	
+		
+		//add matchday description icon container
+		let roundiconanddescription = creatediv({
+			divclass: ["navigation-icon-description", "navigationitemhover"],
+			appendto: roundcontainer
+		})
+
+		//add icon to matchday
+		let roundicon = document.createElement("img");
+		roundicon.setAttribute("src", "lib/assets/round.svg");
+		roundicon.classList.add("navigationicon");
+		roundiconanddescription.appendChild(roundicon);
+
+		//add matchday name
+		let matchdaynumber = creatediv({
+			divtext: "Runde " + rounds[k]["rnumber"],
+			divclass: ["flexleft", "navigationdescription"],
+			appendto: roundiconanddescription
+		})
+
+		//add event lisnter if matchday is selected
+		roundiconanddescription.addEventListener("click", () => {
+			setselectednavigation(roundcontainer);
+			
+			//TODO build workspace view round 
+			//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+		})				
+	}
+	
+}
+
+let buildroundsinit = async (matchdaycontainer, tid, md) => {
+
+	//create maincontainer for rounds 
+	let maincontainerrounds = creatediv({
+		appendto: matchdaycontainer
+	})
+
+	//set id of rounds maincontainer
+	maincontainerrounds.setAttribute("id", "mc-r-tid-" + tid + "-md-" + md);
+
+	//set container hidden
+	//maincontainermatchdays.style.display = "none";
+
+	//set data state to hidden 
+	maincontainerrounds.setAttribute("data-state", "hidden");
+	
+	//create container for days
+	let containerrounds = creatediv({
+		appendto: maincontainerrounds
+	});
+
+	//set id of days container
+	containerrounds.setAttribute("id", "rounds-" + tid + "-" + md);
+
+	await buildrounds(containerrounds, tid, md);
+
 }
 
 
