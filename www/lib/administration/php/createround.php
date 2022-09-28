@@ -5,8 +5,6 @@
 	$json = file_get_contents("php://input");
 	$data = json_decode($json, true);
 
-	print_r($data);
-
 	//empty array for php response
 	$response = [];
 
@@ -65,6 +63,7 @@
 	$sql->execute();
 
 	$response["result"] = 0;
+	$response["rnumber"] = $nextround;
 	
 	echo(json_encode($response));
 ?>
