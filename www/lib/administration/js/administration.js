@@ -877,9 +877,6 @@ let buildmodalcreateclub = (tid) => {
 
 let createnewmatchday = async (tid) => {
 
-	//console.log(tid);
-
-
 	//create object for php script
 	let postdata = {tid: tid};	
 	
@@ -896,6 +893,9 @@ let createnewmatchday = async (tid) => {
 	//response of php script
 	let phpresponse = await response.json();
 
+	return phpresponse["mdnumber"];
+
+	/*
 	if(phpresponse["result"] == 0){
 		
 
@@ -906,6 +906,7 @@ let createnewmatchday = async (tid) => {
 		//give alert with error message
 		alert("error");
 	}
+	*/
 
 }
 
@@ -1115,6 +1116,93 @@ let buildtournamentsinit = async (maincontainer) => {
 
 }
 
+let buildsinglematchday = async (container, tid, mdnumber) => {
+
+	let matchdaycontainer = creatediv({
+		divclass: ["navigationitem-1", "navigationhover"],
+		appendto: container,
+	})
+
+	//create filler div
+	creatediv({appendto: matchdaycontainer});
+	
+	//create container for expand/collapse control
+	let expandcontainer = creatediv({
+		appendto: matchdaycontainer,
+		divclass: ["expandcontainer", "flexcenter"]
+	})
+	expandcontainer.setAttribute("data-state", "collapsed");
+
+	//create svg for expand/collapse control
+	let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	polygonsvg.setAttribute("viewBox", "0 0 20 20");
+	polygonsvg.setAttribute("height", "20px");
+	polygonsvg.setAttribute("width", "20px");
+	expandcontainer.appendChild(polygonsvg);
+
+	//create new triangle
+	let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	polygon.setAttribute("points", "8,5 13,10 8,15");
+	polygon.setAttribute("fill", "#5f6368");	
+	polygonsvg.appendChild(polygon);
+
+	// add matchday description icon container
+	let matchdayiconanddescription = creatediv({
+		divclass: ["navigation-icon-description", "navigationitemhover"],
+		appendto: matchdaycontainer
+	})
+
+	//add icon to matchday
+	let matchdayicon = document.createElement("img");
+	matchdayicon.setAttribute("src", "lib/assets/matchday.svg");
+	matchdayicon.classList.add("navigationicon");
+	matchdayiconanddescription.appendChild(matchdayicon);
+
+	//add matchday name
+	let matchdaynumber = creatediv({
+		divtext: "Spieltag " + mdnumber,
+		divclass: ["flexleft", "navigationdescription"],
+		appendto: matchdayiconanddescription
+	})
+
+	//add event lisnter if matchday is selected
+	matchdayiconanddescription.addEventListener("click", () => {
+		setselectednavigation(matchdaycontainer);
+		
+		//TODO build workspace view matchday
+		//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+		//createnewmatchday(tournaments[i]["tid"]);
+	})
+
+	//add event listener for expand/collapse control of rounds
+	polygonsvg.addEventListener("click", () => {
+	
+		//change polygon
+		expandcollapseicon(expandcontainer, polygon);
+		
+		//id of mainer container of rounds
+		let mainconterroundsids = "mc-r-tid-" + tid + "-md-" + mdnumber; 
+
+		//get container of rounds
+		let maincontainerrounds = document.getElementById(mainconterroundsids);
+		
+		//get visiblity state of container
+		let roundsstate = maincontainerrounds.getAttribute("data-state");
+		
+		if(roundsstate == "hidden"){
+			//make rounds vsible
+			changeelementdisplay(maincontainerrounds, "block");
+			maincontainerrounds.setAttribute("data-state", "visible");
+		}else{
+			//make rounds invisible
+			changeelementdisplay(maincontainerrounds, "none");
+			maincontainerrounds.setAttribute("data-state", "hidden");
+		}
+		
+	})
+
+}
+
 let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 	
 	//check if matchdays should be rebuild
@@ -1127,92 +1215,8 @@ let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 
 	//loop through matchdays
 	for(let j = 0; j < matchdays.length; j++){
-		let matchdaycontainer = creatediv({
-			divclass: ["navigationitem-1", "navigationhover"],
-			appendto: container,
-		})
-
-		//create filler div
-		creatediv({appendto: matchdaycontainer});
-		
-		//create container for expand/collapse control
-		let expandcontainer = creatediv({
-			appendto: matchdaycontainer,
-			divclass: ["expandcontainer", "flexcenter"]
-		})
-		expandcontainer.setAttribute("data-state", "collapsed");
-
-		//create svg for expand/collapse control
-		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		polygonsvg.setAttribute("viewBox", "0 0 20 20");
-		polygonsvg.setAttribute("height", "20px");
-		polygonsvg.setAttribute("width", "20px");
-		expandcontainer.appendChild(polygonsvg);
-
-		//create new triangle
-		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		polygon.setAttribute("points", "8,5 13,10 8,15");
-		polygon.setAttribute("fill", "#5f6368");	
-		polygonsvg.appendChild(polygon);
-
-		// add matchday description icon container
-		let matchdayiconanddescription = creatediv({
-			divclass: ["navigation-icon-description", "navigationitemhover"],
-			appendto: matchdaycontainer
-		})
-
-		//add icon to matchday
-		let matchdayicon = document.createElement("img");
-		matchdayicon.setAttribute("src", "lib/assets/matchday.svg");
-		matchdayicon.classList.add("navigationicon");
-		matchdayiconanddescription.appendChild(matchdayicon);
-
-		//add matchday name
-		let matchdaynumber = creatediv({
-			divtext: "Spieltag " + matchdays[j]["mdnumber"],
-			divclass: ["flexleft", "navigationdescription"],
-			appendto: matchdayiconanddescription
-		})
-
-		//add event lisnter if matchday is selected
-		matchdayiconanddescription.addEventListener("click", () => {
-			setselectednavigation(matchdaycontainer);
-			
-			//TODO build workspace view matchday
-			//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
-			//createnewmatchday(tournaments[i]["tid"]);
-		})
-		
+		await buildsinglematchday(container, tid, matchdays[j]["mdnumber"]);
 		await buildroundsinit(container, tid, matchdays[j]["mdnumber"]);
-
-
-		//add event listener for expand/collapse control of rounds
-		polygonsvg.addEventListener("click", () => {
-		
-			//change polygon
-			expandcollapseicon(expandcontainer, polygon);
-			
-			//id of mainer container of rounds
-			let mainconterroundsids = "mc-r-tid-" + tid + "-md-" + matchdays[j]["mdnumber"];
-
-			//get container of rounds
-			let maincontainerrounds = document.getElementById(mainconterroundsids);
-			
-			//get visiblity state of container
-			let roundsstate = maincontainerrounds.getAttribute("data-state");
-			
-			if(roundsstate == "hidden"){
-				//make rounds vsible
-				changeelementdisplay(maincontainerrounds, "block");
-				maincontainerrounds.setAttribute("data-state", "visible");
-			}else{
-				//make rounds invisible
-				changeelementdisplay(maincontainerrounds, "none");
-				maincontainerrounds.setAttribute("data-state", "hidden");
-			}
-			
-		})
-
 	}
 }
 
@@ -1274,8 +1278,11 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 
 	//add event listner to create matchday
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
-		await createnewmatchday(tid);
-		buildmatchdays(containerdays, tid, 1);
+		//create new matchday and return matchday number
+		let mdnumber = await createnewmatchday(tid);
+
+		//add new matchday to navigation
+		buildsinglematchday(containerdays, tid, mdnumber);
 	})
 }
 
@@ -1437,9 +1444,6 @@ let createnewround = async (tid, md) => {
 
 	//response of php script
 	let phpresponse = await response.json();
-
-	console.log(phpresponse);
-
 
 }
 

@@ -55,6 +55,7 @@
 	$sql->execute();
 
 	$response["result"] = 0;
+	$response["mdnumber"] = $nextmatchday;
 	
 	echo(json_encode($response));
 ?>
