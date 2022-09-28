@@ -121,7 +121,7 @@ let buildconstantnavigation = (maincontainer) => {
 		appendto: settingscontainer
 	})
 
-	sesstingsiconanddescription.addEventListener("click", () =>{
+	sesstingsiconanddescription.addEventListener("click", () => { 
 		setselectednavigation(settingscontainer);
 		buildsettings;
 	})
@@ -1388,6 +1388,12 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 		appendto: maincontainerrounds,
 	})
 
+	createroundcontainer.addEventListener("click", async () => {
+
+		createnewround(tid, md);
+
+	});
+
 	//create filler div
 	creatediv({appendto: createroundcontainer});
 	creatediv({appendto: createroundcontainer});
@@ -1414,6 +1420,28 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 
 }
 
+let createnewround = async (tid, md) => {
+
+	//create json for php
+	let postdata = {tid: tid, md: md};
+
+	//call php script
+	let response = await fetch("/lib/administration/php/createround.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(postdata)
+	});
+
+	//response of php script
+	let phpresponse = await response.json();
+
+	console.log(phpresponse);
+
+
+}
 
 DOMready(buildheader);
 DOMready(buildnavigation);
