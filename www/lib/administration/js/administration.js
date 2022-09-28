@@ -426,8 +426,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	trackconfig.setAttribute("src", "lib/assets/track.svg");
 	trackconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(trackconfig);
-	trackconfig.addEventListener("click", () => {
-		//TODO config for tracks
+	trackconfig.addEventListener("click", async () => {
+		await buildworkspacetrackconfiguration(id);
 	})
 
 	//create icon for club configuration
@@ -1460,6 +1460,21 @@ let createnewround = async (tid, md) => {
 	//return round number
 	return phpresponse["rnumber"];
 
+}
+
+let buildworkspacetrackconfiguration = async (tid) => {
+	
+	console.log(tid);
+
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+
+	//get workspace body
+	let workspacebody = getworkspacebody();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
 }
 
 DOMready(buildheader);
