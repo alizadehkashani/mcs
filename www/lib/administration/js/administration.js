@@ -1464,7 +1464,7 @@ let createnewround = async (tid, md) => {
 
 let buildworkspacetrackconfiguration = async (tid) => {
 	
-	console.log(tid);
+	let tracks = await gettracks(tid);
 
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
@@ -1475,6 +1475,87 @@ let buildworkspacetrackconfiguration = async (tid) => {
 	//clear workspace body and foot
 	clearworkspacebody();
 	clearworkspacefoot();
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-viewtrackinformation");
+
+	//create maincontainer for creation of new track
+	let maincontainercreatetrack = creatediv({
+		appendto: workspacebody,
+		divid: "track-create-container"
+	});
+
+	//create icon for tournament information
+	let addtrackicon = document.createElement("img");
+	addtrackicon.setAttribute("src", "lib/assets/addcircle.svg");
+	addtrackicon.classList.add("workspaceicon");
+	maincontainercreatetrack.appendChild(addtrackicon);
+	addtrackicon.addEventListener("click", () => {
+		//build modal to view/update/delete track
+	})
+
+	//crate main contaier for display of current tracks display
+	let maincontainerdisplaytracks = creatediv({
+		appendto: workspacebody,
+		divclass: ["tracks-table"]
+	});
+
+	//build table of tracks
+	await buildtrackstable(tid, maincontainerdisplaytracks); 
+
+
+}
+
+let gettracks = async (tid) => {
+
+	let tracks = await fetch("/lib/administration/php/gettracks.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/json',
+			'content-Type': 'application/json'
+		},
+		body: JSON.stringify({tid: tid})
+	});
+
+	tracks = await tracks.json();
+
+	return tracks;
+}
+
+let buildtrackstable = async (tid, container) => {
+
+	//get tracks from db
+	let tracks = await gettracks(tid);
+
+	//variable for number of tracks in tournament
+	let numberoftracks = tracks.length;
+
+	//loop through tracks and add to tracks table
+	for(let i = 0; i < numberoftracks; i++){
+		buildsingletrack(container, tracks[i]);
+	}
+}
+
+let buildsingletrack = (container, trackdata) => {
+	
+	//create new row
+	let row = creatediv({
+		divclass: ["tracks-table-row"]
+	});
+
+	//create div for track table
+	let tracklabel = creatediv({
+		divtext: trackdata.label,
+		appendto: row
+	});
+
+	//create div for track table
+	let trackdescription= creatediv({
+		divtext: trackdata.trackdescription,
+		appendto: row
+	});
+
+	container.appendChild(row);
 }
 
 DOMready(buildheader);

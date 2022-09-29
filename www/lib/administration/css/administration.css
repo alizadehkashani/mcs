@@ -473,4 +473,34 @@
 	grid-row-gap: 5px;
 }
 
+.workspace-viewtrackinformation{
+	height: 600px;
+	
+	display: grid;
 
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 50px 1fr;
+
+}
+
+.tracks-table{
+
+	display: grid;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(10, 25px);
+
+	padding: 10px;
+}
+
+.tracks-table-row{
+	display: grid;
+
+	grid-template-columns: 50px 1fr;
+	grid-template-rows: 1fr;
+
+}
