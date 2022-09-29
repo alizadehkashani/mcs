@@ -1,21 +1,23 @@
+
 <?php
 	//get db information
 	require("../../../../lib/dbconfig.php");
 	
 	$data = file_get_contents("php://input");
 	$input = json_decode($data, true);
-
-	
-	//query to insert new track 
+		
+	//update track
 	$query = "
-		INSERT INTO tracks (tid, label, trackdescription)
-		VALUES (:tid, :label, :trackdescription)
+		UPDATE tracks
+		SET tid = :tid, label = :label, trackdescription = :trackdescription
+		WHERE trackid = :trackid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":label", $input["label"]);
 	$sql->bindParam(":trackdescription", $input["trackdescription"]);
+	$sql->bindParam(":trackid", $input["trackid"]);
 	$sql->execute();
 
 ?>

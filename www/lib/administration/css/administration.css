@@ -504,3 +504,25 @@
 	grid-template-rows: 1fr;
 
 }
+
+#modal-create-track{
+
+	width: 600px;
+	height: 200px;
+
+}
+
+#modal-create-track-body{
+
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 200px;
+	grid-template-rows: repeat(2, 25px);
+
+	grid-row-gap: 5px;
+
+}

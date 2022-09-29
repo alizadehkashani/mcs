@@ -462,7 +462,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 
 	//build standard view, tournament information
 	//buildworkspacetournamentinformation(id, tournamentnamediv);
-	buildworkspaceclubinformation(id);
+	//buildworkspaceclubinformation(id);
+	buildworkspacetrackconfiguration(id);
 
 }
 
@@ -1491,7 +1492,10 @@ let buildworkspacetrackconfiguration = async (tid) => {
 	addtrackicon.classList.add("workspaceicon");
 	maincontainercreatetrack.appendChild(addtrackicon);
 	addtrackicon.addEventListener("click", () => {
-		//build modal to view/update/delete track
+		//build modal to create tack
+		buildmodalcreatetrack(tid);
+		toggleoverlay(true);
+
 	})
 
 	//crate main contaier for display of current tracks display
@@ -1556,6 +1560,47 @@ let buildsingletrack = (container, trackdata) => {
 	});
 
 	container.appendChild(row);
+}
+
+let buildmodalcreatetrack = async (tid) => {
+
+	//create modal
+	let modal = createbasicmodal(
+		"modal-create-track",
+		"Bahn anlegen",
+		"modal-create-track-body"
+	);
+
+	//create label for label
+	let tracklabellabel = creatediv({
+		divtext: "Label",
+		appendto: modal.modalbody
+	});
+
+	//create input field for track label
+	let tracklabelinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+
+	//create label for track description
+	let labeltrackdescription = creatediv({
+		divtext: "Beschreibung",
+		appendto: modal.modalbody
+	});
+
+	//create input for track description
+	let inputtrackdescription = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+
+	//set eventlistener to accept button
+	modal.acceptbutton.addEventListener("click", async () => {
+
+		console.log(tid);
+	});
+
 }
 
 DOMready(buildheader);
