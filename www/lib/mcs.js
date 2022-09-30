@@ -107,3 +107,21 @@ let toggleoverlay = (active) => {
 	}
 
 }
+
+let limitinput = (limit, inputfield) => {
+	//debugger;
+
+	//get current value of input field
+	let currentvalue = inputfield.value;
+
+	//get current length
+	let currentlength = inputfield.value.length;
+
+	if(currentlength > limit){
+		currentvalue = currentvalue.substring(0, limit);
+		return currentvalue;
+	}else{
+		return currentvalue
+	}
+
+}
