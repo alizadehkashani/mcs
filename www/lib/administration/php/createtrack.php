@@ -18,4 +18,8 @@
 	$sql->bindParam(":trackdescription", $input["trackdescription"]);
 	$sql->execute();
 
+	$response = [];
+	$response["result"] = 0;
+	echo(json_encode($response));
+
 ?>

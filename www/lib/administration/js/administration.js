@@ -1582,6 +1582,13 @@ let buildmodalcreatetrack = async (tid) => {
 		type: "INPUT",
 		appendto: modal.modalbody
 	});
+	tracklabelinput.style.width = "30px";
+
+	//limit input length to one
+	tracklabelinput.addEventListener("input", () => {
+		console.log("changed");
+		tracklabelinput.value = limitinput(1, tracklabelinput);
+	});
 
 	//create label for track description
 	let labeltrackdescription = creatediv({
@@ -1595,10 +1602,42 @@ let buildmodalcreatetrack = async (tid) => {
 		appendto: modal.modalbody
 	});
 
+	//limit input length
+	inputtrackdescription.addEventListener("input", () => {
+		console.log("changed");
+		inputtrackdescription.value = limitinput(20, inputtrackdescription);
+	});
+
 	//set eventlistener to accept button
 	modal.acceptbutton.addEventListener("click", async () => {
 
-		console.log(tid);
+		//set data for php script
+		let requestdata = {
+			tid: tid, 
+			label: tracklabelinput.value, 
+			trackdescription: inputtrackdescription.value
+		};
+
+		//call php script to create new track
+		let response = await fetch("/lib/administration/php/createtrack.php", {
+			method: 'POST',
+			headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+			body: JSON.stringify(requestdata)
+		});
+
+		//response of php script
+		response = await response.json();
+
+		//if track was successfully created, close modal and turn off overlay
+		if(response["result"] == 0){
+			changeelementvisibility(modal.modalcontainer, false, true);
+			toggleoverlay(false);
+		}
+
+
 	});
 
 }
