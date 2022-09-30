@@ -1635,8 +1635,12 @@ let buildmodalcreatetrack = async (tid) => {
 		if(response["result"] == 0){
 			changeelementvisibility(modal.modalcontainer, false, true);
 			toggleoverlay(false);
-		}
+		}else if(response["result"] == 1){
+			changeelementvisibility(modal.modalcontainer, false, true);
+			toggleoverlay(false);
 
+			alert(response["message"]);
+		}
 
 	});
 
