@@ -1536,11 +1536,11 @@ let buildtrackstable = async (tid, container) => {
 
 	//loop through tracks and add to tracks table
 	for(let i = 0; i < numberoftracks; i++){
-		buildsingletrack(container, tracks[i]);
+		buildsingletrack(container, tracks[i], tid);
 	}
 }
 
-let buildsingletrack = (container, trackdata) => {
+let buildsingletrack = (container, trackdata, tid) => {
 	
 	//create new row
 	let row = creatediv({
@@ -1557,6 +1557,12 @@ let buildsingletrack = (container, trackdata) => {
 	let trackdescription= creatediv({
 		divtext: trackdata.trackdescription,
 		appendto: row
+	});
+
+	row.addEventListener("click", async = () => {
+		//build modal to edit track
+		buildmodaledittrack(tid, trackdata.trackid);
+		toggleoverlay(true);
 	});
 
 	container.appendChild(row);
@@ -1586,7 +1592,6 @@ let buildmodalcreatetrack = async (tid) => {
 
 	//limit input length to one
 	tracklabelinput.addEventListener("input", () => {
-		console.log("changed");
 		tracklabelinput.value = limitinput(1, tracklabelinput);
 	});
 
@@ -1604,7 +1609,6 @@ let buildmodalcreatetrack = async (tid) => {
 
 	//limit input length
 	inputtrackdescription.addEventListener("input", () => {
-		console.log("changed");
 		inputtrackdescription.value = limitinput(20, inputtrackdescription);
 	});
 
@@ -1644,6 +1648,113 @@ let buildmodalcreatetrack = async (tid) => {
 
 	});
 
+}
+
+let buildmodaledittrack = async (tid, trackid) => {
+
+	//get track
+	let trackdata = await gettrack(tid, trackid);
+
+	console.log(trackdata);
+
+	//create modal
+	let modal = createbasicmodal(
+		"modal-edit-track",
+		"Bahn",
+		"modal-edit-track-body"
+	);
+
+	//create label for label
+	let tracklabellabel = creatediv({
+		divtext: "Label",
+		appendto: modal.modalbody
+	});
+
+	//create input field for track label
+	let tracklabelinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	tracklabelinput.style.width = "30px";
+	tracklabelinput.value = trackdata["label"];
+
+	//limit input length to one
+	tracklabelinput.addEventListener("input", () => {
+		console.log("changed");
+		tracklabelinput.value = limitinput(1, tracklabelinput);
+	});
+
+	//create label for track description
+	let labeltrackdescription = creatediv({
+		divtext: "Beschreibung",
+		appendto: modal.modalbody
+	});
+
+	//create input for track description
+	let inputtrackdescription = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	inputtrackdescription.value = trackdata["trackdescription"];
+
+	//limit input length
+	inputtrackdescription.addEventListener("input", () => {
+		console.log("changed");
+		inputtrackdescription.value = limitinput(20, inputtrackdescription);
+	});
+
+	//set eventlistener to accept button
+	modal.acceptbutton.addEventListener("click", async () => {
+
+		//set data for php script
+		let requestdata = {
+			tid: tid, 
+			label: tracklabelinput.value, 
+			trackdescription: inputtrackdescription.value
+		};
+
+		//call php script to create new track
+		let response = await fetch("/lib/administration/php/updatetrack.php", {
+			method: 'POST',
+			headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json'
+				},
+			body: JSON.stringify(requestdata)
+		});
+
+		//response of php script
+		response = await response.json();
+
+		//if track was successfully created, close modal and turn off overlay
+		if(response["result"] == 0){
+			changeelementvisibility(modal.modalcontainer, false, true);
+			toggleoverlay(false);
+		}
+	});
+
+}
+
+let gettrack = async (tid, trackid) => {
+
+	//set request data for php script
+	let requestdata = {
+		tid: tid,
+		trackid: trackid
+	}
+
+	//call php script
+	let track = await fetch("/lib/administration/php/gettrack.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	//return track
+	return await track.json();
 }
 
 DOMready(buildheader);

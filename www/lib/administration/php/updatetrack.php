@@ -1,4 +1,3 @@
-
 <?php
 	//get db information
 	require("../../../../lib/dbconfig.php");
@@ -6,6 +5,9 @@
 	$data = file_get_contents("php://input");
 	$input = json_decode($data, true);
 		
+	//array for response
+	$response = [];
+
 	//update track
 	$query = "
 		UPDATE tracks
@@ -19,5 +21,10 @@
 	$sql->bindParam(":trackdescription", $input["trackdescription"]);
 	$sql->bindParam(":trackid", $input["trackid"]);
 	$sql->execute();
+
+	$response["result"] = 0;
+	$response["message"] = "Bahn aktualisiert";
+
+	echo(json_encode($response));
 
 ?>
