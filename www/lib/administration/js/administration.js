@@ -312,9 +312,6 @@ let createnewtournament = async (description, location) => {
 		changeelementvisibility(document.getElementById("modal-create-tournament"), false, true);
 		toggleoverlay(false);
 
-		//give altert to user, that tournament has been created
-		alert(phpresponse["message"]);
-
 	}else{
 		alert("error");
 	}
@@ -352,16 +349,13 @@ let createnewclub = async (tid, clubnameinput, modalcontainer) => {
 		clubnameinput.value = "";
 		
 		//rebuild clubs table
-		fillclubstable(tid);
+		await fillclubstable(tid);
 		
 		
 
 		//deactivate modal and overlay
 		changeelementvisibility(modalcontainer, false, true);
 		toggleoverlay(false);
-
-		//alert user, that club was deleted
-		alert("Verein angelegt");
 
 	}else{
 		alert("error");
@@ -445,7 +439,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", () => {
-		//TODO config for players
+		buildworkspaceplayerconfig(id);
 	})	
 
 	//create icon for tournament archive
@@ -463,7 +457,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	//build standard view, tournament information
 	//buildworkspacetournamentinformation(id, tournamentnamediv);
 	//buildworkspaceclubinformation(id);
-	buildworkspacetrackconfiguration(id);
+	//buildworkspacetrackconfiguration(id);
+	buildworkspaceplayerconfig(id);
 
 }
 
@@ -541,7 +536,6 @@ let buildworkspaceclubinformation = async (tid) => {
 	//add class to workspace body
 	workspacebody.classList.add("workspace-view-club-information");
 
-
 	//create container for create club button
 	let createclubbuttoncontainer = creatediv({
 		appendto: workspacebody
@@ -563,7 +557,8 @@ let buildworkspaceclubinformation = async (tid) => {
 		appendto: workspacebody
 	})
 
-	fillclubstable(tid);
+	//fill table with clubs
+	await fillclubstable(tid);
 	
 }
 
@@ -641,10 +636,11 @@ let buildmodalviewclub = async (tid, clubid) => {
 	
 }
 
-
 let deleteclub = async (tid, cid) => {
+	//set data for php script
 	let requestdata = {tid: tid, cid: cid};
 
+	//call php script
 	let phpresponse = await fetch("/lib/administration/php/deleteclub.php", {
 		method: 'POST',
 		headers: {
@@ -654,11 +650,12 @@ let deleteclub = async (tid, cid) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php resposnse
 	let response = await phpresponse.json();
 
+	//rebuild table if no error
 	if(response.result == 0){
-		fillclubstable(tid);
-		alert("Verein gelöscht");
+		await fillclubstable(tid);
 	}else{
 		alert("Error");
 	}
@@ -666,8 +663,10 @@ let deleteclub = async (tid, cid) => {
 
 let updateclub = async (tid, cid, cname) => {
 
+	//set data for php script
 	let requestdata = {tid: tid, cid: cid, cname: cname};
 
+	//call php script
 	let phpresponse = await fetch("/lib/administration/php/updateclub.php", {
 		method: 'POST',
 		headers: {
@@ -677,19 +676,23 @@ let updateclub = async (tid, cid, cname) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php response
 	let response = await phpresponse.json();
 
+	//if no error build clubs table
 	if(response.result == 0){
-		fillclubstable(tid);
-		alert("Verein geändert");
+		await fillclubstable(tid);
 	}else{
 		alert("Error");
 	}
 }
 
 let getclub = async (tid, cid) => {
+
+	//set data for php script
 	let requestdata = {tid: tid, cid: cid};
 
+	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getclub.php", {
 		method: 'POST',
 		headers: {
@@ -699,14 +702,19 @@ let getclub = async (tid, cid) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php response
 	let response = await phpresponse.json();
 
+	//return club data
 	return response;
 }
 
 let getclubs = async (tid) => {
+
+	//set data for php script
 	let requestdata = {tid: tid};
 
+	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getclubs.php", {
 		method: 'POST',
 		headers: {
@@ -716,14 +724,19 @@ let getclubs = async (tid) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php response
 	let response = await phpresponse.json();
 
+	//return clubs
 	return response;
 }
 
 let getmatchdays = async (tid) => {
+	
+	//set data for php script
 	let requestdata = {tid: tid};
 
+	//call php script 
 	let phpresponse = await fetch("/lib/administration/php/getmatchdays.php", {
 		method: 'POST',
 		headers: {
@@ -733,14 +746,19 @@ let getmatchdays = async (tid) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php response
 	let response = await phpresponse.json();
 
+	//return matchdays
 	return response;
 }
 
 let getrounds = async (tid, mdnumber) => {
+	
+	//set data for php script
 	let requestdata = {tid: tid, mdnumber: mdnumber};
 
+	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getrounds.php", {
 		method: 'POST',
 		headers: {
@@ -750,12 +768,15 @@ let getrounds = async (tid, mdnumber) => {
 		body: JSON.stringify(requestdata)
 	});
 
+	//variable for php response
 	let response = await phpresponse.json();
 
+	//return rounds
 	return response;
 }
 
 let buildmodalcreatetournament = () => {
+
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
 
@@ -844,7 +865,7 @@ let buildmodalcreatetournament = () => {
 		createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
 	})
 
-	
+	//turn in overlay
 	toggleoverlay(true);
 }
 
@@ -1700,16 +1721,16 @@ let buildmodaledittrack = async (tid, trackid) => {
 	deltrackicon.classList.add("workspaceicon");
 	containerdelbutton.appendChild(deltrackicon);
 	deltrackicon.addEventListener("click", async () => {
-		//TODO DEL TRACK
+		//DEL TRACK
 		await deletetrack(tid, trackid);	
 
-		//TODO REBUILD TRACK TABLE
+		//REBUILD TRACK TABLE
 		await buildtrackstable(tid, document.getElementById("tracks-table"), true);			
 
-		//TODO TOGGLE MODAL
+		//TOGGLE MODAL
 		changeelementvisibility(modal.modalcontainer, false, true);
 
-		//TODO TOGGLE OVERLAY
+		//TOGGLE OVERLAY
 		toggleoverlay(false);
 	})
 
@@ -1801,6 +1822,10 @@ let deletetrack = async (tid, trackid) => {
 	return await phpresponse.json();
 }
 
+	let buildworkspaceplayerconfig = async (tid) => {
+		console.log(tid);	
+		
+	}
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);
