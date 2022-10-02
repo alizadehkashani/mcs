@@ -1501,11 +1501,12 @@ let buildworkspacetrackconfiguration = async (tid) => {
 	//crate main contaier for display of current tracks display
 	let maincontainerdisplaytracks = creatediv({
 		appendto: workspacebody,
-		divclass: ["tracks-table"]
+		divclass: ["tracks-table"],
+		divid: "tracks-table"
 	});
 
 	//build table of tracks
-	await buildtrackstable(tid, maincontainerdisplaytracks); 
+	await buildtrackstable(tid, maincontainerdisplaytracks, false); 
 
 
 }
@@ -1526,7 +1527,12 @@ let gettracks = async (tid) => {
 	return tracks;
 }
 
-let buildtrackstable = async (tid, container) => {
+let buildtrackstable = async (tid, container, rebuild) => {
+
+	//if rebuild, clear container
+	if(rebuild){
+		cleareelement(container)
+	}
 
 	//get tracks from db
 	let tracks = await gettracks(tid);
@@ -1635,8 +1641,9 @@ let buildmodalcreatetrack = async (tid) => {
 		//response of php script
 		response = await response.json();
 
-		//if track was successfully created, close modal and turn off overlay
+		//if track was successfully created, close modal and turn off overlay and build table
 		if(response["result"] == 0){
+			await buildtrackstable(tid, document.getElementById("tracks-table"), true);			
 			changeelementvisibility(modal.modalcontainer, false, true);
 			toggleoverlay(false);
 		}else if(response["result"] == 1){
@@ -1654,8 +1661,6 @@ let buildmodaledittrack = async (tid, trackid) => {
 
 	//get track
 	let trackdata = await gettrack(tid, trackid);
-
-	console.log(trackdata);
 
 	//create modal
 	let modal = createbasicmodal(
@@ -1680,9 +1685,34 @@ let buildmodaledittrack = async (tid, trackid) => {
 
 	//limit input length to one
 	tracklabelinput.addEventListener("input", () => {
-		console.log("changed");
 		tracklabelinput.value = limitinput(1, tracklabelinput);
 	});
+
+	//container for button to delete track
+	let containerdelbutton = creatediv({
+		divclass: ["flexright"],
+		appendto: modal.modalbody
+	});
+
+	//create icon for track deletion
+	let deltrackicon = document.createElement("img");
+	deltrackicon.setAttribute("src", "lib/assets/delete.svg");
+	deltrackicon.classList.add("workspaceicon");
+	containerdelbutton.appendChild(deltrackicon);
+	deltrackicon.addEventListener("click", async () => {
+		//TODO DEL TRACK
+		await deletetrack(tid, trackid);	
+
+		//TODO REBUILD TRACK TABLE
+		await buildtrackstable(tid, document.getElementById("tracks-table"), true);			
+
+		//TODO TOGGLE MODAL
+		changeelementvisibility(modal.modalcontainer, false, true);
+
+		//TODO TOGGLE OVERLAY
+		toggleoverlay(false);
+	})
+
 
 	//create label for track description
 	let labeltrackdescription = creatediv({
@@ -1699,7 +1729,6 @@ let buildmodaledittrack = async (tid, trackid) => {
 
 	//limit input length
 	inputtrackdescription.addEventListener("input", () => {
-		console.log("changed");
 		inputtrackdescription.value = limitinput(20, inputtrackdescription);
 	});
 
@@ -1709,12 +1738,13 @@ let buildmodaledittrack = async (tid, trackid) => {
 		//set data for php script
 		let requestdata = {
 			tid: tid, 
+			trackid: trackdata["trackid"],
 			label: tracklabelinput.value, 
 			trackdescription: inputtrackdescription.value
 		};
 
 		//call php script to create new track
-		let response = await fetch("/lib/administration/php/updatetrack.php", {
+			let response = await fetch("/lib/administration/php/updatetrack.php", {
 			method: 'POST',
 			headers: {
 					'Accept': 'application/json',
@@ -1728,6 +1758,7 @@ let buildmodaledittrack = async (tid, trackid) => {
 
 		//if track was successfully created, close modal and turn off overlay
 		if(response["result"] == 0){
+			buildtrackstable(tid, document.getElementById("tracks-table"), true);			
 			changeelementvisibility(modal.modalcontainer, false, true);
 			toggleoverlay(false);
 		}
@@ -1755,6 +1786,19 @@ let gettrack = async (tid, trackid) => {
 
 	//return track
 	return await track.json();
+}
+
+let deletetrack = async (tid, trackid) => {
+	let phpresponse = await fetch("/lib/administration/php/deltrack.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({tid: tid, trackid: trackid})
+	});
+
+	return await phpresponse.json();
 }
 
 DOMready(buildheader);

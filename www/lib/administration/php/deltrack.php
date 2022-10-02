@@ -10,20 +10,17 @@
 
 	//update track
 	$query = "
-		UPDATE tracks
-		SET label = :label, trackdescription = :trackdescription
+		DELETE FROM tracks 
 		WHERE tid = :tid AND trackid = :trackid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":trackid", $input["trackid"]);
-	$sql->bindParam(":label", $input["label"]);
-	$sql->bindParam(":trackdescription", $input["trackdescription"]);
 	$sql->execute();
 
 	$response["result"] = 0;
-	$response["message"] = "Bahn aktualisiert";
+	$response["message"] = "Bahn entfernt";
 
 	echo(json_encode($response));
 
