@@ -302,6 +302,13 @@
 
 }
 
+.mcsbutton{
+	background-color: var(--mcscolorlight);
+	border-radius: 20px;
+	padding-left: 10px;
+	padding-top: 3px;
+}
+
 .createtournamentbutton{
 	grid-column: 2 / 3;
 	grid-row: 3 / 4;
@@ -547,4 +554,25 @@
 
 	grid-row-gap: 5px;
 
+}
+
+.workspace-player-config{
+	height: 600px;
+	
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 50px 1fr;
+}
+
+#container-player-select{
+
+	display: grid;
+
+	grid-template-columns: 300px 100px 100px;
+	grid-template-rows: 1fr;	
 }

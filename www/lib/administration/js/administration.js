@@ -1507,7 +1507,7 @@ let buildworkspacetrackconfiguration = async (tid) => {
 		divid: "track-create-container"
 	});
 
-	//create icon for tournament information
+	//create icon for track creation
 	let addtrackicon = document.createElement("img");
 	addtrackicon.setAttribute("src", "lib/assets/addcircle.svg");
 	addtrackicon.classList.add("workspaceicon");
@@ -1822,10 +1822,45 @@ let deletetrack = async (tid, trackid) => {
 	return await phpresponse.json();
 }
 
-	let buildworkspaceplayerconfig = async (tid) => {
-		console.log(tid);	
-		
-	}
+let buildworkspaceplayerconfig = async (tid) => {
+	
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+
+	//get workspace body
+	let workspacebody = getworkspacebody();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-player-config");
+
+	//create container for players selection
+	let playerselectioncontainer = creatediv({
+		divid: "container-player-select",
+		appendto: workspacebody
+	});
+}
+
+let getplayers = async (tid, cid) => {
+
+	//call php script to fetch players
+	let players = await fetch("/lib/administration/php/getplayers.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({tid: tid, cid: cid, all: 1})
+	});
+
+	//return players
+	return players.JSON();
+
+}
+
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);
