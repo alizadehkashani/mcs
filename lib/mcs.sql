@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 29, 2022 at 04:33 PM
+-- Generation Time: Oct 04, 2022 at 10:02 AM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -76,26 +76,12 @@ INSERT INTO `clubs` (`tid`, `cid`, `cname`) VALUES
 (2, 44, 'Hannover 96'),
 (2, 46, 'Lindenhof'),
 (1, 47, 'MCS Schriesheim'),
-(1, 50, 'asd'),
-(1, 53, '123'),
-(1, 54, '321'),
-(1, 57, '456'),
-(1, 58, 'asd'),
-(1, 59, 'asd'),
-(1, 60, 'asd'),
-(1, 62, '231'),
-(1, 64, 'asd'),
-(1, 65, '23123'),
-(1, 66, 'asd'),
-(1, 67, 'asd'),
-(1, 69, '222'),
-(1, 70, 'asd'),
-(1, 72, 'asd'),
-(1, 73, 'asd'),
-(1, 74, 'asd'),
-(1, 75, 'allo'),
 (3, 76, 'Weinheim'),
-(3, 77, 'test');
+(3, 77, 'test'),
+(1, 78, 'Heidelberg'),
+(1, 79, 'Mannheim'),
+(1, 80, 'Hirschberg'),
+(1, 81, 'Leutershausen');
 
 -- --------------------------------------------------------
 
@@ -472,7 +458,12 @@ CREATE TABLE `tracks` (
 
 INSERT INTO `tracks` (`tid`, `trackid`, `currentgroup`, `label`, `trackdescription`) VALUES
 (1, 1, 0, 'A', 'Filz'),
-(1, 2, 0, 'B', 'Minigolf');
+(1, 2, 0, 'B', 'Minigolf'),
+(1, 23, 0, 'C', 'Golf'),
+(1, 24, 0, 'D', 'Kinderbahn'),
+(2, 7, 0, 'a', 'test'),
+(2, 8, 0, 'A', 'Filz'),
+(2, 9, 0, 'A', 'Filz');
 
 -- --------------------------------------------------------
 
@@ -550,7 +541,8 @@ ALTER TABLE `tournaments`
 -- Indexes for table `tracks`
 --
 ALTER TABLE `tracks`
-  ADD PRIMARY KEY (`tid`,`trackid`);
+  ADD PRIMARY KEY (`tid`,`trackid`),
+  ADD UNIQUE KEY `trackid` (`trackid`);
 
 --
 -- Indexes for table `user`
@@ -566,13 +558,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `clubs`
 --
 ALTER TABLE `clubs`
-  MODIFY `cid` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=78;
+  MODIFY `cid` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `tournaments`
 --
 ALTER TABLE `tournaments`
   MODIFY `tid` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `tracks`
+--
+ALTER TABLE `tracks`
+  MODIFY `trackid` int(3) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables

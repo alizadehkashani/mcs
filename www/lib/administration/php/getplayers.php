@@ -22,15 +22,16 @@
 			SELECT *
 			FROM players
 			WHERE tid = :tid AND cid = :cid
+			ORDER BY playernumber ASC
 		";
 
 	}
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":trackid", $input["trackid"]);
+	$sql->bindParam(":cid", $input["cid"]);
 	$sql->execute();
-	$track = $sql->fetch(PDO::FETCH_ASSOC);
+	$players = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-	echo(json_encode($track));
+	echo(json_encode($players));
 ?>
