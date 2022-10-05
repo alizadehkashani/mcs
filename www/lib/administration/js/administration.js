@@ -2090,6 +2090,9 @@ let buildmodalcreateplayer = async (tid) => {
 			genderinput.value = "";
 			surnameinput.value = "";
 			firstnameinput.value = "";
+
+			//clear player table
+			clearid("workspace-players-table");
 		}
 	});
 

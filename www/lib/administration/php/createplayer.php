@@ -41,7 +41,7 @@
 		$sql->bindParam(":cid", $input["cid"]);
 		$sql->bindParam(":playernumber", $input["playernumber"]);
 		$sql->bindParam(":gender", $input["gender"]);
-		$sql->bindParam(":surname", $input["tid"]);
+		$sql->bindParam(":surname", $input["surname"]);
 		$sql->bindParam(":firstname", $input["firstname"]);
 		$sql->execute();
 
