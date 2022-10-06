@@ -1874,7 +1874,7 @@ let buildworkspaceplayerconfig = async (tid) => {
 	addplayersvg.classList.add("workspaceicon");
 	addplayercontainer.appendChild(addplayersvg);
 	addplayersvg.addEventListener("click", async () => {
-		buildmodalcreateplayer(tid); 
+		buildmodalcreateplayer(tid, clubselection.value); 
 		toggleoverlay(true);
 	})
 
@@ -1920,15 +1920,34 @@ let buildplayerstable = async (container, tid, cid) => {
 
 	//loop through players and insert into tables
 	for(let i = 0; i < players.length; i++){
-		buildsingleplayer(container, players[i]);
+		buildsingleplayer(container, players[i], tid);
 	}
 }
 
-let buildsingleplayer = async (container, playerdata) => {
+let getplayer = async (tid, playernumber) => {
+
+	let player = await fetch("/lib/administration/php/getplayer.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify({tid: tid, playernumber: playernumber})
+	});
+
+	return await player.json();
+}
+
+let buildsingleplayer = async (container, playerdata, tid) => {
 	//create row
 	let row = creatediv({
 		appendto: container,
 		divclass: ["player-row"]
+	});
+	//add event listner to when to display player
+	row.addEventListener("click", async () => {
+		await buildmodaleditplayer(tid, playerdata.playernumber);
+		toggleoverlay(true);
 	});
 
 	//add playernumber
@@ -1973,7 +1992,7 @@ let getplayers = async (tid, cid, all) => {
 
 }
 
-let buildmodalcreateplayer = async (tid) => {
+let buildmodalcreateplayer = async (tid, currentclub) => {
 
 	//create modal
 	let modal = createbasicmodal(
@@ -1990,6 +2009,7 @@ let buildmodalcreateplayer = async (tid) => {
 
 	//create club selection
 	let clubssel = await clubsdropdown(tid);
+	clubssel.value = currentclub;
 	modal.modalbody.appendChild(clubssel);
 
 	//create label for playernumber 
@@ -2080,7 +2100,6 @@ let buildmodalcreateplayer = async (tid) => {
 
 		//php response
 		let phpresponse = await createplayer.json();
-		console.log(phpresponse);
 		
 		if(phpresponse["result"] == 1){
 			alert(phpresponse["message"]);
@@ -2096,6 +2115,137 @@ let buildmodalcreateplayer = async (tid) => {
 		}
 	});
 
+}
+
+let buildmodaleditplayer = async (tid, playernumber) => {
+	let playerdata = await getplayer(tid, playernumber);
+
+	//create modal
+	let modal = createbasicmodal(
+		"modal-edit-player",
+		"Spieler " + playerdata["playernumber"],
+		"modal-edit-player-body"
+	);
+
+	//create label for club selection
+	let clubsellabel = creatediv({
+		appendto: modal.modalbody,
+		divtext: "Verein"
+	});
+
+	//create club selection
+	let clubssel = await clubsdropdown(tid);
+	clubssel.value = playerdata["cid"];
+	modal.modalbody.appendChild(clubssel);
+
+	//create label for playernumber 
+	let playernumberlabel = creatediv({
+		appendto: modal.modalbody,
+		divtext: "Spielernummer"
+	});
+
+	//create input for playernumber 
+	let playernumberinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	playernumberinput.value = playerdata["playernumber"];
+	//limit input length playernumber
+	playernumberinput.addEventListener("input", () => {
+		playernumberinput.value = limitinput(3, playernumberinput);
+	});
+
+	//create label for gender 
+	let genderlabel = creatediv({
+		appendto: modal.modalbody,
+		divtext: "Geschlecht"
+	});
+
+	//create input for gender 
+	let genderinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	genderinput.value = playerdata["gender"];
+	//limit input length gender
+	genderinput.addEventListener("input", () => {
+		genderinput.value = limitinput(1, genderinput);
+	});
+
+	//create label for surname 
+	let surnamelabel = creatediv({
+		appendto: modal.modalbody,
+		divtext: "Nachname"
+	});
+
+	//create input for surname 
+	let surnameinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	surnameinput.value = playerdata["surname"];
+	//limit input length surname
+	surnameinput.addEventListener("input", () => {
+		surnameinput.value = limitinput(20, surnameinput);
+	});
+
+	//create label for firstname 
+	let firstnamelabel = creatediv({
+		appendto: modal.modalbody,
+		divtext: "Vorname"
+	});
+
+	//create input for surname 
+	let firstnameinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+	firstnameinput.value = playerdata["firstname"];
+	//limit input length firstname
+	firstnameinput.addEventListener("input", () => {
+		firstnameinput.value = limitinput(20, firstnameinput);
+	});
+
+	/*
+	//add event listner to accept button
+	modal.acceptbutton.addEventListener("click", async () =>{
+		//create json for php
+		phpinput = {
+			tid: tid,
+			cid: clubssel.value,
+			playernumber: playernumberinput.value,
+			gender: genderinput.value,
+			surname: surnameinput.value,
+			firstname: firstnameinput.value
+		}
+
+		//call php script
+		let createplayer = await fetch("/lib/administration/php/createplayer.php", {
+			method: 'POST',
+			header: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(phpinput)
+		});
+
+		//php response
+		let phpresponse = await createplayer.json();
+		
+		if(phpresponse["result"] == 1){
+			alert(phpresponse["message"]);
+		}else{
+			//reset inputs when succsessfull
+			playernumberinput.value = "";
+			genderinput.value = "";
+			surnameinput.value = "";
+			firstnameinput.value = "";
+
+			//clear player table
+			clearid("workspace-players-table");
+		}
+	});
+	*/
 }
 
 DOMready(buildheader);

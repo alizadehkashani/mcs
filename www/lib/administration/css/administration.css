@@ -617,3 +617,25 @@
 	grid-row-gap: 5px;
 
 }
+
+#modal-edit-player{
+
+	width: 600px;
+	height: 250px;
+
+}
+
+#modal-edit-player-body{
+
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 250px;
+	grid-template-rows: repeat(5, 25px);
+
+	grid-row-gap: 5px;
+
+}
