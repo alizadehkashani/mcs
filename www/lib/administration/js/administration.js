@@ -2110,8 +2110,8 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 			surnameinput.value = "";
 			firstnameinput.value = "";
 
-			//clear player table
-			clearid("workspace-players-table");
+			//build table again with cid which new player was created in
+			await buildplayerstable(document.getElementById("workspace-players-table"), tid, clubssel.value); 
 		}
 	});
 
@@ -2206,7 +2206,6 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 		firstnameinput.value = limitinput(20, firstnameinput);
 	});
 
-	/*
 	//add event listner to accept button
 	modal.acceptbutton.addEventListener("click", async () =>{
 		//create json for php
@@ -2220,7 +2219,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 		}
 
 		//call php script
-		let createplayer = await fetch("/lib/administration/php/createplayer.php", {
+		let createplayer = await fetch("/lib/administration/php/updateplayer.php", {
 			method: 'POST',
 			header: {
 				'Accept': 'application/json',
@@ -2235,17 +2234,13 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 		if(phpresponse["result"] == 1){
 			alert(phpresponse["message"]);
 		}else{
-			//reset inputs when succsessfull
-			playernumberinput.value = "";
-			genderinput.value = "";
-			surnameinput.value = "";
-			firstnameinput.value = "";
-
-			//clear player table
-			clearid("workspace-players-table");
+			//close modal turn off overlay
+			await buildplayerstable(document.getElementById("workspace-players-table"), tid, clubssel.value); 
+			changeelementvisibility(modal.modalcontainer, false, true);
+			toggleoverlay(false);
+			//TODO reload table?	
 		}
 	});
-	*/
 }
 
 DOMready(buildheader);

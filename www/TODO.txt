@@ -3,3 +3,4 @@ TODO	when deleting club, also delete players?
 TODO	user should have to confirm again if he wants to delete club
 TODO 	create backups when deleting something?
 TODO	player creation gender dropdown
+TODO	able to change playernumber
