@@ -2310,64 +2310,93 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	//get tournament information from database
 	let matchdayinformation = await getmatchday(tid, mdnumber);
 
+	//container to store information about basic matchday information
 	let matchdayinfoinputcontainer = creatediv({
 		appendto: workspacebody,
 		divclass: ["workspace-view-matchdayinformation-input-container"]
 	});
 
+	//label for matchday number
 	let labelmdnumber = creatediv({
+		appendto: matchdayinfoinputcontainer,
+		divtext: "Nummer:"
+	});
+
+	//matchday number
+	let mdnumberdisplay = creatediv({
 		appendto: matchdayinfoinputcontainer,
 		divtext: matchdayinformation["mdnumber"]
 	});
-
-	let matchdayroundsinformation = creatediv({
-
-
+	
+	//label for matchday description
+	let mddescriptionlabel = creatediv({
+		appendto: matchdayinfoinputcontainer,
+		divtext: "Beschreibung:"
 	});
-	/*
-	//div for description off tournmanet description button
-	creatediv({
-		appendto: workspacebody,
-		divtext: "Name"
-	})
 
-	//input for tournament name
-	let tournamentnameinput = creatediv({
+	//matchday description input
+	let mddescription = creatediv({
 		type: "INPUT",
+		appendto: matchdayinfoinputcontainer,
+	});
+	mddescription.value = matchdayinformation["mddescription"];
+
+	//container to display informtion about rounds in matchday
+	let matchdayroundsinformation = creatediv({
+		divclass: ["workspace-view-maytchdayinformation-roundsoverview"],
 		appendto: workspacebody
-	})
-	tournamentnameinput.value = tournamentinformation[0]["tname"];
+	});
 
-	//description for tournament location input
-	creatediv({
-		appendto: workspacebody,
-		divtext: "Austragungsort"
-	})
+	//get number of rounds of that matchday from database
+	let numberofrounds = await getnumberofrounds(tid, mdnumber);
 
-	//input for tournamentlocationinput
-	let tournamentlocationinput = creatediv({
-		type: "INPUT",
-		appendto: workspacebody
-	})
-	tournamentlocationinput.value = tournamentinformation[0]["tlocation"];
+	//label for number of rounds
+	let numberofroundslabel = creatediv({
+		appendto: matchdayroundsinformation,
+		divtext: "Anzahl Runden"
+	});
 
-	//create container for close button
+	//display number of rounds
+	let numberofroundsdisplay = creatediv({
+		appendto: matchdayroundsinformation,
+		divtext: numberofrounds
+	});
+
+	//create container for done button
 	let donebuttoncontainer = creatediv({
 		appendto: workspacefoot,
 		divid: "administrationworkspacedonecontainer"
 	})
-	
-	//add close button
+
+	//add done button
 	let doneicon = document.createElement("img");
 	doneicon.setAttribute("src", "lib/assets/done.svg");
 	doneicon.classList.add("workspaceicon");
 	donebuttoncontainer.appendChild(doneicon);
 
-	//add eventlistner to close button
+	//add eventlistner to done button
 	donebuttoncontainer.addEventListener("click", () =>{
 		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
 	})
-	*/
+
+}
+
+let getnumberofrounds = async (tid, mdnumber) => {
+	let phpinput = {tid: tid, mdnumber: mdnumber};
+
+
+	//call php script
+	let numberofrounds = await fetch("/lib/administration/php/getnumberofrounds.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpinput)
+	});
+
+	//return response
+	return await numberofrounds.json();
 }
  
 DOMready(buildheader);
