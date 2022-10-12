@@ -51,7 +51,7 @@ let buildvariablenavigation = async (maincontainer) => {
 
 	cleareelement(maincontainer);
 
-	buildtournamentsinit(maincontainer);
+	await buildtournamentsinit(maincontainer);
 }
 
 
@@ -411,8 +411,8 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	tournamentinformationicon.setAttribute("src", "lib/assets/tournamentinfo.svg");
 	tournamentinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentinformationicon);
-	tournamentinformationicon.addEventListener("click", () => {
-		buildworkspacetournamentinformation(id, tournamentnamediv);
+	tournamentinformationicon.addEventListener("click", async () => {
+		await buildworkspacetournamentinformation(id, tournamentnamediv);
 	})
 
 	//create icon for track configuration
@@ -455,18 +455,15 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	workspaceheadvariable.appendChild(deleteicon);
 
 	//build standard view, tournament information
-	//buildworkspacetournamentinformation(id, tournamentnamediv);
+	buildworkspacetournamentinformation(id, tournamentnamediv);
 	//buildworkspaceclubinformation(id);
 	//buildworkspacetrackconfiguration(id);
-	buildworkspaceplayerconfig(id);
+	//buildworkspaceplayerconfig(id);
 
 }
 
 let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		
-	//get tournament information from database
-	let tournamentinformation = await gettournament(id);
-
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
 
@@ -479,6 +476,9 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 	
 	//add class to workspace body
 	workspacebody.classList.add("workspaceviewtournamentinformation");
+
+	//get tournament information from database
+	let tournamentinformation = await gettournament(id);
 
 	//div for description off tournmanet description button
 	creatediv({
@@ -738,6 +738,28 @@ let getmatchdays = async (tid) => {
 
 	//call php script 
 	let phpresponse = await fetch("/lib/administration/php/getmatchdays.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	//variable for php response
+	let response = await phpresponse.json();
+
+	//return matchdays
+	return response;
+}
+
+let getmatchday = async (tid, mdnumber) => {
+
+	//set data for php script
+	let requestdata = {tid: tid, mdnumber: mdnumber};
+
+	//call php script 
+	let phpresponse = await fetch("/lib/administration/php/getmatchday.php", {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/jsono',
@@ -1054,9 +1076,9 @@ let buildtournamentsinit = async (maincontainer) => {
 		})
 		
 		//add event lisnter if tournmant is selected
-		tournamenticonanddescription.addEventListener("click", () => {
+		tournamenticonanddescription.addEventListener("click", async () => {
 			setselectednavigation(tournament);
-			buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
+			await buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
 		})
 
 		//-------------------------------BUILD MATCHDAYS--------------------------------	
@@ -1190,10 +1212,7 @@ let buildsinglematchday = async (container, tid, mdnumber) => {
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer);
-		
-		//TODO build workspace view matchday
-		//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
-		//createnewmatchday(tournaments[i]["tid"]);
+		buildworkspaceviewmatchday(tid, mdnumber);
 	})
 
 	//add event listener for expand/collapse control of rounds
@@ -1365,7 +1384,7 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 		appendto: roundiconanddescription
 	})
 
-	//add event lisnter if matchday is selected
+	//add event lisnter if round is selected
 	roundiconanddescription.addEventListener("click", () => {
 		setselectednavigation(roundcontainer);
 		
@@ -1837,7 +1856,6 @@ let buildworkspaceplayerconfig = async (tid) => {
 	//add class to workspace body
 	workspacebody.classList.add("workspace-player-config");
 
-
 	//create container for players selection
 	let playerselectioncontainer = creatediv({
 		divid: "container-player-select",
@@ -2243,6 +2261,115 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 }
 
+let buildworkspaceviewmatchday = (tid, mdnumber) => {
+	
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+	let workspacebody = getworkspacebody();
+	let workspacefoot = getworkspacefoot();
+	let workspaceheadvariable = getworkspaceheadvariable();
+
+	//clear workspace
+	clearworkspace();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+
+	//create icon for tournament information
+	let matchdayinformationicon = document.createElement("img");
+	matchdayinformationicon.setAttribute("src", "lib/assets/matchdayinformation.svg");
+	matchdayinformationicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(matchdayinformationicon);
+	matchdayinformationicon.addEventListener("click", () => {
+		console.log("hi");
+		buildworkspacematchdayinformation(tid, mdnumber);
+	})
+
+	buildworkspacematchdayinformation(tid, mdnumber);
+
+}
+
+let buildworkspacematchdayinformation = async (tid, mdnumber) => {
+
+	//get workspace body
+	let workspacebody = getworkspacebody();
+
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//add class to workspace body
+	workspacebody.classList.add("workspace-view-matchdayinformation-body");
+
+	//get tournament information from database
+	let matchdayinformation = await getmatchday(tid, mdnumber);
+
+	let matchdayinfoinputcontainer = creatediv({
+		appendto: workspacebody,
+		divclass: ["workspace-view-matchdayinformation-input-container"]
+	});
+
+	let labelmdnumber = creatediv({
+		appendto: matchdayinfoinputcontainer,
+		divtext: matchdayinformation["mdnumber"]
+	});
+
+	let matchdayroundsinformation = creatediv({
+
+
+	});
+	/*
+	//div for description off tournmanet description button
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Name"
+	})
+
+	//input for tournament name
+	let tournamentnameinput = creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+	tournamentnameinput.value = tournamentinformation[0]["tname"];
+
+	//description for tournament location input
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Austragungsort"
+	})
+
+	//input for tournamentlocationinput
+	let tournamentlocationinput = creatediv({
+		type: "INPUT",
+		appendto: workspacebody
+	})
+	tournamentlocationinput.value = tournamentinformation[0]["tlocation"];
+
+	//create container for close button
+	let donebuttoncontainer = creatediv({
+		appendto: workspacefoot,
+		divid: "administrationworkspacedonecontainer"
+	})
+	
+	//add close button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	//add eventlistner to close button
+	donebuttoncontainer.addEventListener("click", () =>{
+		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
+	})
+	*/
+}
+ 
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);

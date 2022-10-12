@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 04, 2022 at 10:02 AM
+-- Generation Time: Oct 08, 2022 at 04:51 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.4.11
 
@@ -274,107 +274,30 @@ INSERT INTO `matchdays` (`tid`, `mdnumber`, `mddescription`) VALUES
 --
 
 CREATE TABLE `players` (
+  `tid` int(3) NOT NULL,
+  `cid` int(3) NOT NULL,
   `playernumber` int(3) NOT NULL,
   `gender` char(1) NOT NULL,
   `surname` char(20) NOT NULL,
-  `firstname` char(20) NOT NULL,
-  `club` int(2) NOT NULL,
-  `comptype` int(11) NOT NULL,
-  `playerorderteam` int(2) NOT NULL,
-  `startgroupsingle` int(3) NOT NULL,
-  `playerordersingle` int(11) NOT NULL,
-  `resultsingle` int(3) NOT NULL
+  `firstname` char(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `players`
 --
 
-INSERT INTO `players` (`playernumber`, `gender`, `surname`, `firstname`, `club`, `comptype`, `playerorderteam`, `startgroupsingle`, `playerordersingle`, `resultsingle`) VALUES
-(101, 'D', 'Ebi', 'Sabine', 7, 3, 1, 0, 0, 1),
-(102, 'D', 'Saft', 'Chiana', 12, 2, 0, 1, 1, 2),
-(103, 'D', 'Blendermann', 'Stefanie', 8, 3, 1, 0, 0, 3),
-(104, 'D', 'Kobisch', 'Alice', 8, 3, 2, 0, 0, 4),
-(105, 'D', 'Gundert', 'Nicole', 8, 3, 3, 0, 0, 5),
-(106, 'D', 'Kirgasser', 'Helga', 13, 2, 0, 1, 2, 6),
-(107, 'D', 'Klaus', 'Liana', 14, 2, 0, 2, 1, 7),
-(108, 'D', 'Bothmann', 'Jasmin', 10, 3, 1, 0, 0, 8),
-(109, 'D', 'Birkelbach', 'Nicole', 10, 3, 2, 0, 0, 9),
-(110, 'D', 'Zodrow-Wenke', 'Bianca', 10, 3, 3, 0, 0, 10),
-(111, 'D', 'von dem Knesebeck', 'Alexandra', 10, 3, 4, 0, 0, 11),
-(112, 'D', 'Schumacher', 'Sarah', 9, 3, 1, 0, 0, 12),
-(113, 'D', 'Krane', 'Michaela', 11, 3, 1, 0, 0, 13),
-(114, 'D', 'Krane', 'Melissa', 11, 3, 2, 0, 0, 14),
-(115, 'D', 'Bollrich', 'Anne', 9, 3, 2, 0, 0, 15),
-(116, 'D', 'Peuker', 'Vanessa', 9, 3, 3, 0, 0, 16),
-(117, 'D', 'Bremicker', 'Susanne', 9, 3, 4, 0, 0, 17),
-(118, 'D', 'Klein', 'Sabine', 15, 2, 0, 2, 2, 18),
-(119, 'D', 'Hammerschmidt', 'Melanie', 7, 3, 2, 0, 0, 19),
-(120, 'D', 'Raith', 'Bianca', 7, 3, 3, 0, 0, 20),
-(201, 'H', 'Fallenbüchel', 'Martin', 16, 2, 0, 1, 1, 1),
-(202, 'H', 'Ritschel', 'Michael', 16, 2, 0, 1, 2, 2),
-(203, 'H', 'Richter', 'Tobias', 17, 2, 0, 1, 3, 3),
-(204, 'H', 'Bäurle', 'Wolfgang', 18, 2, 0, 2, 1, 4),
-(205, 'H', 'Schmidt', 'Maximilian', 18, 2, 0, 2, 2, 5),
-(206, 'H', 'Bollrich', 'Jens', 19, 2, 0, 2, 3, 6),
-(207, 'H', 'Blümer', 'Severin', 5, 3, 1, 0, 0, 7),
-(208, 'H', 'Van Diejen', 'Tom', 20, 2, 0, 3, 1, 8),
-(209, 'H', 'Klassen', 'Oleg', 5, 3, 2, 0, 0, 9),
-(210, 'H', 'Van Vught', 'Jan', 5, 3, 3, 0, 0, 10),
-(211, 'H', 'Pester', 'Magnus', 21, 2, 0, 3, 2, 11),
-(212, 'H', 'Drewes', 'Daniel', 21, 2, 0, 3, 3, 12),
-(213, 'H', 'Braungart Zink', 'Achim', 5, 3, 4, 0, 0, 13),
-(214, 'H', 'Hense', 'Danny', 5, 3, 5, 0, 0, 14),
-(215, 'H', 'Giebenhain', 'Thomas', 20, 2, 0, 4, 1, 15),
-(216, 'H', 'Stöckle', 'Martin', 6, 3, 1, 0, 0, 16),
-(217, 'H', 'Wietz', 'Florian', 6, 3, 2, 0, 0, 17),
-(218, 'H', 'Stille', 'Kris', 6, 3, 3, 0, 0, 18),
-(219, 'H', 'Mrohs', 'Alexander', 6, 3, 4, 0, 0, 19),
-(220, 'H', 'Güth', 'Benjamin', 6, 3, 5, 0, 0, 20),
-(221, 'H', 'Wendling', 'Oliver', 6, 3, 6, 0, 0, 21),
-(222, 'H', 'Dickes', 'Robin', 1, 3, 1, 0, 0, 22),
-(223, 'H', 'Krauss', 'Silvio', 1, 3, 2, 0, 0, 23),
-(224, 'H', 'Moosmann', 'Jan-Niclas', 22, 2, 0, 4, 2, 24),
-(225, 'H', 'Noack', 'Marcel', 1, 3, 3, 0, 0, 25),
-(226, 'H', 'Neumann', 'Lukas', 1, 3, 4, 0, 0, 26),
-(227, 'H', 'Stoparic', 'Miroslav', 1, 3, 5, 0, 0, 27),
-(228, 'H', 'Kobisch', 'Roman', 1, 3, 6, 0, 0, 28),
-(229, 'H', 'Janßen', 'Markus', 1, 3, 7, 0, 0, 29),
-(230, 'H', 'Grunt', 'Christoph', 23, 2, 0, 4, 3, 30),
-(231, 'H', 'Ulrich', 'Stefan', 23, 2, 0, 5, 1, 31),
-(232, 'H', 'Schmidt', 'Frank', 13, 2, 0, 5, 2, 32),
-(233, 'H', 'Zielaff', 'Christian', 10, 2, 0, 5, 3, 33),
-(234, 'H', 'Müller', 'Yannick', 3, 3, 1, 0, 0, 34),
-(235, 'H', 'Klöckener', 'Lauro', 11, 3, 3, 0, 0, 35),
-(236, 'H', 'Schmeckenbecher', 'Kenny Marc', 24, 2, 0, 6, 1, 36),
-(237, 'H', 'Kapke', 'Dennis', 2, 3, 1, 0, 0, 37),
-(238, 'H', 'Heine', 'Sebastian', 2, 3, 2, 0, 0, 38),
-(239, 'H', 'Hettrich', 'Robin', 2, 3, 3, 0, 0, 39),
-(240, 'H', 'Piekorz', 'Sebastian', 3, 3, 2, 0, 0, 40),
-(241, 'H', 'Bothmann', 'Patrick', 2, 3, 4, 0, 0, 41),
-(242, 'H', 'Kube', 'Sebastian', 2, 3, 5, 0, 0, 42),
-(243, 'H', 'Geist', 'Alexander', 3, 3, 3, 0, 0, 43),
-(244, 'H', 'Junkermann', 'Alexander', 2, 3, 6, 0, 0, 44),
-(245, 'H', 'Koziol', 'Michael', 3, 3, 4, 0, 0, 45),
-(246, 'H', 'Erlbruch', 'Walter', 3, 3, 5, 0, 0, 46),
-(247, 'H', 'Erlbruch', 'Harald', 3, 3, 6, 0, 0, 47),
-(248, 'H', 'Lumma', 'Dirk', 15, 2, 0, 6, 2, 48),
-(249, 'H', 'Springob', 'René', 11, 2, 0, 6, 3, 49),
-(250, 'H', 'Lichtenberg', 'Jan Peter', 4, 3, 1, 0, 0, 50),
-(251, 'H', 'Lieber', 'Johannes', 4, 3, 2, 0, 0, 51),
-(252, 'H', 'Spreier', 'Sascha', 4, 3, 3, 0, 0, 52),
-(253, 'H', 'Gillen', 'Pascal', 4, 3, 4, 0, 0, 53),
-(301, 'H', 'Rhyn', 'Michel', 5, 1, 6, 0, 0, 0),
-(302, 'H', 'Heipel', 'Ingmar', 5, 1, 7, 0, 0, 0),
-(303, 'H', 'Lorenz', 'Patrick', 5, 1, 8, 0, 0, 0),
-(304, 'D', 'Klukas', 'Yvonne', 8, 1, 4, 0, 0, 0),
-(305, 'H', 'Sommer', 'Reto', 1, 1, 8, 0, 0, 0),
-(306, 'H', 'Dorner', 'Kai', 2, 1, 7, 0, 0, 0),
-(307, 'D', 'Tietz', 'Marlene', 11, 1, 5, 0, 0, 0),
-(308, 'D', 'Borggraefe', 'Martina', 11, 1, 6, 0, 0, 0),
-(309, 'H', 'Jecny', 'Martin', 3, 1, 7, 0, 0, 0),
-(310, 'H', 'Smejkal', 'Marek', 3, 1, 8, 0, 0, 0),
-(311, 'H', 'Molnár', 'Karel Jr.', 3, 1, 9, 0, 0, 0);
+INSERT INTO `players` (`tid`, `cid`, `playernumber`, `gender`, `surname`, `firstname`) VALUES
+(1, 47, 458, 'M', 'Alizadeh', 'Tim'),
+(1, 78, 123, 'M', 'Alizadeh', 'Ramin'),
+(1, 78, 225, 'M', 'Alizadeh', 'Ramin'),
+(1, 78, 333, 'M', 'Alizadeh', 'Tim'),
+(1, 78, 654, 'M', 'Alizadeh', 'Tim'),
+(1, 78, 888, 'M', 'Alizadeh', 'Ramin'),
+(1, 78, 889, 'A', 'Mueller', 'Max'),
+(1, 79, 147, 'W', 'Mueller', 'Walter'),
+(1, 79, 999, 'W', 'Alizadeh', 'Ramin'),
+(1, 80, 621, 'W', 'Hallo', 'Hallo'),
+(2, 1, 888, 'M', 'Alizadeh', 'Ramin');
 
 -- --------------------------------------------------------
 
@@ -523,7 +446,8 @@ ALTER TABLE `matchdays`
 -- Indexes for table `players`
 --
 ALTER TABLE `players`
-  ADD PRIMARY KEY (`playernumber`);
+  ADD PRIMARY KEY (`tid`,`cid`,`playernumber`),
+  ADD KEY `cid` (`cid`);
 
 --
 -- Indexes for table `rounds`
@@ -587,6 +511,13 @@ ALTER TABLE `clubs`
 --
 ALTER TABLE `matchdays`
   ADD CONSTRAINT `matchdays_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tournaments` (`tid`);
+
+--
+-- Constraints for table `players`
+--
+ALTER TABLE `players`
+  ADD CONSTRAINT `players_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tournaments` (`tid`),
+  ADD CONSTRAINT `players_ibfk_2` FOREIGN KEY (`cid`) REFERENCES `clubs` (`cid`);
 
 --
 -- Constraints for table `rounds`
