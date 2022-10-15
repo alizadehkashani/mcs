@@ -2376,7 +2376,7 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 
 	//add eventlistner to done button
 	donebuttoncontainer.addEventListener("click", () =>{
-		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
+		console.log("hi");	
 	})
 
 }
