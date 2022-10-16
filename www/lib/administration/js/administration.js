@@ -2376,7 +2376,15 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 
 	//add eventlistner to done button
 	donebuttoncontainer.addEventListener("click", () =>{
-		console.log("hi");	
+
+		//data of matchday
+		let mddata = {
+			tid: tid,
+			mdnumber: mdnumber,
+			mddescription: mddescription.value
+		}
+
+		updatematchday(mddata);
 	})
 
 }
@@ -2398,7 +2406,24 @@ let getnumberofrounds = async (tid, mdnumber) => {
 	//return response
 	return await numberofrounds.json();
 }
- 
+
+let updatematchday = async (mddata) => {
+		debugger;
+		//call php script
+		let createplayer = await fetch("/lib/administration/php/updatematchday.php", {
+			method: 'POST',
+			header: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(mddata)
+		});
+
+		//php response
+		let phpresponse = await createplayer.json();
+
+}
+
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);
