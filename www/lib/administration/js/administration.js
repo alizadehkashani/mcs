@@ -2408,7 +2408,7 @@ let getnumberofrounds = async (tid, mdnumber) => {
 }
 
 let updatematchday = async (mddata) => {
-		debugger;
+
 		//call php script
 		let createplayer = await fetch("/lib/administration/php/updatematchday.php", {
 			method: 'POST',

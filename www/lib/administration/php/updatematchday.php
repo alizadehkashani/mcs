@@ -1,4 +1,7 @@
 <?php
+
+	ini_set('display_errors', 1);
+
 	//get db information
 	require("../../../../lib/dbconfig.php");
 	
@@ -8,22 +11,20 @@
 	//array for response
 	$response = [];
 
-	//update track
+	//update matchday
 	$query = "
 		UPDATE matchdays
-		SET label = :label, trackdescription = :trackdescription
-		WHERE tid = :tid AND trackid = :trackid
+		SET mddescription = :mddescription
+		WHERE tid = :tid AND mdnumber = :mdnumber
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":trackid", $input["trackid"]);
-	$sql->bindParam(":label", $input["label"]);
-	$sql->bindParam(":trackdescription", $input["trackdescription"]);
+	$sql->bindParam(":mdnumber", $input["mdnumber"]);
+	$sql->bindParam(":mddescription", $input["mddescription"]);
 	$sql->execute();
 
 	$response["result"] = 0;
-	$response["message"] = "Bahn aktualisiert";
 
 	echo(json_encode($response));
 
