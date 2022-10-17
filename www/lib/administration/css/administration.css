@@ -625,6 +625,14 @@
 
 }
 
+#modal-edit-player-layout{
+	display: grid;
+	
+	grid-template-columns: 460px 100px;
+	grid-template-rows: 1fr;
+
+}
+
 #modal-edit-player-body{
 
 	display: grid;
@@ -633,7 +641,7 @@
 	padding-left: 10px;
 	padding-right: 10px;
 
-	grid-template-columns: 200px 250px;
+	grid-template-columns: 200px 250px; 
 	grid-template-rows: repeat(5, 25px);
 
 	grid-row-gap: 5px;

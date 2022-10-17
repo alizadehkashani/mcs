@@ -2136,36 +2136,43 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 }
 
 let buildmodaleditplayer = async (tid, playernumber) => {
-	let playerdata = await getplayer(tid, playernumber);
 
 	//create modal
 	let modal = createbasicmodal(
 		"modal-edit-player",
-		"Spieler " + playerdata["playernumber"],
-		"modal-edit-player-body"
+		"Spieler",
+		"modal-edit-player-layout"
 	);
+
+	//get playerdata from db
+	let playerdata = await getplayer(tid, playernumber);
+
+	let playerinfo = creatediv({
+		appendto: modal.modalbody,
+		divid: "modal-edit-player-body"
+	});
 
 	//create label for club selection
 	let clubsellabel = creatediv({
-		appendto: modal.modalbody,
+		appendto: playerinfo,
 		divtext: "Verein"
 	});
 
 	//create club selection
 	let clubssel = await clubsdropdown(tid);
 	clubssel.value = playerdata["cid"];
-	modal.modalbody.appendChild(clubssel);
+	playerinfo.appendChild(clubssel);
 
 	//create label for playernumber 
 	let playernumberlabel = creatediv({
-		appendto: modal.modalbody,
+		appendto: playerinfo,
 		divtext: "Spielernummer"
 	});
 
 	//create input for playernumber 
 	let playernumberinput = creatediv({
 		type: "INPUT",
-		appendto: modal.modalbody
+		appendto: playerinfo
 	});
 	playernumberinput.value = playerdata["playernumber"];
 	//limit input length playernumber
@@ -2175,14 +2182,14 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 
 	//create label for gender 
 	let genderlabel = creatediv({
-		appendto: modal.modalbody,
+		appendto: playerinfo,
 		divtext: "Geschlecht"
 	});
 
 	//create input for gender 
 	let genderinput = creatediv({
 		type: "INPUT",
-		appendto: modal.modalbody
+		appendto: playerinfo
 	});
 	genderinput.value = playerdata["gender"];
 	//limit input length gender
@@ -2192,14 +2199,14 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 
 	//create label for surname 
 	let surnamelabel = creatediv({
-		appendto: modal.modalbody,
+		appendto: playerinfo,
 		divtext: "Nachname"
 	});
 
 	//create input for surname 
 	let surnameinput = creatediv({
 		type: "INPUT",
-		appendto: modal.modalbody
+		appendto: playerinfo
 	});
 	surnameinput.value = playerdata["surname"];
 	//limit input length surname
@@ -2209,14 +2216,14 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 
 	//create label for firstname 
 	let firstnamelabel = creatediv({
-		appendto: modal.modalbody,
+		appendto: playerinfo,
 		divtext: "Vorname"
 	});
 
 	//create input for surname 
 	let firstnameinput = creatediv({
 		type: "INPUT",
-		appendto: modal.modalbody
+		appendto: playerinfo
 	});
 	firstnameinput.value = playerdata["firstname"];
 	//limit input length firstname
@@ -2224,8 +2231,25 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 		firstnameinput.value = limitinput(20, firstnameinput);
 	});
 
+	//add button to delete user
+	//create container for deletion button
+	let deleteplayerbuttoncontainer = creatediv({
+		appendto: modal.modalbody,
+		divclass: ["flexcenter"]
+	})
+
+	//add player deletion button
+	let deleteplayerbutton = document.createElement("img");
+	deleteplayerbutton.setAttribute("src", "lib/assets/playerremove.svg");
+	deleteplayerbutton.classList.add("workspaceicon");
+	deleteplayerbuttoncontainer.appendChild(deleteplayerbutton);
+
+	deleteplayerbuttoncontainer.addEventListener("click", async () => {
+		console.log("hi");
+	});
+
 	//add event listner to accept button
-	modal.acceptbutton.addEventListener("click", async () =>{
+	modal.acceptbutton.addEventListener("click", async () => {
 		//create json for php
 		phpinput = {
 			tid: tid,
