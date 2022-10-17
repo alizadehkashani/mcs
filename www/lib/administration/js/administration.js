@@ -24,7 +24,7 @@ let buildheader = () => {
 
 //triggers creation for main navigation
 let buildnavigation = () => {
-	
+		
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
 	
@@ -2249,9 +2249,10 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 
 	//add event listner to accept button
+	//update player
 	modal.acceptbutton.addEventListener("click", async () => {
 		//create json for php
-		phpinput = {
+		playerdata = {
 			tid: tid,
 			cid: clubssel.value,
 			playernumber: playernumberinput.value,
@@ -2260,28 +2261,9 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 			firstname: firstnameinput.value
 		}
 
-		//call php script
-		let createplayer = await fetch("/lib/administration/php/updateplayer.php", {
-			method: 'POST',
-			header: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(phpinput)
-		});
+		updateplayer(playerdata, modal.modalcontainer);
 
-		//php response
-		let phpresponse = await createplayer.json();
 		
-		if(phpresponse["result"] == 1){
-			alert(phpresponse["message"]);
-		}else{
-			//close modal turn off overlay
-			await buildplayerstable(document.getElementById("workspace-players-table"), tid, clubssel.value); 
-			changeelementvisibility(modal.modalcontainer, false, true);
-			toggleoverlay(false);
-			//TODO reload table?	
-		}
 	});
 }
 
@@ -2448,8 +2430,38 @@ let updatematchday = async (mddata) => {
 
 }
 
-DOMready(buildheader);
-DOMready(buildnavigation);
-DOMready(buildworkspace);
+let updateplayer = async (playerdata, modalcontainer) => {
+
+		//call php script
+		let phppath = "/lib/administration/php/updateplayer.php";
+		let updateplayer = await fetch(phppath, {
+			method: 'POST',
+			header: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(playerdata)
+		});
+
+		//php response
+		let phpresponse = await updateplayer.json();
+		
+		if(phpresponse["result"] == 1){
+			alert(phpresponse["message"]);
+		}else{
+			//close modal turn off overlay
+			let tableid = "workspace-players-table";
+			let table = document.getElementById(tableid);
+			await buildplayerstable(table, playerdata.tid, playerdata.cid); 
+			changeelementvisibility(modalcontainer, false, true);
+			toggleoverlay(false);
+			//TODO reload table?	
+		}
+
+	}
+
+	DOMready(buildheader);
+	DOMready(buildnavigation);
+	DOMready(buildworkspace);
 
 DOMready(addEventListeners);
