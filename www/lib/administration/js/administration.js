@@ -2504,6 +2504,7 @@ let delteplayer = async (modal, tid, cid, playernumber) => {
 	}
 
 }
+
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);
