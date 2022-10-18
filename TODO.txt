@@ -8,3 +8,7 @@ TODO	player update in own function
 
 :noh	remove current highlight
 :e %:h/filename
+show tables
+describe <table>
+use <table>
+mysqldump -u <username> -p <database> <filename>
