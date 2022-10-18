@@ -2244,8 +2244,18 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	deleteplayerbutton.classList.add("workspaceicon");
 	deleteplayerbuttoncontainer.appendChild(deleteplayerbutton);
 
+	//add eventlistener to deletebutton
 	deleteplayerbuttoncontainer.addEventListener("click", async () => {
-		console.log("hi");
+		//delete player
+		delteplayer(
+			modal.modalcontainer, 
+			playerdata.tid, 
+			playerdata.cid, 
+			playerdata.playernumber
+		);
+
+
+
 	});
 
 	//add event listner to accept button
@@ -2415,53 +2425,87 @@ let getnumberofrounds = async (tid, mdnumber) => {
 
 let updatematchday = async (mddata) => {
 
-		//call php script
-		let createplayer = await fetch("/lib/administration/php/updatematchday.php", {
-			method: 'POST',
-			header: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(mddata)
-		});
+	//call php script
+	let createplayer = await fetch("/lib/administration/php/updatematchday.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(mddata)
+	});
 
-		//php response
-		let phpresponse = await createplayer.json();
+	//php response
+	let phpresponse = await createplayer.json();
 
 }
 
 let updateplayer = async (playerdata, modalcontainer) => {
 
-		//call php script
-		let phppath = "/lib/administration/php/updateplayer.php";
-		let updateplayer = await fetch(phppath, {
-			method: 'POST',
-			header: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(playerdata)
-		});
+	//call php script
+	let phppath = "/lib/administration/php/updateplayer.php";
+	let updateplayer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
 
-		//php response
-		let phpresponse = await updateplayer.json();
-		
-		if(phpresponse["result"] == 1){
-			alert(phpresponse["message"]);
-		}else{
-			//close modal turn off overlay
-			let tableid = "workspace-players-table";
-			let table = document.getElementById(tableid);
-			await buildplayerstable(table, playerdata.tid, playerdata.cid); 
-			changeelementvisibility(modalcontainer, false, true);
-			toggleoverlay(false);
-			//TODO reload table?	
-		}
-
+	//php response
+	let phpresponse = await updateplayer.json();
+	
+	if(phpresponse["result"] == 1){
+		alert(phpresponse["message"]);
+	}else{
+		//close modal turn off overlay
+		let tableid = "workspace-players-table";
+		let table = document.getElementById(tableid);
+		await buildplayerstable(table, playerdata.tid, playerdata.cid); 
+		changeelementvisibility(modalcontainer, false, true);
+		toggleoverlay(false);
 	}
 
-	DOMready(buildheader);
-	DOMready(buildnavigation);
-	DOMready(buildworkspace);
+}
+
+let delteplayer = async (modal, tid, cid, playernumber) => {
+
+	//data of player which should be deleted
+	playerdata = {
+		tid: tid,
+		cid: cid,
+		playernumber: playernumber
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/deleteplayer.php";
+	let deleteplayer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
+
+	//php response
+	let phpresponse = await deleteplayer.json();
+	
+	if(phpresponse["result"] == 1){
+		alert(phpresponse["message"]);
+	}else{
+		let tableid = "workspace-players-table";
+		let table = document.getElementById(tableid);
+		await buildplayerstable(table, playerdata.tid, playerdata.cid); 
+		//close modal turn off overlay
+		changeelementvisibility(modal, false, true);
+		toggleoverlay(false);
+	}
+
+}
+DOMready(buildheader);
+DOMready(buildnavigation);
+DOMready(buildworkspace);
 
 DOMready(addEventListeners);

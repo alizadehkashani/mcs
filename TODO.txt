@@ -7,3 +7,4 @@ TODO	able to change playernumber
 TODO	player update in own function
 
 :noh	remove current highlight
+:e %:h/filename
