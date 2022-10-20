@@ -2396,8 +2396,16 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 
 		//if md is not actifve, allows to activate
 		if(matchdayinformation.mdcurrent == 0){
-			let activate = setmdactive(matchdayinformation.tid, matchdayinformation.mdnumber);
+			let activate = await setmdactive(matchdayinformation.tid, matchdayinformation.mdnumber);
 			console.log(activate);
+			//if md was succsessfully activated
+			//change icon
+			if(activate == 0){
+				//cleareelement(setcurrentbuttoncontainer);
+				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
+				activemd.innerHTML = "X";
+
+			}
 		}
 
 	});
