@@ -668,7 +668,7 @@
 	display: grid;
 	
 	grid-template-columns: 200px 200px;
-	grid-template-rows: repeat(2, 25px);
+	grid-template-rows: repeat(4, 25px);
 }
 
 .workspace-view-maytchdayinformation-roundsoverview{

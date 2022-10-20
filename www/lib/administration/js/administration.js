@@ -2357,6 +2357,51 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	});
 	mddescription.value = matchdayinformation["mddescription"];
 
+	//label for active matchday
+	let activelabel = creatediv({
+		appendto: matchdayinfoinputcontainer,
+		divtext: "Aktiver Tag"
+	});
+
+	let activemd = creatediv({
+		appendto: matchdayinfoinputcontainer
+	});
+		
+	//set x if current matchday
+	if(matchdayinformation.mdcurrent == 0){
+		activemd.innerHTML = "-";
+		var pathtosvg = "lib/assets/toggleoff.svg";
+	}else if(matchdayinformation.mdcurrent == 1){
+		activemd.innerHTML = "X";
+		var pathtosvg = "lib/assets/toggleon.svg";
+	}
+
+	//lable for md activation
+	creatediv({
+		appendto: matchdayinfoinputcontainer,
+		divtext: "Tag aktiv setzen"
+	});
+
+	//create container for button
+	let setcurrentbuttoncontainer = creatediv({
+		appendto: matchdayinfoinputcontainer
+	});
+
+	//button to set matchday current
+	let setcurrentbutton = document.createElement("img");
+	setcurrentbutton.setAttribute("src", pathtosvg);
+	setcurrentbutton.classList.add("workspaceicon");
+	setcurrentbuttoncontainer.appendChild(setcurrentbutton);
+	setcurrentbutton.addEventListener("click", async () => {
+
+		//if md is not actifve, allows to activate
+		if(matchdayinformation.mdcurrent == 0){
+			let activate = setmdactive(matchdayinformation.tid, matchdayinformation.mdnumber);
+			console.log(activate);
+		}
+
+	});
+
 	//container to display informtion about rounds in matchday
 	let matchdayroundsinformation = creatediv({
 		divclass: ["workspace-view-maytchdayinformation-roundsoverview"],
@@ -2502,6 +2547,32 @@ let delteplayer = async (modal, tid, cid, playernumber) => {
 		changeelementvisibility(modal, false, true);
 		toggleoverlay(false);
 	}
+
+}
+
+let setmdactive = async (tid, mdnumber) => {
+
+	mddata = {
+		tid: tid,
+		mdnumber: mdnumber,
+		mdcurrent: 1
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/setmdcurrent.php";
+	let activemd = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(mddata)
+	});
+
+	//php response
+	let phpresponse = await activemd.json();
+	
+	return phpresponse["result"];
 
 }
 
