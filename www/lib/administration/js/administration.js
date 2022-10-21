@@ -2300,9 +2300,22 @@ let buildworkspaceviewmatchday = (tid, mdnumber) => {
 	matchdayinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdayinformationicon);
 	matchdayinformationicon.addEventListener("click", () => {
-		console.log("hi");
+		//displays matchday information
 		buildworkspacematchdayinformation(tid, mdnumber);
 	})
+
+	//create icon for matchday deletion 
+	let matchdaydeletionicon = document.createElement("img");
+	matchdaydeletionicon.setAttribute("src", "lib/assets/delete.svg");
+	matchdaydeletionicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(matchdaydeletionicon);
+	matchdaydeletionicon.addEventListener("click", () => {
+		//displays matchday information
+		//buildworkspacematchdayinformation(tid, mdnumber);
+		deletematchday(tid, mdnumber);
+
+	})
+
 
 	buildworkspacematchdayinformation(tid, mdnumber);
 
@@ -2397,9 +2410,8 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 		//if md is not actifve, allows to activate
 		if(matchdayinformation.mdcurrent == 0){
 			let activate = await setmdactive(matchdayinformation.tid, matchdayinformation.mdnumber);
-			console.log(activate);
 			//if md was succsessfully activated
-			//change icon
+			//change icon and set X
 			if(activate == 0){
 				//cleareelement(setcurrentbuttoncontainer);
 				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
@@ -2568,6 +2580,31 @@ let setmdactive = async (tid, mdnumber) => {
 
 	//call php script
 	let phppath = "/lib/administration/php/setmdcurrent.php";
+	let activemd = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(mddata)
+	});
+
+	//php response
+	let phpresponse = await activemd.json();
+	
+	return phpresponse["result"];
+
+}
+
+let deletematchday = async (tid, mdnumber) => {
+
+	mddata = {
+		tid: tid,
+		mdnumber: mdnumber,
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/deletematchday.php";
 	let activemd = await fetch(phppath, {
 		method: 'POST',
 		header: {
