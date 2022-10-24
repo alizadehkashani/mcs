@@ -1212,7 +1212,7 @@ let buildsinglematchday = async (container, tid, mdnumber) => {
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer);
-		buildworkspaceviewmatchday(tid, mdnumber);
+		buildworkspaceviewmatchday(matchdaycontainer, tid, mdnumber);
 	})
 
 	//add event listener for expand/collapse control of rounds
@@ -2277,7 +2277,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 }
 
-let buildworkspaceviewmatchday = (tid, mdnumber) => {
+let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2309,11 +2309,18 @@ let buildworkspaceviewmatchday = (tid, mdnumber) => {
 	matchdaydeletionicon.setAttribute("src", "lib/assets/delete.svg");
 	matchdaydeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdaydeletionicon);
-	matchdaydeletionicon.addEventListener("click", () => {
-		//displays matchday information
-		//buildworkspacematchdayinformation(tid, mdnumber);
-		deletematchday(tid, mdnumber);
-
+	matchdaydeletionicon.addEventListener("click", async () => {
+		//deletematchday
+		let delmdresp = await deletematchday(tid, mdnumber);
+		console.log(delmdresp);
+		if(delmdresp.result == 0){
+			let roundcontainerid = "mc-r-tid-" + tid + "-md-" + mdnumber;
+			let roundcontainer = document.getElementById(roundcontainerid);
+			roundcontainer.remove();
+			mdcontainer.remove();
+		}else{
+			alert(delmdresp.message);
+		}
 	})
 
 
@@ -2617,7 +2624,7 @@ let deletematchday = async (tid, mdnumber) => {
 	//php response
 	let phpresponse = await activemd.json();
 	
-	return phpresponse["result"];
+	return phpresponse;
 
 }
 
