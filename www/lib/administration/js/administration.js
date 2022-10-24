@@ -2323,7 +2323,10 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 			
 			roundcontainer.remove();
 			mdcontainer.remove();
+
 			//close workspace
+			closeworkspace();
+
 		}else{
 			alert(delmdresp.message);
 		}
