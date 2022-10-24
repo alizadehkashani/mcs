@@ -144,14 +144,14 @@ let buildsettings = () => {
 
 let buildworkspace = () => {
 	//create workspace container
-	let workspace = creatediv({
+	globalworkspace = creatediv({
 		appendto: document.getElementById("administration"),
 		divid: ["administrationworkspace"] 
 	})
 
 	//create worspace head container
 	let workspacehead = creatediv({
-		appendto: workspace,
+		appendto: globalworkspace,
 		divid: "administrationworkspacehead"
 	})
 
@@ -175,23 +175,26 @@ let buildworkspace = () => {
 
 	//add eventlistner to close button
 	closebuttoncontainer.addEventListener("click", () =>{
-		changeelementvisibility(workspace, false, false);
-		deselectallnavigation();
+		closeworkspace();
 	})
 
 	//create body
 	creatediv({
-		appendto: workspace,
+		appendto: globalworkspace,
 		divid: "administrationworkspacebody"
 	})
 	
 	//creat foot
 	creatediv({
-		appendto: workspace,
+		appendto: globalworkspace,
 		divid: "administrationworkspacefoot"
 	})
 }
 
+let closeworkspace = () => {
+	changeelementvisibility(globalworkspace, false, false);
+	deselectallnavigation();
+}
 
 //returns dom element of workspace
 let getworkspace = () => {
@@ -2314,10 +2317,13 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 		let delmdresp = await deletematchday(tid, mdnumber);
 		console.log(delmdresp);
 		if(delmdresp.result == 0){
+			//get container with rounds
 			let roundcontainerid = "mc-r-tid-" + tid + "-md-" + mdnumber;
 			let roundcontainer = document.getElementById(roundcontainerid);
+			
 			roundcontainer.remove();
 			mdcontainer.remove();
+			//close workspace
 		}else{
 			alert(delmdresp.message);
 		}
