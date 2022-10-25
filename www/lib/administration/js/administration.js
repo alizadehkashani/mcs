@@ -1346,28 +1346,6 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 	creatediv({appendto: roundcontainer});
 	creatediv({appendto: roundcontainer});
 
-	/*
-	//create container for expand/collapse control
-	let expandcontainer = creatediv({
-		appendto: roundcontainer,
-		divclass: ["expandcontainer", "flexcenter"]
-	})
-	expandcontainer.setAttribute("data-state", "collapsed");
-
-	//create svg for expand/collapse control
-	let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-	polygonsvg.setAttribute("viewBox", "0 0 20 20");
-	polygonsvg.setAttribute("height", "20px");
-	polygonsvg.setAttribute("width", "20px");
-	expandcontainer.appendChild(polygonsvg);
-
-	//create new triangle
-	let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-	polygon.setAttribute("points", "8,5 13,10 8,15");
-	polygon.setAttribute("fill", "#5f6368");	
-	polygonsvg.appendChild(polygon);	
-	*/
-
 	//add matchday description icon container
 	let roundiconanddescription = creatediv({
 		divclass: ["navigation-icon-description", "navigationitemhover"],
@@ -1392,7 +1370,8 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 		setselectednavigation(roundcontainer);
 		
 		//TODO build workspace view round 
-		//buildworkspaceviewtournament(tournaments[i]["tid"], matchdaynumber);
+		buildworkspaceviewround(tid, md, rnumber, roundcontainer);
+
 	})				
 
 }
@@ -2632,6 +2611,89 @@ let deletematchday = async (tid, mdnumber) => {
 
 	//php response
 	let phpresponse = await activemd.json();
+	
+	return phpresponse;
+
+}
+
+let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => {
+
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+	let workspacebody = getworkspacebody();
+	let workspacefoot = getworkspacefoot();
+	let workspaceheadvariable = getworkspaceheadvariable();
+
+	//clear workspace
+	clearworkspace();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+
+	//create icon for round information
+	let roundinformationicon = document.createElement("img");
+	roundinformationicon.setAttribute("src", "lib/assets/info.svg");
+	roundinformationicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(roundinformationicon);
+	roundinformationicon.addEventListener("click", () => {
+		//displays round information
+		buildworkspaceroundinformation(tid, mdnumber, rnumber);
+	})
+
+	//create icon for round deletion 
+	let rounddeletionicon = document.createElement("img");
+	rounddeletionicon.setAttribute("src", "lib/assets/delete.svg");
+	rounddeletionicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(rounddeletionicon);
+	rounddeletionicon.addEventListener("click", async () => {
+
+		//deleteround
+		let delroundresp = await deleteround(tid, mdnumber, rnumber);
+		if(delroundresp.result == 0){
+			
+			//delte round container
+			roundcontainer.remove();
+
+			//close workspace
+			closeworkspace();
+
+		}else{
+			alert(delroundresp.message);
+		}
+	})
+
+	buildworkspaceroundinformation(tid, mdnumber, rnumber);
+}
+
+let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
+
+
+}
+
+let deleteround = async (tid, mdnumber, rnumber) => {
+
+	rdata = {
+		tid: tid,
+		mdnumber: mdnumber,
+		rnumber: rnumber
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/deleteround.php";
+	let delround = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(rdata)
+	});
+
+	//php response
+	let phpresponse = await delround.json();
 	
 	return phpresponse;
 
