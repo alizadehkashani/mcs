@@ -2376,10 +2376,10 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	});
 		
 	//set x if current matchday
-	if(roundinformation.mdcurrent == 0){
+	if(matchdayinformation.mdcurrent == 0){
 		activemd.innerHTML = "-";
 		var pathtosvg = "lib/assets/toggleoff.svg";
-	}else if(roundinformation.mdcurrent == 1){
+	}else if(matchdayinformation.mdcurrent == 1){
 		activemd.innerHTML = "X";
 		var pathtosvg = "lib/assets/toggleon.svg";
 	}
@@ -2641,6 +2641,16 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 	roundinformationicon.addEventListener("click", () => {
 		//displays round information
 		buildworkspaceroundinformation(tid, mdnumber, rnumber);
+	})
+
+	//create icon for startgroups 
+	let roundstartgroupsicon = document.createElement("img");
+	roundstartgroupsicon.setAttribute("src", "lib/assets/startgroups.svg");
+	roundstartgroupsicon.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(roundstartgroupsicon);
+	roundstartgroupsicon.addEventListener("click", () => {
+		//displays round information
+		//buildworkspaceroundstartgroups(tid, mdnumber, rnumber);
 	})
 
 	//create icon for round deletion 
