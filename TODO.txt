@@ -1,5 +1,5 @@
 TODO	in tournament overview show current day and current round
-TODO	when deleting club, also delete players?
+DONE	when deleting club, also delete players?
 TODO	user should have to confirm again if he wants to delete club
 TODO 	create backups when deleting something?
 TODO	player creation gender dropdown
@@ -8,7 +8,14 @@ TODO	player update in own function
 
 :noh	remove current highlight
 :e %:h/filename
+
+SQL:
 show tables
 describe <table>
-use <table>
-mysqldump -u <username> -p <database> <filename>
+use <database>
+mysqldump -u <username> -p <database> > <filename>
+ALTER TABLE <table> MODIFY <column> <dataype>(<size>);
+ALTER TABLE t1 ALTER b SET DEFAULT 'hello';
+ALTER TABLE websites
+  ADD host_name varchar(40)
+    AFTER server_name;

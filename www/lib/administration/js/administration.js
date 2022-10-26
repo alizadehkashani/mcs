@@ -2376,10 +2376,10 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	});
 		
 	//set x if current matchday
-	if(matchdayinformation.mdcurrent == 0){
+	if(roundinformation.mdcurrent == 0){
 		activemd.innerHTML = "-";
 		var pathtosvg = "lib/assets/toggleoff.svg";
-	}else if(matchdayinformation.mdcurrent == 1){
+	}else if(roundinformation.mdcurrent == 1){
 		activemd.innerHTML = "X";
 		var pathtosvg = "lib/assets/toggleon.svg";
 	}
@@ -2670,6 +2670,129 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 
 let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 
+	//get workspace body
+	let workspacebody = getworkspacebody();
+
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//add class to workspace body
+	workspacebody.classList.add("workspace-view-roundinformation-body");
+
+	//get round information from database
+	let roundinformation = await getround(tid, mdnumber, rnumber);
+
+	//container to store information about basic round information
+	let roundinfoinputcontainer = creatediv({
+		appendto: workspacebody,
+		divclass: ["workspace-view-roundinformation-input-container"]
+	});
+
+	//label for round number
+	let labelmdnumber = creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: "Nummer:"
+	});
+
+	//round number
+	let rnumberdisplay = creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: roundinformation["rnumber"]
+	});
+	
+	//label for round description
+	let rdescriptionlabel = creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: "Beschreibung:"
+	});
+
+	//round description input
+	let rdescription = creatediv({
+		type: "INPUT",
+		appendto: roundinfoinputcontainer,
+	});
+	rdescription.value = roundinformation["rdescription"];
+
+	//label for active round
+	let activelabel = creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: "Aktive Runde"
+	});
+
+	let activer = creatediv({
+		appendto: roundinfoinputcontainer
+	});
+		
+	//set x if current round
+	if(roundinformation.rcurrent == 0){
+		activer.innerHTML = "-";
+		var pathtosvg = "lib/assets/toggleoff.svg";
+	}else if(roundinformation.rcurrent == 1){
+		activer.innerHTML = "X";
+		var pathtosvg = "lib/assets/toggleon.svg";
+	}
+
+	//lable for md activation
+	creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: "Runde aktiv setzen"
+	});
+
+	//create container for button
+	let setcurrentbuttoncontainer = creatediv({
+		appendto: roundinfoinputcontainer
+	});
+
+	//button to set round current
+	let setcurrentbutton = document.createElement("img");
+	setcurrentbutton.setAttribute("src", pathtosvg);
+	setcurrentbutton.classList.add("workspaceicon");
+	setcurrentbuttoncontainer.appendChild(setcurrentbutton);
+	setcurrentbutton.addEventListener("click", async () => {
+
+		//if round is not actifve, allows to activate
+		if(roundinformation.rcurrent == 0){
+			let activate = await setractive(roundinformation.tid, roundinformation.mdnumber);
+			//if round was succsessfully activated
+			//change icon and set X
+			if(activate == 0){
+				//cleareelement(setcurrentbuttoncontainer);
+				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
+				activer.innerHTML = "X";
+
+			}
+		}
+
+	});
+
+	//create container for done button
+	let donebuttoncontainer = creatediv({
+		appendto: workspacefoot,
+		divid: "administrationworkspacedonecontainer"
+	})
+
+	//add done button
+	let doneicon = document.createElement("img");
+	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("workspaceicon");
+	donebuttoncontainer.appendChild(doneicon);
+
+	//add eventlistner to done button
+	donebuttoncontainer.addEventListener("click", () =>{
+
+		//data of round
+		let rdata = {
+			tid: tid,
+			mdnumber: rnumber,
+			rdescription: rdescription.value
+		}
+
+		updateround(rdata);
+	})
 
 }
 
@@ -2696,6 +2819,55 @@ let deleteround = async (tid, mdnumber, rnumber) => {
 	let phpresponse = await delround.json();
 	
 	return phpresponse;
+
+}
+
+let getround = async (tid, mdnumber, rnumber) => {
+
+	//set data for php script
+	let requestdata = {tid: tid, mdnumber: mdnumber, rnumber: rnumber};
+
+	//call php script 
+	let phpresponse = await fetch("/lib/administration/php/getround.php", {
+		method: 'POST',
+		headers: {
+			'Accept': 'application/jsono',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(requestdata)
+	});
+
+	//variable for php response
+	let response = await phpresponse.json();
+
+	//return round
+	return response;
+}
+
+let setractive = async (tid, mdnumber, rnumber) => {
+
+	rdata = {
+		tid: tid,
+		mdnumber: mdnumber,
+		rnumber: rnumber,
+		rcurrent: 1
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/setrcurrent.php";
+	let activer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(rdata)
+	});
+
+	//php response
+	let phpresponse = await activer.json();
+	
+	return phpresponse["result"];
 
 }
 
