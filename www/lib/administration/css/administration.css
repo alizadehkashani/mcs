@@ -693,10 +693,11 @@
 	grid-row-gap: 5px;
 }
 
-.workspace-view-roundinformation-input-container{
+.workspace-view-roundstartgroups-body{
 
 	display: grid;
 	
-	grid-template-columns: 200px 200px;
-	grid-template-rows: repeat(4, 25px);
+	grid-template-columns: 1fr; 
+	grid-template-rows: 50px 400px;
+
 }

@@ -411,7 +411,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 
 	//create icon for tournament information
 	let tournamentinformationicon = document.createElement("img");
-	tournamentinformationicon.setAttribute("src", "lib/assets/tournamentinfo.svg");
+	tournamentinformationicon.setAttribute("src", "lib/assets/info.svg");
 	tournamentinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", async () => {
@@ -1369,7 +1369,7 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 	roundiconanddescription.addEventListener("click", () => {
 		setselectednavigation(roundcontainer);
 		
-		//TODO build workspace view round 
+		//build workspace view round 
 		buildworkspaceviewround(tid, md, rnumber, roundcontainer);
 
 	})				
@@ -2278,7 +2278,7 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 
 	//create icon for tournament information
 	let matchdayinformationicon = document.createElement("img");
-	matchdayinformationicon.setAttribute("src", "lib/assets/matchdayinformation.svg");
+	matchdayinformationicon.setAttribute("src", "lib/assets/info.svg");
 	matchdayinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdayinformationicon);
 	matchdayinformationicon.addEventListener("click", () => {
@@ -2650,7 +2650,7 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 	workspaceheadvariable.appendChild(roundstartgroupsicon);
 	roundstartgroupsicon.addEventListener("click", () => {
 		//displays round information
-		//buildworkspaceroundstartgroups(tid, mdnumber, rnumber);
+		buildworkspaceroundstartgroups(tid, mdnumber, rnumber);
 	})
 
 	//create icon for round deletion 
@@ -2881,6 +2881,22 @@ let setractive = async (tid, mdnumber, rnumber) => {
 
 }
 
+let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
+	debugger;
+	//get workspace body
+	let workspacebody = getworkspacebody();
+
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//add class to workspace body
+	workspacebody.classList.add("workspace-view-roundstartgroups-body");
+
+}
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);
