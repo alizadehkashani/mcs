@@ -2695,6 +2695,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 
 	//get round information from database
 	let roundinformation = await getround(tid, mdnumber, rnumber);
+	console.log(roundinformation);
 
 	//container to store information about basic round information
 	let roundinfoinputcontainer = creatediv({
@@ -2724,6 +2725,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	let rdescription = creatediv({
 		type: "INPUT",
 		appendto: roundinfoinputcontainer,
+		divtext: roundinformation["rdescription"]
 	});
 	rdescription.value = roundinformation["rdescription"];
 
@@ -2794,17 +2796,39 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	//add eventlistner to done button
 	donebuttoncontainer.addEventListener("click", () =>{
 
-		//data of round
-		let rdata = {
-			tid: tid,
-			mdnumber: rnumber,
-			rdescription: rdescription.value
-		}
 
-		updateround(rdata);
+		updateround(tid, mdnumber, rnumber, rdescription.value);
 	})
 
 }
+
+let updateround = async (tid, mdnumber, rnumber, rdescription)=> {
+	//debugger;
+	//data of round
+	let rdata = {
+		tid: tid,
+		mdnumber: mdnumber,
+		rnumber: rnumber,
+		rdescription: rdescription
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/updateround.php";
+	let updateround = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(rdata)
+	});
+
+	//php response
+	let phpresponse = await updateround.json();
+	
+	return phpresponse;
+}
+
 
 let deleteround = async (tid, mdnumber, rnumber) => {
 
@@ -2882,7 +2906,7 @@ let setractive = async (tid, mdnumber, rnumber) => {
 }
 
 let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
-	debugger;
+
 	//get workspace body
 	let workspacebody = getworkspacebody();
 
@@ -2897,6 +2921,7 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 	workspacebody.classList.add("workspace-view-roundstartgroups-body");
 
 }
+
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);

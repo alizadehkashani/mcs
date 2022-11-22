@@ -701,3 +701,9 @@
 	grid-template-rows: 50px 400px;
 
 }
+
+.workspace-view-roundinformation-input-container{
+	display: grid;
+	grid-template-columns: 200px 200px;
+	grid-template-rows: repeat(4, 25px);
+}
