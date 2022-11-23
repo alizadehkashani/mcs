@@ -2936,7 +2936,7 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 		let tracklabel = creatediv({
 			appendto: trackselectioncontainer,
 			divtext: tracks[i].label,
-			divclass: ["flexcenter"]
+			divclass: ["startgroupstracklabel", "flexcenter"]
 		})
 
 		tracklabel.addEventListener("click", async () => {

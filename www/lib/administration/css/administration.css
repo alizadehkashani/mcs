@@ -715,3 +715,12 @@
 	grid-template-rows: 1fr;
 	grid-auto-flow: column;
 }
+.startgroupstracklabel{
+	margin: 5px;
+	border-radius: 25px;
+}
+
+.startgroupstracklabel:hover{
+	cursor: pointer;
+	background-color: var(--mcscolorlight);
+}
