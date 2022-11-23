@@ -2695,7 +2695,6 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 
 	//get round information from database
 	let roundinformation = await getround(tid, mdnumber, rnumber);
-	console.log(roundinformation);
 
 	//container to store information about basic round information
 	let roundinfoinputcontainer = creatediv({
@@ -2803,7 +2802,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 }
 
 let updateround = async (tid, mdnumber, rnumber, rdescription)=> {
-	//debugger;
+
 	//data of round
 	let rdata = {
 		tid: tid,
@@ -2919,7 +2918,41 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 	
 	//add class to workspace body
 	workspacebody.classList.add("workspace-view-roundstartgroups-body");
+	
+	let trackselectioncontainer = creatediv({
+		appendto: workspacebody,
+		divclass: ["workspace-trackselection-container"]
+	});
 
+	let trackstartgroups = creatediv({
+		appendto: workspacebody,
+		divtext: "hallo"
+	})
+
+	//get tracks from db
+	let tracks = await gettracks(tid);
+
+	for(let i = 0; i < tracks.length; i++){
+		let tracklabel = creatediv({
+			appendto: trackselectioncontainer,
+			divtext: tracks[i].label,
+			divclass: ["flexcenter"]
+		})
+
+		tracklabel.addEventListener("click", async () => {
+			buildtrackstartgroups(tid, tracks[i].trackid, mdnumber, rnumber);
+		})
+
+	}
+
+
+}
+
+let buildtrackstartgroups = async (tid, trackid, mdnumber, rnumber) => {
+	console.log(tid);
+	console.log(trackid);
+	console.log(mdnumber);
+	console.log(rnumber);
 }
 
 DOMready(buildheader);
