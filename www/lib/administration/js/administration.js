@@ -122,7 +122,7 @@ let buildconstantnavigation = (maincontainer) => {
 	})
 
 	sesstingsiconanddescription.addEventListener("click", () => { 
-		setselectednavigation(settingscontainer);
+		setselectednavigation(settingscontainer, "navigation");
 		buildsettings;
 	})
 
@@ -193,7 +193,7 @@ let buildworkspace = () => {
 
 let closeworkspace = () => {
 	changeelementvisibility(globalworkspace, false, false);
-	deselectallnavigation();
+	deselectallnavigation("navigation");
 }
 
 //returns dom element of workspace
@@ -246,21 +246,37 @@ let clearworkspacefoot = () => {
 	document.getElementById("administrationworkspacefoot").className = "";
 }
 
-let setselectednavigation = (div) => {
+let setselectednavigation = (div, type) => {
 
-	deselectallnavigation();
+	
+	deselectallnavigation(type);
 	
 	div.classList.remove("navigationhover");
 	div.classList.add("selectednavigation");
 
 }
 
-let deselectallnavigation = () => {
-	let currentselected = document.querySelector(".selectednavigation");
+let deselectallnavigation = (type) => {
+
+	let selector;
+	let hover;
+
+	switch(type){
+		case 'navigation':
+			selector = "selectednavigation";
+			hover = "navigationhover";
+			break;
+		case 'track':
+			selector = ".selectedtrack";
+			hover = "trackhover";
+			break;
+	}
+
+	let currentselected = document.querySelector("." + selector);
 
 	if(currentselected != null){
-		currentselected.classList.remove("selectednavigation");
-		currentselected.classList.add("navigationhover");
+		currentselected.classList.remove(selector);
+		currentselected.classList.add(hover);
 	}
 }
 
@@ -1080,7 +1096,7 @@ let buildtournamentsinit = async (maincontainer) => {
 		
 		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", async () => {
-			setselectednavigation(tournament);
+			setselectednavigation(tournament, "navigation");
 			await buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
 		})
 
@@ -1214,7 +1230,7 @@ let buildsinglematchday = async (container, tid, mdnumber) => {
 
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
-		setselectednavigation(matchdaycontainer);
+		setselectednavigation(matchdaycontainer, "navigation");
 		buildworkspaceviewmatchday(matchdaycontainer, tid, mdnumber);
 	})
 
@@ -1367,7 +1383,7 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 
 	//add event lisnter if round is selected
 	roundiconanddescription.addEventListener("click", () => {
-		setselectednavigation(roundcontainer);
+		setselectednavigation(roundcontainer, "navigation");
 		
 		//build workspace view round 
 		buildworkspaceviewround(tid, md, rnumber, roundcontainer);
