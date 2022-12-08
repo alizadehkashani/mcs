@@ -724,3 +724,7 @@
 	cursor: pointer;
 	background-color: var(--mcscolorlight);
 }
+
+.selectedtrack{
+	background-color: var(--mcscolorlight);
+}

@@ -247,17 +247,7 @@ let clearworkspacefoot = () => {
 }
 
 let setselectednavigation = (div, type) => {
-
 	
-	deselectallnavigation(type);
-	
-	div.classList.remove("navigationhover");
-	div.classList.add("selectednavigation");
-
-}
-
-let deselectallnavigation = (type) => {
-
 	let selector;
 	let hover;
 
@@ -267,10 +257,19 @@ let deselectallnavigation = (type) => {
 			hover = "navigationhover";
 			break;
 		case 'track':
-			selector = ".selectedtrack";
+			selector = "selectedtrack";
 			hover = "trackhover";
 			break;
 	}
+
+	deselectallnavigation(selector, hover);
+
+	div.classList.remove(hover);
+	div.classList.add(selector);
+
+}
+
+let deselectallnavigation = (selector, hover) => {
 
 	let currentselected = document.querySelector("." + selector);
 
@@ -2956,7 +2955,9 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 		})
 
 		tracklabel.addEventListener("click", async () => {
+			setselectednavigation(tracklabel, "track");
 			buildtrackstartgroups(tid, tracks[i].trackid, mdnumber, rnumber);
+
 		})
 
 	}
