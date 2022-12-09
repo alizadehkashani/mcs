@@ -19,3 +19,24 @@ ALTER TABLE t1 ALTER b SET DEFAULT 'hello';
 ALTER TABLE websites
   ADD host_name varchar(40)
     AFTER server_name;
+
+
+    tournament id
+    track id
+    matchday id
+    round id
+    group id
+    group start oder
+    player number
+    player order
+    current group
+
+
+create table groups (
+	tid int(3),
+	trackid int(3),
+	mdnumber int(3),
+	rnumber int(3),
+	groupid int(3),
+	gstartorder int(3),
+	playernumber
