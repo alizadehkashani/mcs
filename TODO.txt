@@ -32,11 +32,21 @@ ALTER TABLE websites
     current group
 
 
-create table groups (
+CREATE TABLE groups (
 	tid int(3),
 	trackid int(3),
 	mdnumber int(3),
 	rnumber int(3),
 	groupid int(3),
-	gstartorder int(3),
-	playernumber
+	playernumber int(3),
+	gorder int(3),
+	porder int(3),
+	currentgroup int(1),
+	PRIMARY KEY (tid, trackid, mdnumber, rnumber, groupid, playernumber)
+	);
+	FOREIGN KEY (tid) REFERENCES tournaments(tid),
+	FOREIGN KEY (trackid) REFERENCES tracks(trackid),
+	FOREIGN KEY (mdnumber) REFERENCES matchdays(mdnumber),
+	FOREIGN KEY (rnumber) REFERENCES rounds(rnumber),
+	FOREIGN KEY (playernumber) REFERENCES players(playernumber)
+

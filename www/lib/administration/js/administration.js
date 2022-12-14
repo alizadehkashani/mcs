@@ -2939,9 +2939,12 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 		divclass: ["workspace-trackselection-container"]
 	});
 
-	let trackstartgroups = creatediv({
+	let trackstartgroupscreatecontainer = creatediv({
 		appendto: workspacebody,
-		divtext: "hallo"
+	})
+
+	let trackstartgroupslist = creatediv({
+		appendto: workspacebody
 	})
 
 	//get tracks from db
@@ -2956,7 +2959,14 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 
 		tracklabel.addEventListener("click", async () => {
 			setselectednavigation(tracklabel, "track");
-			buildtrackstartgroups(tid, tracks[i].trackid, mdnumber, rnumber);
+			buildtrackstartgroups(
+				trackstartgroupscreatecontainer,
+				trackstartgroupslist,
+				tid,
+				tracks[i].trackid,
+				mdnumber,
+				rnumber
+				);
 
 		})
 
@@ -2965,11 +2975,19 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 
 }
 
-let buildtrackstartgroups = async (tid, trackid, mdnumber, rnumber) => {
+let buildtrackstartgroups = async (
+	buttoncontainer,
+	listcontainer,
+	tid,
+	trackid,
+	mdnumber,
+	rnumber) => {
+
 	console.log(tid);
 	console.log(trackid);
 	console.log(mdnumber);
 	console.log(rnumber);
+	console.log(buttoncontainer);
 }
 
 DOMready(buildheader);
