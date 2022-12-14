@@ -2983,11 +2983,49 @@ let buildtrackstartgroups = async (
 	mdnumber,
 	rnumber) => {
 
+	cleareelement(buttoncontainer);
+	cleareelement(listcontainer);
 	console.log(tid);
 	console.log(trackid);
 	console.log(mdnumber);
 	console.log(rnumber);
 	console.log(buttoncontainer);
+
+	//create button to create new empty group
+	let creategroupbutton = document.createElement("img");
+	creategroupbutton.setAttribute("src", "lib/assets/addcircle.svg");
+	creategroupbutton.classList.add("workspaceicon");
+	buttoncontainer.appendChild(creategroupbutton);
+	
+	creategroupbutton.addEventListener("click", async () => {
+		createnewgroup(tid, trackid, mdnumber, rnumber);
+	})
+}
+
+let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
+
+	groupdata = {
+		tid: tid,
+		trackid: trackid,
+		mdnumber: mdnumber,
+		rnumber: rnumber
+	}
+
+	let phppath = "/lib/administration/php/creategroup.php";
+
+	let createnewgroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(groupdata)
+	});
+
+	//php response
+	let phpresponse = await createnewgroup.json();
+	
+	console.log(phpresponse);
 }
 
 DOMready(buildheader);
