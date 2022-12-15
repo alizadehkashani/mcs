@@ -24,8 +24,6 @@
 	$sql->bindParam(":rnumber", $data["rnumber"]);
 	$sql->execute();
 
-	echo($sql->rowCount());
-
 	if($sql->rowCount() == 0){//currently no groups existing
 		//if there are no groups, set grouporder to one
 		$grouporder = 1;

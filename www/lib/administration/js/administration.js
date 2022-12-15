@@ -49,7 +49,7 @@ let buildnavigation = () => {
 //builds the upper part of the navigation
 let buildvariablenavigation = async (maincontainer) => {
 
-	cleareelement(maincontainer);
+	clearelement(maincontainer);
 
 	await buildtournamentsinit(maincontainer);
 }
@@ -586,7 +586,7 @@ let fillclubstable = async (tid) => {
 
 	let tablecontainer = document.getElementById("clubs-table");
 	
-	cleareelement(tablecontainer);
+	clearelement(tablecontainer);
 	
 	//insert data from db into table
 	for(let i = 0; i < clubs.length; i++){
@@ -1266,7 +1266,7 @@ let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 	
 	//check if matchdays should be rebuild
 	if(rebuild == 1){
-		cleareelement(container);
+		clearelement(container);
 	}
 
 	//get matchdays
@@ -1395,7 +1395,7 @@ let buildrounds = async (container, tid, md, rebuild) => {
 
 	//check if rounds should be rebuild
 	if(rebuild == 1){
-		cleareelement(container);
+		clearelement(container);
 	}
 
 
@@ -1568,7 +1568,7 @@ let buildtrackstable = async (tid, container, rebuild) => {
 
 	//if rebuild, clear container
 	if(rebuild){
-		cleareelement(container)
+		clearelement(container)
 	}
 
 	//get tracks from db
@@ -1928,7 +1928,7 @@ let clubsdropdown = async (tid) => {
 
 let buildplayerstable = async (container, tid, cid) => {
 	//empty table
-	cleareelement(container);
+	clearelement(container);
 
 	//get players
 	let players = await getplayers(tid, cid, 0);
@@ -2423,7 +2423,7 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 			//if md was succsessfully activated
 			//change icon and set X
 			if(activate == 0){
-				//cleareelement(setcurrentbuttoncontainer);
+				//clearelement(setcurrentbuttoncontainer);
 				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
 				activemd.innerHTML = "X";
 
@@ -2786,7 +2786,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 			//if round was succsessfully activated
 			//change icon and set X
 			if(activate == 0){
-				//cleareelement(setcurrentbuttoncontainer);
+				//clearelement(setcurrentbuttoncontainer);
 				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
 				activer.innerHTML = "X";
 
@@ -2944,7 +2944,8 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 	})
 
 	let trackstartgroupslist = creatediv({
-		appendto: workspacebody
+		appendto: workspacebody,
+		divid: "trackstartgroupslist"
 	})
 
 	//get tracks from db
@@ -2983,24 +2984,24 @@ let buildtrackstartgroups = async (
 	mdnumber,
 	rnumber) => {
 
-	cleareelement(buttoncontainer);
-	cleareelement(listcontainer);
-	console.log(tid);
-	console.log(trackid);
-	console.log(mdnumber);
-	console.log(rnumber);
-	console.log(buttoncontainer);
 
-	//create button to create new empty group
-	let creategroupbutton = document.createElement("img");
-	creategroupbutton.setAttribute("src", "lib/assets/addcircle.svg");
-	creategroupbutton.classList.add("workspaceicon");
-	buttoncontainer.appendChild(creategroupbutton);
-	
-	creategroupbutton.addEventListener("click", async () => {
-		createnewgroup(tid, trackid, mdnumber, rnumber);
-	})
-}
+		clearelement(buttoncontainer);
+		clearelement(listcontainer);
+
+		//create button to create new empty group
+		let creategroupbutton = document.createElement("img");
+		creategroupbutton.setAttribute("src", "lib/assets/addcircle.svg");
+		creategroupbutton.classList.add("workspaceicon");
+		buttoncontainer.appendChild(creategroupbutton);
+		
+		creategroupbutton.addEventListener("click", async () => {
+			createnewgroup(tid, trackid, mdnumber, rnumber);
+			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
+		})
+
+		await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
+
+	}
 
 let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
 
@@ -3025,9 +3026,80 @@ let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
 	//php response
 	let phpresponse = await createnewgroup.json();
 	
-	console.log(phpresponse);
 }
 
+let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
+	
+	groupdata = {
+		tid: tid,
+		trackid: trackid,
+		mdnumber: mdnumber,
+		rnumber: rnumber
+	}
+
+	let phppath = "/lib/administration/php/getstartgroups.php";
+
+	let createnewgroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(groupdata)
+	});
+
+	//php response
+	let phpresponse = await createnewgroup.json();
+
+	return phpresponse;
+}
+
+let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumber) => {
+
+	//clear list
+	clearelement(tablecontainer);
+
+	//get groups from db
+	let groups = await getstartgroups(tid, trackid, mdnumber, rnumber);
+	console.log(groups);
+	console.log(groups.length);
+
+	//loop through groups and build table
+	for(let i = 0; i < groups.length; i++){
+		let groupcontainer = creatediv({
+			appendto: tablecontainer,
+			divclass: ["trackstartgroupcontainer"]
+		});
+
+		//create container for expand/collapse control
+		let expandcontainer = creatediv({
+			appendto: groupcontainer,
+			divclass: ["expandcontainer", "flexcenter"]
+		})
+		expandcontainer.setAttribute("data-state", "collapsed");
+		
+		//create svg for expand/collapse control
+		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvg.setAttribute("viewBox", "0 0 20 20");
+		polygonsvg.setAttribute("height", "20px");
+		polygonsvg.setAttribute("width", "20px");
+		expandcontainer.appendChild(polygonsvg);
+
+		//create new triangle
+		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygon.setAttribute("points", "8,5 13,10 8,15");
+		polygon.setAttribute("fill", "#5f6368");	
+		polygonsvg.appendChild(polygon);
+
+		//container for start order of group
+		let groupordernumber = creatediv({
+			appendto: groupcontainer,
+			divtext: i + 1,
+			divclass: ["flexcenter"]
+		})
+	}
+
+}
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);

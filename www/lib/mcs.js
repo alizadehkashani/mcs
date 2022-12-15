@@ -27,7 +27,7 @@ function clearid(elementid){
 }
 
 //clears dom element of all child nodes
-let cleareelement = (element) => {
+let clearelement = (element) => {
 	while(element.hasChildNodes()){
 
 		//delete last nodes until empty
