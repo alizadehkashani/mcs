@@ -747,3 +747,25 @@
 	grid-template-columns: 25px 25px 25px 1fr 25px;
 	background-color: var(--mcsgrey);
 }
+
+#modal-add-player-to-group{
+
+	width: 600px;
+	height: 250px;
+
+}
+
+#modal-add-player-to-group-layout{
+	display: grid;
+	
+	grid-template-columns: 200px 1fr;
+	grid-template-rows: 1fr;
+
+}
+
+#modal-add-player-to-group-playerinfo-container{
+	display: grid;
+	
+	grid-template-columns: 100px 1fr;
+	grid-template-rows: repeat(5, 30px); 
+}

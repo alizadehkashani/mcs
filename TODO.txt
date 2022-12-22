@@ -50,3 +50,9 @@ CREATE TABLE groups (
 	FOREIGN KEY (rnumber) REFERENCES rounds(rnumber),
 	FOREIGN KEY (playernumber) REFERENCES players(playernumber)
 
+CREATE TABLE groupplayers (
+	tid int(3),
+	groupid int(11),
+	playernumber int(3),
+	playerorder int(3),
+	PRIMARY KEY (tid, groupid, playernumber));

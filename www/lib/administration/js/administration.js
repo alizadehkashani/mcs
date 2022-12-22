@@ -3073,8 +3073,6 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 
 	//get groups from db
 	let groups = await getstartgroups(tid, trackid, mdnumber, rnumber);
-	console.log(groups);
-	console.log(groups.length);
 
 	//loop through groups and build table
 	for(let i = 0; i < groups.length; i++){
@@ -3121,14 +3119,41 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
 		
 		addplayertogroupbutton.addEventListener("click", async () => {
-			console.log('hallo');
+			addplayertogroup(tid, groups[i]["groupid"]);
 		})
 
 	}
 
 }
 
-let addplayertogroup = async (groupid) => {
+let addplayertogroup = async (tid, groupid) => {
+	console.log(tid);
+	console.log(groupid);
+	
+	//turn on overlay
+	toggleoverlay(true);
+
+	//create modal
+	let modal = createbasicmodal(
+		"modal-add-player-to-group",
+		"Spieler Gruppe hinzufuegen",
+		"modal-add-player-to-group-layout"
+	);
+
+	let playernumberinputcontainer = creatediv({
+		appendto: modal.modalbody
+	})
+	
+	//create input for playernumber 
+	let playernumberinput = creatediv({
+		type: "INPUT",
+		appendto: playernumberinputcontainer
+	});
+
+	let playerinformationcontainer = creatediv({
+		appendto: modal.modalbody,
+		divid: "modal-add-player-to-group-playerinfo-container"
+	})
 
 
 }
