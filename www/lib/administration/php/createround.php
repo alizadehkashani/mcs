@@ -1,4 +1,3 @@
-
 <?php
 	require("../../../../lib/dbconfig.php");
 

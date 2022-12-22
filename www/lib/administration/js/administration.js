@@ -2999,6 +2999,18 @@ let buildtrackstartgroups = async (
 			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 		})
 
+		/*
+		//create button to add player group
+		let addplayertogroupbutton = document.createElement("img");
+		addplayertogroupbutton.setAttribute("src", "lib/assets/playeradd.svg");
+		addplayertogroupbutton.classList.add("workspaceicon");
+		buttoncontainer.appendChild(addplayertogroupbutton);
+		
+		addplayertogroupbutton.addEventListener("click", async () => {
+
+		})
+		*/
+
 		await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 
 	}
@@ -3097,9 +3109,30 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			divtext: i + 1,
 			divclass: ["flexcenter"]
 		})
+		
+		let addplayertogroupbuttoncontainer = creatediv({
+			appendto: groupcontainer
+		})
+		
+		//create button to add player group
+		let addplayertogroupbutton = document.createElement("img");
+		addplayertogroupbutton.setAttribute("src", "lib/assets/addplayergroup.svg");
+		addplayertogroupbutton.classList.add("workspaceicon");
+		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
+		
+		addplayertogroupbutton.addEventListener("click", async () => {
+			console.log('hallo');
+		})
+
 	}
 
 }
+
+let addplayertogroup = async (groupid) => {
+
+
+}
+
 DOMready(buildheader);
 DOMready(buildnavigation);
 DOMready(buildworkspace);

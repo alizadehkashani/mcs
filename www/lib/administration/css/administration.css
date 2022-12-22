@@ -51,6 +51,7 @@
 	
 	height: 100%;
 
+	overflow-y: auto;
 }
 
 #navigationconstantcontainer{
@@ -743,6 +744,6 @@
 .trackstartgroupcontainer{
 	display: grid;
 	grid-template-rows: 1fr;
-	grid-template-columns: 25px 25px 25px 1fr;
+	grid-template-columns: 25px 25px 25px 1fr 25px;
 	background-color: var(--mcsgrey);
 }
