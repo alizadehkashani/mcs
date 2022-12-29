@@ -751,15 +751,17 @@
 #modal-add-player-to-group{
 
 	width: 600px;
-	height: 250px;
+	height: 650px;
 
 }
 
 #modal-add-player-to-group-layout{
+
 	display: grid;
-	
-	grid-template-columns: 200px 1fr;
-	grid-template-rows: 1fr;
+	grid-template-columns: 1fr;
+	grid-auto-rows: 30px;
+	grid-row-gap: 5px;
+	overflow-y: auto;
 
 }
 
@@ -768,4 +770,16 @@
 	
 	grid-template-columns: 100px 1fr;
 	grid-template-rows: repeat(5, 30px); 
+
+	grid-auto-flow: column;
+}
+
+#playernumberaddtogroupinput{
+	width: 100px;
+}
+
+.addplayertogroup-playercontainer{
+	display: grid;
+	grid-template-columns: 50px 1fr 1fr 30px;
+	grid-template-rows: 1fr;
 }

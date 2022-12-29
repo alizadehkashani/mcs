@@ -2960,7 +2960,10 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 
 		tracklabel.addEventListener("click", async () => {
 			setselectednavigation(tracklabel, "track");
-			buildtrackstartgroups(
+
+			tracklabel.style.pointerEvents = "none";
+
+			await buildtrackstartgroups(
 				trackstartgroupscreatecontainer,
 				trackstartgroupslist,
 				tid,
@@ -2968,6 +2971,9 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 				mdnumber,
 				rnumber
 				);
+
+			tracklabel.style.pointerEvents = "auto";
+
 
 		})
 
@@ -2998,18 +3004,6 @@ let buildtrackstartgroups = async (
 			createnewgroup(tid, trackid, mdnumber, rnumber);
 			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 		})
-
-		/*
-		//create button to add player group
-		let addplayertogroupbutton = document.createElement("img");
-		addplayertogroupbutton.setAttribute("src", "lib/assets/playeradd.svg");
-		addplayertogroupbutton.classList.add("workspaceicon");
-		buttoncontainer.appendChild(addplayertogroupbutton);
-		
-		addplayertogroupbutton.addEventListener("click", async () => {
-
-		})
-		*/
 
 		await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 
@@ -3042,6 +3036,7 @@ let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
 
 let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
 	
+	debugger;
 	groupdata = {
 		tid: tid,
 		trackid: trackid,
@@ -3119,16 +3114,17 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
 		
 		addplayertogroupbutton.addEventListener("click", async () => {
-			addplayertogroup(tid, groups[i]["groupid"]);
+			await addplayertogroupmodal(tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
 		})
+
+		let groupplayers = await getplayersingroup(groups[i]["groupid"]);
+		console.log(groupplayers);
 
 	}
 
 }
 
-let addplayertogroup = async (tid, groupid) => {
-	console.log(tid);
-	console.log(groupid);
+let addplayertogroupmodal = async (tid, trackid, mdnumber, rnumber, groupid) => {
 	
 	//turn on overlay
 	toggleoverlay(true);
@@ -3140,22 +3136,114 @@ let addplayertogroup = async (tid, groupid) => {
 		"modal-add-player-to-group-layout"
 	);
 
-	let playernumberinputcontainer = creatediv({
-		appendto: modal.modalbody
-	})
+	let players = await getplayersnotingroup(tid, trackid, mdnumber, rnumber, groupid)
+
+	for(let i = 0; i < players.length; i++){
+		let playercontainer = creatediv({
+			appendto: modal.modalbody,
+			divclass: ["addplayertogroup-playercontainer"]
+		});
+
+		//playernumber, surname, firstname
+		for(let j = 0; j < 3; j++){
+
+			creatediv({
+				appendto: playercontainer,
+				divtext: players[i][j]
+			})
+
+		}
+
+		//create button to add player group
+		let addplayertogroupbutton = document.createElement("img");
+		addplayertogroupbutton.setAttribute("src", "lib/assets/addplayergroup.svg");
+		addplayertogroupbutton.classList.add("workspaceicon");
+		playercontainer.appendChild(addplayertogroupbutton);
+		
+		addplayertogroupbutton.addEventListener("click", async () => {
+			debugger;
+			addplayertogroup(tid, groupid, players[i]["playernumber"]);		
+			playercontainer.remove();
+		})
+
+
+	}
 	
-	//create input for playernumber 
-	let playernumberinput = creatediv({
-		type: "INPUT",
-		appendto: playernumberinputcontainer
+}
+
+let addplayertogroup = async (tid, groupid, playernumber) => {
+
+	phpdata = {
+		tid: tid,
+		groupid: groupid,
+		playernumber: playernumber,
+	}
+
+	let phppath = "/lib/administration/php/addplayertogroup.php";
+
+	let addplayertogroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
 	});
 
-	let playerinformationcontainer = creatediv({
-		appendto: modal.modalbody,
-		divid: "modal-add-player-to-group-playerinfo-container"
-	})
+	//php response
+	let phpresponse = await addplayertogroup.json();
 
+	return phpresponse;
+}
 
+let getplayersnotingroup = async (tid, trackid, mdnumber, rnumber) => {
+
+	phpdata = {
+		tid: tid,
+		trackid: trackid,
+		mdnumber: mdnumber,
+		rnumber: rnumber
+	}
+
+	let phppath = "/lib/administration/php/getplayersnotingroup.php";
+
+	let addplayertogroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await addplayertogroup.json();
+
+	return phpresponse;
+
+}
+
+let getplayersingroup = async (groupid) => {
+	
+	phpdata = {
+		groupid: groupid
+	}
+
+	let phppath = "/lib/administration/php/getgroupplayers.php";
+
+	let addplayertogroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await addplayertogroup.json();
+
+	return phpresponse;
 }
 
 DOMready(buildheader);

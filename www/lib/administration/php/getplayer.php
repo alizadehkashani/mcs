@@ -18,6 +18,13 @@
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
 	$player = $sql->fetch(PDO::FETCH_ASSOC);
+	
+	if($sql->rowCount() > 0){
 
-	echo(json_encode($player));
+		echo(json_encode($player));
+
+	}else{
+		echo("0");
+	}
+
 ?>
