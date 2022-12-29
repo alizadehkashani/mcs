@@ -3118,10 +3118,60 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		})
 
 		let groupplayers = await getplayersingroup(groups[i]["groupid"]);
-		console.log(groupplayers);
 
+		let playerscontainer = creatediv({
+			appendto: tablecontainer,
+		});
+
+		for(let j = 0; j < groupplayers.length; j++){
+			let playerdata = {
+				playerstartorder: j+1,
+				playernumber: groupplayers[j]["playernumber"],
+				surname: groupplayers[j]["surname"],
+				firstname: groupplayers[j]["firstname"]
+			}
+
+			await startgroupsinsertplayer(playerscontainer, playerdata);
+		}
 	}
 
+}
+
+let startgroupsinsertplayer = async (container, playerdata) => {
+
+			let playercontainer = creatediv({
+				appendto: container,
+				divclass: ["track-group-player-container"]
+			})
+
+			//player start order
+			creatediv({
+				appendto: playercontainer,
+				divtext: playerdata.playerstartorder 
+			});
+
+			//TODO move player up/down
+			let changeorderplayercontainer = creatediv({
+				appendto: playercontainer
+			});
+
+			//playernumber
+			creatediv({
+				appendto: playercontainer,
+				divtext: playerdata.playernumber
+			});
+
+			//surname
+			creatediv({
+				appendto: playercontainer,
+				divtext: playerdata.surname
+			});
+			
+			//firstname
+			creatediv({
+				appendto: playercontainer,
+				divtext: playerdata.firstname
+			});
 }
 
 let addplayertogroupmodal = async (tid, trackid, mdnumber, rnumber, groupid) => {
