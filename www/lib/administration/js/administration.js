@@ -3071,9 +3071,16 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 
 	//loop through groups and build table
 	for(let i = 0; i < groups.length; i++){
+
+		//container showing group basic data
 		let groupcontainer = creatediv({
 			appendto: tablecontainer,
 			divclass: ["trackstartgroupcontainer"]
+		});
+
+		//contaienr showing players withing group
+		let playerscontainer = creatediv({
+			appendto: tablecontainer,
 		});
 
 		//create container for expand/collapse control
@@ -3114,67 +3121,97 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
 		
 		addplayertogroupbutton.addEventListener("click", async () => {
-			await addplayertogroupmodal(tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
+			await addplayertogroupmodal(playerscontainer, tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
 		})
 
-		let groupplayers = await getplayersingroup(groups[i]["groupid"]);
 
-		let playerscontainer = creatediv({
-			appendto: tablecontainer,
-		});
+		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
 
-		for(let j = 0; j < groupplayers.length; j++){
-			let playerdata = {
-				playerstartorder: j+1,
-				playernumber: groupplayers[j]["playernumber"],
-				surname: groupplayers[j]["surname"],
-				firstname: groupplayers[j]["firstname"]
-			}
+	}
 
-			await startgroupsinsertplayer(playerscontainer, playerdata);
+}
+
+let buildgroupplayers = async (container, groupid) => {
+
+	clearelement(container);
+
+	let groupplayers = await getplayersingroup(groupid);
+
+
+	for(let j = 0; j < groupplayers.length; j++){
+
+		let playerdata = {
+			playerstartorder: j+1,
+			playernumber: groupplayers[j]["playernumber"],
+			surname: groupplayers[j]["surname"],
+			firstname: groupplayers[j]["firstname"],
+			groupid: groupid
 		}
+
+		await startgroupsinsertplayer(container, playerdata);
 	}
 
 }
 
 let startgroupsinsertplayer = async (container, playerdata) => {
 
-			let playercontainer = creatediv({
-				appendto: container,
-				divclass: ["track-group-player-container"]
-			})
+	let playercontainer = creatediv({
+		appendto: container,
+		divclass: ["track-group-player-container"]
+	})
 
-			//player start order
-			creatediv({
-				appendto: playercontainer,
-				divtext: playerdata.playerstartorder 
-			});
+	//player start order
+	creatediv({
+		appendto: playercontainer,
+		divtext: playerdata.playerstartorder 
+	});
 
-			//TODO move player up/down
-			let changeorderplayercontainer = creatediv({
-				appendto: playercontainer
-			});
+	//TODO move player up/down
+	let changeorderplayercontainer = creatediv({
+		appendto: playercontainer
+	});
 
-			//playernumber
-			creatediv({
-				appendto: playercontainer,
-				divtext: playerdata.playernumber
-			});
+	//playernumber
+	creatediv({
+		appendto: playercontainer,
+		divtext: playerdata.playernumber
+	});
 
-			//surname
-			creatediv({
-				appendto: playercontainer,
-				divtext: playerdata.surname
-			});
-			
-			//firstname
-			creatediv({
-				appendto: playercontainer,
-				divtext: playerdata.firstname
-			});
+	//surname
+	creatediv({
+		appendto: playercontainer,
+		divtext: playerdata.surname
+	});
+
+	//firstname
+	creatediv({
+		appendto: playercontainer,
+		divtext: playerdata.firstname
+	});
+
+	//container for player remove button
+	let removeplayerfromgroupbuttoncontainer = creatediv({
+		appendto: playercontainer
+	})
+
+	//create button to remove player from group
+	let removeplayerfromgroupbutton = document.createElement("img");
+	removeplayerfromgroupbutton.setAttribute("src", "lib/assets/playerremove.svg");
+	removeplayerfromgroupbutton.classList.add("workspaceicon");
+	removeplayerfromgroupbuttoncontainer.appendChild(removeplayerfromgroupbutton);
+
+	removeplayerfromgroupbutton.addEventListener("click", async () => {
+
+		console.log(playerdata.playernumber);
+		console.log(playerdata.groupid);
+		console.log(container);
+		await removeplayerfromgroup(playerdata.groupid, playerdata.playernumber);
+		await buildgroupplayers(container, playerdata.groupid);
+	})
+	
 }
 
-let addplayertogroupmodal = async (tid, trackid, mdnumber, rnumber, groupid) => {
+let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnumber, groupid) => {
 	
 	//turn on overlay
 	toggleoverlay(true);
@@ -3211,8 +3248,8 @@ let addplayertogroupmodal = async (tid, trackid, mdnumber, rnumber, groupid) => 
 		playercontainer.appendChild(addplayertogroupbutton);
 		
 		addplayertogroupbutton.addEventListener("click", async () => {
-			debugger;
-			addplayertogroup(tid, groupid, players[i]["playernumber"]);		
+			await addplayertogroup(tid, groupid, players[i]["playernumber"]);		
+			buildgroupplayers(playerscontainer, groupid);
 			playercontainer.remove();
 		})
 
@@ -3280,6 +3317,31 @@ let getplayersingroup = async (groupid) => {
 	}
 
 	let phppath = "/lib/administration/php/getgroupplayers.php";
+
+	let addplayertogroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await addplayertogroup.json();
+
+	return phpresponse;
+}
+
+let removeplayerfromgroup = async (groupid, playernumber) => { 
+
+	phpdata = {
+		groupid: groupid,
+		playernumber: playernumber
+
+	}
+
+	let phppath = "/lib/administration/php/removeplayerfromgroup.php";
 
 	let addplayertogroup = await fetch(phppath, {
 		method: 'POST',
