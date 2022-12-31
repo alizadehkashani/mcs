@@ -3036,7 +3036,6 @@ let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
 
 let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
 	
-	debugger;
 	groupdata = {
 		tid: tid,
 		trackid: trackid,
@@ -3124,6 +3123,35 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			await addplayertogroupmodal(playerscontainer, tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
 		})
 
+		//filler div
+		creatediv({
+			appendto: groupcontainer
+		});
+
+		let removegroupbuttoncontainer = creatediv({
+			appendto: groupcontainer
+		})
+
+		//button to delete group and players
+		let deletegroupbutton = document.createElement("img");
+		deletegroupbutton.setAttribute("src", "lib/assets/clubremove.svg");
+		deletegroupbutton.classList.add("workspaceicon");
+		removegroupbuttoncontainer.appendChild(deletegroupbutton);
+		
+		deletegroupbutton.addEventListener("click", async () => {
+			//TODO function to delte group
+			let groupinfo = {
+				tid: tid,
+				trackid: trackid,
+				mdnumber: mdnumber,
+				rnumber: rnumber,
+				groupid: groups[i]["groupid"]
+			}
+
+			await removegroup(groupcontainer, playerscontainer, groupinfo);	
+			await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+		})
+
 
 		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
 
@@ -3202,9 +3230,6 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 
 	removeplayerfromgroupbutton.addEventListener("click", async () => {
 
-		console.log(playerdata.playernumber);
-		console.log(playerdata.groupid);
-		console.log(container);
 		await removeplayerfromgroup(playerdata.groupid, playerdata.playernumber);
 		await buildgroupplayers(container, playerdata.groupid);
 	})
@@ -3356,6 +3381,38 @@ let removeplayerfromgroup = async (groupid, playernumber) => {
 	let phpresponse = await addplayertogroup.json();
 
 	return phpresponse;
+}
+
+let removegroup = async (groupcontainer, playercontainer, groupinfo) => {
+
+	phpdata = {
+		tid: groupinfo.tid,
+		trackid: groupinfo.trackid,
+		mdnumber: groupinfo.mdnumber,
+		rnumber: groupinfo.rnumber,
+		groupid: groupinfo.groupid,
+
+	}
+
+	let phppath = "/lib/administration/php/deletegroup.php";
+
+	let addplayertogroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await addplayertogroup.json();
+
+	groupcontainer.remove();
+
+	return phpresponse;
+
+
 }
 
 DOMready(buildheader);

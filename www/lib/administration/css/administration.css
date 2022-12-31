@@ -746,7 +746,7 @@
 .trackstartgroupcontainer{
 	display: grid;
 	grid-template-rows: 1fr;
-	grid-template-columns: 25px 25px 25px 1fr 25px;
+	grid-template-columns: 25px 30px 25px 1fr 30px;
 	background-color: var(--mcsgrey);
 }
 
