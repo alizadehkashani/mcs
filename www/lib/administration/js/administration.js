@@ -3087,7 +3087,7 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			appendto: groupcontainer,
 			divclass: ["expandcontainer", "flexcenter"]
 		})
-		expandcontainer.setAttribute("data-state", "collapsed");
+		expandcontainer.setAttribute("data-state", "expanded");
 		
 		//create svg for expand/collapse control
 		let polygonsvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -3098,9 +3098,31 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 
 		//create new triangle
 		let polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		polygon.setAttribute("points", "8,5 13,10 8,15");
+		polygon.setAttribute("points", "5,8 10,13 15,8");
 		polygon.setAttribute("fill", "#5f6368");	
 		polygonsvg.appendChild(polygon);
+
+		//eventlisnter for on click on triangle
+		//hide/show group players
+		polygonsvg.addEventListener("click", () => {
+			
+			//change polygon
+			expandcollapseicon(expandcontainer, polygon);
+			
+
+			//get players container sate
+			let playercontainersstate = playerscontainer.getAttribute("data-state");
+			
+			if(playercontainersstate == "hidden"){
+				//make matchdays invsible
+				changeelementdisplay(playerscontainer, "block");
+				playerscontainer.setAttribute("data-state", "visible");
+			}else{
+				changeelementdisplay(playerscontainer, "none");
+				playerscontainer.setAttribute("data-state", "hidden");
+			}
+			
+		})
 
 		//container for start order of group
 		let groupordernumber = creatediv({
@@ -3110,7 +3132,8 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		})
 		
 		let addplayertogroupbuttoncontainer = creatediv({
-			appendto: groupcontainer
+			appendto: groupcontainer,
+			divclass: ["startgroupsbuttoncontainer"]
 		})
 		
 		//create button to add player group
@@ -3123,13 +3146,16 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			await addplayertogroupmodal(playerscontainer, tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
 		})
 
+		changeopacityonhover(groupcontainer, addplayertogroupbuttoncontainer);
+
 		//filler div
 		creatediv({
 			appendto: groupcontainer
 		});
 
 		let removegroupbuttoncontainer = creatediv({
-			appendto: groupcontainer
+			appendto: groupcontainer,
+			divclass: ["startgroupsbuttoncontainer"]
 		})
 
 		//button to delete group and players
@@ -3151,6 +3177,8 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			await removegroup(groupcontainer, playerscontainer, groupinfo);	
 			await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
 		})
+
+		changeopacityonhover(groupcontainer, removegroupbuttoncontainer);
 
 
 		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
@@ -3219,7 +3247,8 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 
 	//container for player remove button
 	let removeplayerfromgroupbuttoncontainer = creatediv({
-		appendto: playercontainer
+		appendto: playercontainer,
+		divclass: ["startgroupsbuttoncontainer"]
 	})
 
 	//create button to remove player from group
@@ -3233,6 +3262,8 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 		await removeplayerfromgroup(playerdata.groupid, playerdata.playernumber);
 		await buildgroupplayers(container, playerdata.groupid);
 	})
+
+	changeopacityonhover(playercontainer, removeplayerfromgroupbuttoncontainer);
 	
 }
 
@@ -3413,6 +3444,19 @@ let removegroup = async (groupcontainer, playercontainer, groupinfo) => {
 	return phpresponse;
 
 
+}
+
+let changeopacityonhover = (divhover, divopacity) => {
+
+	divhover.addEventListener("mouseover", () => {
+
+		changeopacity(divopacity, 100);
+	});
+
+	divhover.addEventListener("mouseout", () => {
+
+		changeopacity(divopacity, 0);
+	});
 }
 
 DOMready(buildheader);

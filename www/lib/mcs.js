@@ -96,6 +96,10 @@ let changeelementdisplay = (div, display) => {
 	div.style.display = display;
 }
 
+let changeopacity = (div, opacityvalue) => {
+	div.style.opacity = opacityvalue;
+}
+
 let toggleoverlay = (active) => {
 	
 	let overlay = document.getElementById("overlay");
