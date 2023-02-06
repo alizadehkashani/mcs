@@ -3224,8 +3224,34 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 
 	//TODO move player up/down
 	let changeorderplayercontainer = creatediv({
-		appendto: playercontainer
+		appendto: playercontainer,
+		divclass: ["track-group-player-move-container"]
 	});
+		//create svg for moving player up
+		let polygonsvgup = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvgup.setAttribute("viewBox", "0 0 20 20");
+		polygonsvgup.setAttribute("height", "15");
+		polygonsvgup.setAttribute("width", "30");
+		changeorderplayercontainer.appendChild(polygonsvgup);
+
+		//create new triangle
+		let polygonup = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygonup.setAttribute("points", "5,13 10,8 15,13");
+		polygonup.setAttribute("fill", "#5f6368");	
+		polygonsvgup.appendChild(polygonup);
+
+		//create svg for moving player down 
+		let polygonsvgdown = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvgdown.setAttribute("viewBox", "0 0 20 20");
+		polygonsvgdown.setAttribute("height", "15");
+		polygonsvgdown.setAttribute("width", "30");
+		changeorderplayercontainer.appendChild(polygonsvgdown);
+
+		//create new triangle
+		let polygondown = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygondown.setAttribute("points", "15,8 10,13 5,8");
+		polygondown.setAttribute("fill", "#5f6368");	
+		polygonsvgdown.appendChild(polygondown);
 
 	//playernumber
 	creatediv({
@@ -3264,7 +3290,7 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 	})
 
 	changeopacityonhover(playercontainer, removeplayerfromgroupbuttoncontainer);
-	
+	changeopacityonhover(playercontainer, changeorderplayercontainer);
 }
 
 let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnumber, groupid) => {
