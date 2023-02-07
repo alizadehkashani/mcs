@@ -3193,11 +3193,11 @@ let buildgroupplayers = async (container, groupid) => {
 
 	let groupplayers = await getplayersingroup(groupid);
 
-
 	for(let j = 0; j < groupplayers.length; j++){
 
 		let playerdata = {
 			playerstartorder: j+1,
+			playerorderdb: groupplayers[j]["playerorder"],
 			playernumber: groupplayers[j]["playernumber"],
 			surname: groupplayers[j]["surname"],
 			firstname: groupplayers[j]["firstname"],
@@ -3222,36 +3222,42 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 		divtext: playerdata.playerstartorder 
 	});
 
-	//TODO move player up/down
+	//move player up/down
 	let changeorderplayercontainer = creatediv({
 		appendto: playercontainer,
 		divclass: ["track-group-player-move-container"]
 	});
-		//create svg for moving player up
-		let polygonsvgup = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		polygonsvgup.setAttribute("viewBox", "0 0 20 20");
-		polygonsvgup.setAttribute("height", "15");
-		polygonsvgup.setAttribute("width", "30");
-		changeorderplayercontainer.appendChild(polygonsvgup);
+	
+	//create svg for moving player up
+	let polygonsvgup = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	polygonsvgup.setAttribute("viewBox", "0 0 20 20");
+	polygonsvgup.setAttribute("height", "15");
+	polygonsvgup.setAttribute("width", "30");
+	changeorderplayercontainer.appendChild(polygonsvgup);
 
-		//create new triangle
-		let polygonup = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		polygonup.setAttribute("points", "5,13 10,8 15,13");
-		polygonup.setAttribute("fill", "#5f6368");	
-		polygonsvgup.appendChild(polygonup);
+	//create new triangle
+	let polygonup = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	polygonup.setAttribute("points", "5,13 10,8 15,13");
+	polygonup.setAttribute("fill", "#5f6368");	
+	polygonsvgup.appendChild(polygonup);
 
-		//create svg for moving player down 
-		let polygonsvgdown = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-		polygonsvgdown.setAttribute("viewBox", "0 0 20 20");
-		polygonsvgdown.setAttribute("height", "15");
-		polygonsvgdown.setAttribute("width", "30");
-		changeorderplayercontainer.appendChild(polygonsvgdown);
+	//add eventlistner to move player up
+	polygonsvgup.addEventListener("click", async () => {
+		await changeplayerorder(1, playerdata.groupid, playerdata.playernumber, playerdata.playerorderdb);
+	});
 
-		//create new triangle
-		let polygondown = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-		polygondown.setAttribute("points", "15,8 10,13 5,8");
-		polygondown.setAttribute("fill", "#5f6368");	
-		polygonsvgdown.appendChild(polygondown);
+	//create svg for moving player down 
+	let polygonsvgdown = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+	polygonsvgdown.setAttribute("viewBox", "0 0 20 20");
+	polygonsvgdown.setAttribute("height", "15");
+	polygonsvgdown.setAttribute("width", "30");
+	changeorderplayercontainer.appendChild(polygonsvgdown);
+
+	//create new triangle
+	let polygondown = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+	polygondown.setAttribute("points", "15,8 10,13 5,8");
+	polygondown.setAttribute("fill", "#5f6368");	
+	polygonsvgdown.appendChild(polygondown);
 
 	//playernumber
 	creatediv({
@@ -3483,6 +3489,34 @@ let changeopacityonhover = (divhover, divopacity) => {
 
 		changeopacity(divopacity, 0);
 	});
+}
+
+let changeplayerorder = async (direction, groupid, playernumber, playerorder) => {
+
+	phpdata = {
+		direction: direction,
+		groupid: groupid,
+		playernumber: playernumber,
+		playerorder: playerorder
+	}
+
+	let phppath = "/lib/administration/php/changeplayerorder.php";
+
+	let moveplayer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await moveplayer.json();
+
+	console.log(phpresponse);
+
+	return phpresponse;
 }
 
 DOMready(buildheader);

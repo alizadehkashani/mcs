@@ -8,11 +8,12 @@
 	$response = [];
 
 	$query = "
-		SELECT players.playernumber, players.surname, players.firstname 
+		SELECT players.playernumber, players.surname, players.firstname, groupplayers.playerorder
 		FROM players 
 		INNER JOIN groupplayers
 		ON groupplayers.playernumber = players.playernumber
 		WHERE groupplayers.groupid = :groupid
+		ORDER BY groupplayers.playerorder ASC
 	";
 
 	$sql = $dbconnection->prepare($query);
