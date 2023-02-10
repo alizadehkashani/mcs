@@ -3204,12 +3204,12 @@ let buildgroupplayers = async (container, groupid) => {
 			groupid: groupid
 		}
 
-		await startgroupsinsertplayer(container, playerdata);
+		await startgroupsinsertplayer(container, groupid, playerdata);
 	}
 
 }
 
-let startgroupsinsertplayer = async (container, playerdata) => {
+let startgroupsinsertplayer = async (container, groupid, playerdata) => {
 
 	let playercontainer = creatediv({
 		appendto: container,
@@ -3243,7 +3243,11 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 
 	//add eventlistner to move player up
 	polygonsvgup.addEventListener("click", async () => {
-		await changeplayerorder(1, playerdata.groupid, playerdata.playernumber, playerdata.playerorderdb);
+		let playermove = await changeplayerorder(1, playerdata.groupid, playerdata.playernumber, playerdata.playerorderdb);
+
+		if(playermove.result == 0){
+			await buildgroupplayers(container, groupid);
+		}
 	});
 
 	//create svg for moving player down 
@@ -3258,6 +3262,15 @@ let startgroupsinsertplayer = async (container, playerdata) => {
 	polygondown.setAttribute("points", "15,8 10,13 5,8");
 	polygondown.setAttribute("fill", "#5f6368");	
 	polygonsvgdown.appendChild(polygondown);
+
+	//add eventlistner to move player up
+	polygonsvgdown.addEventListener("click", async () => {
+		let playermove = await changeplayerorder(0, playerdata.groupid, playerdata.playernumber, playerdata.playerorderdb);
+
+		if(playermove.result == 0){
+			await buildgroupplayers(container, groupid);
+		}
+	});
 
 	//playernumber
 	creatediv({
@@ -3513,8 +3526,6 @@ let changeplayerorder = async (direction, groupid, playernumber, playerorder) =>
 
 	//php response
 	let phpresponse = await moveplayer.json();
-
-	console.log(phpresponse);
 
 	return phpresponse;
 }
