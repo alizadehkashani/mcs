@@ -1,3 +1,4 @@
+TODO	change order of start groups
 TODO	in tournament overview show current day and current round
 DONE	when deleting club, also delete players?
 TODO	user should have to confirm again if he wants to delete club
@@ -5,6 +6,8 @@ TODO 	create backups when deleting something?
 TODO	player creation gender dropdown
 TODO	able to change playernumber
 TODO	player update in own function
+TODO 	when deleting a player, also delte in other tables
+TODO	add functionallity to delete tracks
 
 :noh	remove current highlight
 :e %:h/filename
