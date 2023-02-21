@@ -3001,7 +3001,7 @@ let buildtrackstartgroups = async (
 		buttoncontainer.appendChild(creategroupbutton);
 		
 		creategroupbutton.addEventListener("click", async () => {
-			createnewgroup(tid, trackid, mdnumber, rnumber);
+			await createnewgroup(tid, trackid, mdnumber, rnumber);
 			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 		})
 
@@ -3071,6 +3071,15 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 	//loop through groups and build table
 	for(let i = 0; i < groups.length; i++){
 
+		let groupdata = {
+			groupid: groups[i].groupid,
+			tid: groups[i].tid,
+			trackid: groups[i].trackid,
+			mdnumber: groups[i].mdnumber,
+			rnumber: groups[i].rnumber,
+			grouporder: groups[i].grouporder
+		}
+
 		//container showing group basic data
 		let groupcontainer = creatediv({
 			appendto: tablecontainer,
@@ -3131,6 +3140,62 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			divclass: ["flexcenter"]
 		})
 		
+
+		//move player up/down
+		let changeorderplayercontainer = creatediv({
+			appendto: groupcontainer,
+			divclass: ["track-group-player-move-container"]
+		});
+
+		changeopacityonhover(groupcontainer, changeorderplayercontainer);
+
+		//create svg for moving group up
+		let polygonsvgup = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvgup.setAttribute("viewBox", "0 0 20 20");
+		polygonsvgup.setAttribute("height", "15");
+		polygonsvgup.setAttribute("width", "30");
+		changeorderplayercontainer.appendChild(polygonsvgup);
+
+		//create new triangle
+		let polygonup = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygonup.setAttribute("points", "5,13 10,8 15,13");
+		polygonup.setAttribute("fill", "#5f6368");	
+		polygonsvgup.appendChild(polygonup);
+
+		//add eventlistner to move group up
+		polygonsvgup.addEventListener("click", async () => {
+
+			let groupmove = await changegrouporder(1, groupdata);
+
+			if(groupmove.result == 0){
+				await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+			}
+		});
+
+		//create svg for moving group up/down
+		let polygonsvgdown = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+		polygonsvgdown.setAttribute("viewBox", "0 0 20 20");
+		polygonsvgdown.setAttribute("height", "15");
+		polygonsvgdown.setAttribute("width", "30");
+		changeorderplayercontainer.appendChild(polygonsvgdown);
+
+		//create new triangle
+		let polygondown = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+		polygondown.setAttribute("points", "15,8 10,13 5,8");
+		polygondown.setAttribute("fill", "#5f6368");	
+		polygonsvgdown.appendChild(polygondown);
+
+		//add eventlistner to move group up
+		polygonsvgdown.addEventListener("click", async () => {
+
+			let groupmove = await changegrouporder(0, groupdata);
+
+			if(groupmove.result == 0){
+				await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+			}
+		});
+
+		//button to add player to group
 		let addplayertogroupbuttoncontainer = creatediv({
 			appendto: groupcontainer,
 			divclass: ["startgroupsbuttoncontainer"]
@@ -3146,11 +3211,12 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			await addplayertogroupmodal(playerscontainer, tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
 		})
 
+		//only show button when mous hovers over group
 		changeopacityonhover(groupcontainer, addplayertogroupbuttoncontainer);
 
 		//filler div
 		creatediv({
-			appendto: groupcontainer
+			appendto: groupcontainer,
 		});
 
 		let removegroupbuttoncontainer = creatediv({
@@ -3181,6 +3247,7 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		changeopacityonhover(groupcontainer, removegroupbuttoncontainer);
 
 
+		//add players to group
 		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
 
 	}
@@ -3526,6 +3593,35 @@ let changeplayerorder = async (direction, groupid, playernumber, playerorder) =>
 
 	//php response
 	let phpresponse = await moveplayer.json();
+
+	return phpresponse;
+}
+
+let changegrouporder = async (direction, groupdata) => {
+
+	phpdata = {
+		direction: direction,
+		groupid: groupdata.groupid,
+		tid: groupdata.tid,
+		trackid: groupdata.trackid,
+		mdnumber: groupdata.mdnumber,
+		rnumber: groupdata.rnumber,
+		grouporder: groupdata.grouporder
+	}
+
+	let phppath = "/lib/administration/php/changegrouporder.php";
+
+	let movegroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await movegroup.json();
 
 	return phpresponse;
 }

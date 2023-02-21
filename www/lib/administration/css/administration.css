@@ -740,7 +740,7 @@
 .trackstartgroupcontainer{
 	display: grid;
 	grid-template-rows: 1fr;
-	grid-template-columns: 25px 30px 25px 1fr 30px;
+	grid-template-columns: 25px 30px 30px 30px 1fr 30px;
 	background-color: var(--mcsgrey);
 }
 
@@ -787,7 +787,7 @@
 .track-group-player-container{
 	display: grid;
 	grid-template-rows: 30px;
-	grid-template-columns: 50px 50px 50px 100px 1fr 50px;
+	grid-template-columns: 55px 50px 50px 100px 1fr 50px;
 }
 
 .track-group-player-container:hover{

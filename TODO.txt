@@ -7,7 +7,9 @@ TODO	player creation gender dropdown
 TODO	able to change playernumber
 TODO	player update in own function
 TODO 	when deleting a player, also delte in other tables
-TODO	add functionallity to delete tracks
+DONE	add functionallity to delete tracks
+TODO	when creating new group, refresh list
+TODO	when viewing a round, and there are no tracks created in the torunament, give message
 
 :noh	remove current highlight
 :e %:h/filename
