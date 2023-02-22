@@ -806,3 +806,15 @@
 	opacity: 0;
 }
 
+.icon-tournament{
+	background-image: url("/../lib/administration/assets/tournament.svg");
+}
+
+.icon-matchday{
+	background-image: url("/../lib/administration/assets/tournament.svg");
+}
+
+.icon{
+	background-size: 30px 30px;
+	opacity: 0.5;
+}

@@ -1081,9 +1081,10 @@ let buildtournamentsinit = async (maincontainer) => {
 		})
 		
 		//add icon to tournament
-		let tournamenticon = document.createElement("img");
-		tournamenticon.setAttribute("src", "lib/administration/assets/tournament.svg");
-		tournamenticon.classList.add("navigationicon");
+
+		let tournamenticon = document.createElement("div");
+		tournamenticon.classList.add("icon-tournament");
+		tournamenticon.classList.add("icon");
 		tournamenticonanddescription.appendChild(tournamenticon);
 		
 		//add tournament name
