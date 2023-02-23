@@ -143,6 +143,7 @@ let buildsettings = () => {
 }
 
 let buildworkspace = () => {
+	
 	//create workspace container
 	globalworkspace = creatediv({
 		appendto: document.getElementById("administration"),
@@ -168,9 +169,9 @@ let buildworkspace = () => {
 	})
 
 	//add close button
-	let closeicon = document.createElement("img");
-	closeicon.setAttribute("src", "lib/assets/close.svg");
-	closeicon.classList.add("workspaceicon");
+	let closeicon = document.createElement("div");
+	closeicon.classList.add("icon-cross");
+	closeicon.classList.add("icon");
 	closebuttoncontainer.appendChild(closeicon);
 
 	//add eventlistner to close button
@@ -474,9 +475,6 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 
 	//build standard view, tournament information
 	buildworkspacetournamentinformation(id, tournamentnamediv);
-	//buildworkspaceclubinformation(id);
-	//buildworkspacetrackconfiguration(id);
-	//buildworkspaceplayerconfig(id);
 
 }
 
@@ -531,9 +529,9 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 	})
 	
 	//add close button
-	let doneicon = document.createElement("img");
-	doneicon.setAttribute("src", "lib/assets/done.svg");
-	doneicon.classList.add("workspaceicon");
+	let doneicon = document.createElement("div");
+	doneicon.classList.add("icon-checkmark");
+	doneicon.classList.add("icon");
 	donebuttoncontainer.appendChild(doneicon);
 
 	//add eventlistner to close button
@@ -997,10 +995,11 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 		divtext: labeltext
 	})
 
+	//debugger;
 	//create close button
-	let closeicon = document.createElement("img");
-	closeicon.setAttribute("src", "lib/assets/close.svg");
-	closeicon.classList.add("workspaceicon");
+	let closeicon = document.createElement("div");
+	closeicon.classList.add("icon-cross");
+	closeicon.classList.add("icon");
 	modalhead.appendChild(closeicon);
 
 	//make modal invsible
@@ -1081,7 +1080,6 @@ let buildtournamentsinit = async (maincontainer) => {
 		})
 		
 		//add icon to tournament
-
 		let tournamenticon = document.createElement("div");
 		tournamenticon.classList.add("icon-tournament");
 		tournamenticon.classList.add("icon");
@@ -1160,9 +1158,9 @@ let buildtournamentsinit = async (maincontainer) => {
 	})
 
 	//icon for create new tournament
-	let createtournamenticon = document.createElement("img");
-	createtournamenticon.setAttribute("src", "lib/administration/assets/createtournament.svg");
-	createtournamenticon.classList.add("navigationicon");
+	let createtournamenticon = document.createElement("div");
+	createtournamenticon.classList.add("icon-createtournament");
+	createtournamenticon.classList.add("icon");
 	createtournamenticonanddescriptioncontainer.appendChild(createtournamenticon);
 
 	//text for create new tournament
@@ -1216,9 +1214,9 @@ let buildsinglematchday = async (container, tid, mdnumber) => {
 	})
 
 	//add icon to matchday
-	let matchdayicon = document.createElement("img");
-	matchdayicon.setAttribute("src", "lib/assets/matchday.svg");
-	matchdayicon.classList.add("navigationicon");
+	let matchdayicon = document.createElement("div");
+	matchdayicon.classList.add("icon-matchday");
+	matchdayicon.classList.add("icon");
 	matchdayiconanddescription.appendChild(matchdayicon);
 
 	//add matchday name
@@ -1323,10 +1321,10 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 		appendto: creatematchdaycontainer
 	})
 
-	//add icon to matchday
-	let creatematchdayicon = document.createElement("img");
-	creatematchdayicon.setAttribute("src", "lib/assets/addcircle.svg");
-	creatematchdayicon.classList.add("navigationicon");
+	//add icon to create matchday
+	let creatematchdayicon = document.createElement("div");
+	creatematchdayicon.classList.add("icon-plus");
+	creatematchdayicon.classList.add("icon");
 	creatematchdayiconanddescription.appendChild(creatematchdayicon);
 
 	//add description to create matchday button
@@ -1368,14 +1366,14 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 		appendto: roundcontainer
 	})
 
-	//add icon to matchday
-	let roundicon = document.createElement("img");
-	roundicon.setAttribute("src", "lib/assets/round.svg");
-	roundicon.classList.add("navigationicon");
+	//add icon to round
+	let roundicon = document.createElement("div");
+	roundicon.classList.add("icon-round");
+	roundicon.classList.add("icon");
 	roundiconanddescription.appendChild(roundicon);
 
-	//add matchday name
-	let matchdaynumber = creatediv({
+	//add round name
+	let roundnumber = creatediv({
 		divtext: "Runde " + rnumber, 
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: roundiconanddescription
@@ -1426,12 +1424,12 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	//set data state to hidden 
 	maincontainerrounds.setAttribute("data-state", "hidden");
 	
-	//create container for days
+	//create container for rounds
 	let containerrounds = creatediv({
 		appendto: maincontainerrounds
 	});
 
-	//set id of days container
+	//set id of rounds container
 	containerrounds.setAttribute("id", "rounds-" + tid + "-" + md);
 
 	await buildrounds(containerrounds, tid, md);
@@ -1457,20 +1455,20 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	creatediv({appendto: createroundcontainer});
 	creatediv({appendto: createroundcontainer});
 
-	// add matchday description icon container
+	// add rounds description icon container
 	let createroundiconanddescription = creatediv({
 		divclass: ["navigation-icon-description", "navigationitemhover"],
 		appendto: createroundcontainer
 	})
 
-	//add icon to round
-	let createroundicon = document.createElement("img");
-	createroundicon.setAttribute("src", "lib/assets/addcircle.svg");
-	createroundicon.classList.add("navigationicon");
+	//add icon to create round button
+	let createroundicon = document.createElement("div");
+	createroundicon.classList.add("icon-plus");
+	createroundicon.classList.add("icon");
 	createroundiconanddescription.appendChild(createroundicon);
 
-	//add description to create matchday button
-	let creatematchdaydescription = creatediv({
+	//add description to create round button
+	let createrounddescription = creatediv({
 		divtext: "Neu",
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: createroundiconanddescription

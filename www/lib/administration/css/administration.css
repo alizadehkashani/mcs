@@ -811,10 +811,36 @@
 }
 
 .icon-matchday{
-	background-image: url("/../lib/administration/assets/tournament.svg");
+	background-image: url("/../lib/assets/matchday.svg");
+}
+
+.icon-round{
+	background-image: url("/../lib/assets/round.svg");
+}
+
+.icon-plus{
+	background-image: url("/../lib/assets/addcircle.svg");
+}
+
+.icon-cross{
+	background-image: url("/../lib/assets/close.svg");
+}
+
+.icon-checkmark{
+	background-image: url("/../lib/assets/done.svg");
+}
+
+.icon-createtournament{
+	background-image: url("/../lib/administration/assets/createtournament.svg");
 }
 
 .icon{
+	width: 30px;
+	height: 30px;
 	background-size: 30px 30px;
 	opacity: 0.5;
+}
+
+.icon:hover{
+	cursor: pointer;
 }
