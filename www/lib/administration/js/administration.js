@@ -564,9 +564,10 @@ let buildworkspaceclubinformation = async (tid) => {
 	})
 	createclubbuttoncontainer.style.padding = "10px";
 
-	//create icon for tournament information
-	let createclubbutton = document.createElement("img");
-	createclubbutton.setAttribute("src", "lib/assets/clubadd.svg");
+	//create icon for adding club
+	let createclubbutton = document.createElement("div");
+	createclubbutton.classList.add("icon-clubplus");
+	createclubbutton.classList.add("icon");
 	createclubbutton.classList.add("workspaceicon");
 	createclubbuttoncontainer.appendChild(createclubbutton);
 	createclubbutton.addEventListener("click", () => {
@@ -1888,8 +1889,9 @@ let buildworkspaceplayerconfig = async (tid) => {
 	});
 
 	//add button to create new player
-	let addplayersvg = document.createElement("img");
-	addplayersvg.setAttribute("src", "lib/assets/playeradd.svg");
+	let addplayersvg = document.createElement("div");
+	addplayersvg.classList.add("icon-playerplus");
+	addplayersvg.classList.add("icon");
 	addplayersvg.classList.add("workspaceicon");
 	addplayercontainer.appendChild(addplayersvg);
 	addplayersvg.addEventListener("click", async () => {
@@ -2296,8 +2298,9 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 	changeelementvisibility(workspace, true, false);
 
 	//create icon for tournament information
-	let matchdayinformationicon = document.createElement("img");
-	matchdayinformationicon.setAttribute("src", "lib/assets/info.svg");
+	let matchdayinformationicon = document.createElement("div");
+	matchdayinformationicon.classList.add("icon-info");
+	matchdayinformationicon.classList.add("icon");
 	matchdayinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdayinformationicon);
 	matchdayinformationicon.addEventListener("click", () => {
@@ -2306,8 +2309,9 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 	})
 
 	//create icon for matchday deletion 
-	let matchdaydeletionicon = document.createElement("img");
-	matchdaydeletionicon.setAttribute("src", "lib/assets/delete.svg");
+	let matchdaydeletionicon = document.createElement("div");
+	matchdaydeletionicon.classList.add("icon-garbage");
+	matchdaydeletionicon.classList.add("icon");
 	matchdaydeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdaydeletionicon);
 	matchdaydeletionicon.addEventListener("click", async () => {
@@ -2397,10 +2401,10 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	//set x if current matchday
 	if(matchdayinformation.mdcurrent == 0){
 		activemd.innerHTML = "-";
-		var pathtosvg = "lib/assets/toggleoff.svg";
+		var divclass = "icon-toggleoff";
 	}else if(matchdayinformation.mdcurrent == 1){
 		activemd.innerHTML = "X";
-		var pathtosvg = "lib/assets/toggleon.svg";
+		var divclass = "icon-toggleon";
 	}
 
 	//lable for md activation
@@ -2415,9 +2419,9 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	});
 
 	//button to set matchday current
-	let setcurrentbutton = document.createElement("img");
-	setcurrentbutton.setAttribute("src", pathtosvg);
-	setcurrentbutton.classList.add("workspaceicon");
+	let setcurrentbutton = document.createElement("div");
+	setcurrentbutton.classList.add(divclass);
+	setcurrentbutton.classList.add("icon");
 	setcurrentbuttoncontainer.appendChild(setcurrentbutton);
 	setcurrentbutton.addEventListener("click", async () => {
 
@@ -2427,8 +2431,9 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 			//if md was succsessfully activated
 			//change icon and set X
 			if(activate == 0){
-				//clearelement(setcurrentbuttoncontainer);
-				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
+				//if matchday is currently not active, set toggle button to on
+				setcurrentbutton.classList.remove("icon-toggleoff");
+				setcurrentbutton.classList.add("icon-toggleon");
 				activemd.innerHTML = "X";
 
 			}
@@ -2464,8 +2469,10 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	})
 
 	//add done button
-	let doneicon = document.createElement("img");
+	let doneicon = document.createElement("div");
 	doneicon.setAttribute("src", "lib/assets/done.svg");
+	doneicon.classList.add("icon-checkmark");
+	doneicon.classList.add("icon");
 	doneicon.classList.add("workspaceicon");
 	donebuttoncontainer.appendChild(doneicon);
 
@@ -2653,8 +2660,9 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 	changeelementvisibility(workspace, true, false);
 
 	//create icon for round information
-	let roundinformationicon = document.createElement("img");
-	roundinformationicon.setAttribute("src", "lib/assets/info.svg");
+	let roundinformationicon = document.createElement("div");
+	roundinformationicon.classList.add("icon-info");
+	roundinformationicon.classList.add("icon");
 	roundinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(roundinformationicon);
 	roundinformationicon.addEventListener("click", () => {
@@ -2663,8 +2671,9 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 	})
 
 	//create icon for startgroups 
-	let roundstartgroupsicon = document.createElement("img");
-	roundstartgroupsicon.setAttribute("src", "lib/assets/startgroups.svg");
+	let roundstartgroupsicon = document.createElement("div");
+	roundstartgroupsicon.classList.add("icon-playdouble");
+	roundstartgroupsicon.classList.add("icon");
 	roundstartgroupsicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(roundstartgroupsicon);
 	roundstartgroupsicon.addEventListener("click", () => {
@@ -2673,8 +2682,9 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 	})
 
 	//create icon for round deletion 
-	let rounddeletionicon = document.createElement("img");
-	rounddeletionicon.setAttribute("src", "lib/assets/delete.svg");
+	let rounddeletionicon = document.createElement("div");
+	rounddeletionicon.classList.add("icon-gargabe");
+	rounddeletionicon.classList.add("icon");
 	rounddeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(rounddeletionicon);
 	rounddeletionicon.addEventListener("click", async () => {
@@ -2760,10 +2770,10 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	//set x if current round
 	if(roundinformation.rcurrent == 0){
 		activer.innerHTML = "-";
-		var pathtosvg = "lib/assets/toggleoff.svg";
+		var divclass = "icon-toggleoff";
 	}else if(roundinformation.rcurrent == 1){
 		activer.innerHTML = "X";
-		var pathtosvg = "lib/assets/toggleon.svg";
+		var divclass = "icon-toggleon";
 	}
 
 	//lable for md activation
@@ -2778,20 +2788,28 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	});
 
 	//button to set round current
-	let setcurrentbutton = document.createElement("img");
-	setcurrentbutton.setAttribute("src", pathtosvg);
-	setcurrentbutton.classList.add("workspaceicon");
+	let setcurrentbutton = document.createElement("div");
+	setcurrentbutton.classList.add(divclass);
+	setcurrentbutton.classList.add("icon");
 	setcurrentbuttoncontainer.appendChild(setcurrentbutton);
 	setcurrentbutton.addEventListener("click", async () => {
 
 		//if round is not actifve, allows to activate
 		if(roundinformation.rcurrent == 0){
-			let activate = await setractive(roundinformation.tid, roundinformation.mdnumber);
+
+			let rounddata = {
+				tid: roundinformation.tid,
+				mdnumber: roundinformation.mdnumber,
+				rnumber: roundinformation.rnumber
+			}
+
+			let activate = await setractive(rounddata);
 			//if round was succsessfully activated
 			//change icon and set X
 			if(activate == 0){
-				//clearelement(setcurrentbuttoncontainer);
-				setcurrentbutton.setAttribute("src", "lib/assets/toggleon.svg")
+				//if round is currently not active, set toggle button to on
+				setcurrentbutton.classList.remove("icon-toggleoff");
+				setcurrentbutton.classList.add("icon-toggleon");
 				activer.innerHTML = "X";
 
 			}
@@ -2896,12 +2914,12 @@ let getround = async (tid, mdnumber, rnumber) => {
 	return response;
 }
 
-let setractive = async (tid, mdnumber, rnumber) => {
+let setractive = async (rounddata) => {
 
 	rdata = {
-		tid: tid,
-		mdnumber: mdnumber,
-		rnumber: rnumber,
+		tid: rounddata.tid,
+		mdnumber: rounddata.mdnumber,
+		rnumber: rounddata.rnumber,
 		rcurrent: 1
 	}
 

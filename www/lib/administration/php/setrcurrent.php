@@ -36,7 +36,7 @@
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":mdnumber", $input["mdnumber"]);
 	$sql->bindParam(":rnumber", $input["rnumber"]);
-	$sql->bindParam(":rcurrent", $input["rcurrent"]);
+	$sql->bindParam(":rcurrent", $one);
 	$sql->execute();
 	
 	$response["result"] = 0;

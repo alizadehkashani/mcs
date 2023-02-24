@@ -157,7 +157,7 @@
 
 	transition: 0.3s;
 
-	border-radius: 15px;
+	border-radius: 5px;
 }
 
 .workspaceicon:hover{
@@ -807,55 +807,79 @@
 }
 
 .icon-tournament{
-	background-image: url("/../lib/administration/assets/tournament.svg");
+	background: no-repeat center url("/../lib/administration/assets/tournament.svg");
 }
 
 .icon-matchday{
-	background-image: url("/../lib/assets/matchday.svg");
+	background: no-repeat center url("/../lib/assets/matchday.svg");
 }
 
 .icon-round{
-	background-image: url("/../lib/assets/round.svg");
+	background: no-repeat center url("/../lib/assets/round.svg");
 }
 
 .icon-plus{
-	background-image: url("/../lib/assets/addcircle.svg");
+	background: no-repeat center url("/../lib/assets/addcircle.svg");
 }
 
 .icon-cross{
-	background-image: url("/../lib/assets/close.svg");
+	background: no-repeat center url("/../lib/assets/close.svg");
 }
 
 .icon-checkmark{
-	background-image: url("/../lib/assets/done.svg");
+	background: no-repeat center url("/../lib/assets/done.svg");
 }
 
 .icon-createtournament{
-	background-image: url("/../lib/administration/assets/createtournament.svg");
+	background: no-repeat center url("/../lib/administration/assets/createtournament.svg");
 }
 
 .icon-info{
-	background-image: url("/../lib/assets/info.svg");
+	background: no-repeat center url("/../lib/assets/info.svg");
 }
 
 .icon-track{
-	background-image: url("/../lib/assets/track.svg");
+	background: no-repeat center url("/../lib/assets/track.svg");
 }
 
 .icon-club{
-	background-image: url("/../lib/assets/club.svg");
+	background: no-repeat center url("/../lib/assets/club.svg");
 }
 
 .icon-player{
-	background-image: url("/../lib/assets/player.svg");
+	background: no-repeat center url("/../lib/assets/player.svg");
+}
+
+.icon-playerplus{
+	background: no-repeat center url("/../lib/assets/playeradd.svg");
 }
 
 .icon-archive{
-	background-image: url("/../lib/assets/archive.svg");
+	background: no-repeat center url("/../lib/assets/archive.svg");
 }
 
 .icon-deltournament{
-	background-image: url("/../lib/assets/deletetournament.svg");
+	background: no-repeat center url("/../lib/assets/deletetournament.svg");
+}
+
+.icon-clubplus{
+	background: no-repeat center url("/../lib/assets/clubadd.svg");
+}
+
+.icon-garbage{
+	background: no-repeat center url("/../lib/assets/delete.svg");
+}
+
+.icon-toggleon{
+	background: no-repeat center url("/../lib/assets/toggleon.svg");
+}
+
+.icon-toggleoff{
+	background: no-repeat center url("/../lib/assets/toggleoff.svg");
+}
+
+.icon-playdouble{
+	background: no-repeat center url("/../lib/assets/startgroups.svg");
 }
 
 .icon{
