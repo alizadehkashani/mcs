@@ -426,8 +426,9 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	changeelementvisibility(workspace, true, false);
 
 	//create icon for tournament information
-	let tournamentinformationicon = document.createElement("img");
-	tournamentinformationicon.setAttribute("src", "lib/assets/info.svg");
+	let tournamentinformationicon = document.createElement("div");
+	tournamentinformationicon.classList.add("icon-info");
+	tournamentinformationicon.classList.add("icon");
 	tournamentinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", async () => {
@@ -435,8 +436,9 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	})
 
 	//create icon for track configuration
-	let trackconfig = document.createElement("img");
-	trackconfig.setAttribute("src", "lib/assets/track.svg");
+	let trackconfig = document.createElement("div");
+	trackconfig.classList.add("icon-track");
+	trackconfig.classList.add("icon");
 	trackconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(trackconfig);
 	trackconfig.addEventListener("click", async () => {
@@ -444,8 +446,9 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	})
 
 	//create icon for club configuration
-	let clubconfig = document.createElement("img");
-	clubconfig.setAttribute("src", "lib/assets/club.svg");
+	let clubconfig = document.createElement("div");
+	clubconfig.classList.add("icon-club");
+	clubconfig.classList.add("icon");
 	clubconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(clubconfig);
 	clubconfig.addEventListener("click", () => {
@@ -453,8 +456,9 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	})
 
 	//create icon for player configuration
-	let playerconfig = document.createElement("img");
-	playerconfig.setAttribute("src", "lib/assets/player.svg");
+	let playerconfig = document.createElement("div");
+	playerconfig.classList.add("icon-player");
+	playerconfig.classList.add("icon");
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", () => {
@@ -462,14 +466,17 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	})	
 
 	//create icon for tournament archive
-	let archiveicon = document.createElement("img");
-	archiveicon.setAttribute("src", "lib/assets/archive.svg");
+	let archiveicon = document.createElement("div");
+	archiveicon.classList.add("icon-archive");
+	archiveicon.classList.add("icon");
 	archiveicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(archiveicon);
 
 	//create icon for tournament deletion
-	let deleteicon = document.createElement("img");
+	let deleteicon = document.createElement("div");
 	deleteicon.setAttribute("src", "lib/assets/deletetournament.svg");
+	deleteicon.classList.add("icon-deltournament");
+	deleteicon.classList.add("icon");
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
 

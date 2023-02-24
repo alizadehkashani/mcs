@@ -834,6 +834,30 @@
 	background-image: url("/../lib/administration/assets/createtournament.svg");
 }
 
+.icon-info{
+	background-image: url("/../lib/assets/info.svg");
+}
+
+.icon-track{
+	background-image: url("/../lib/assets/track.svg");
+}
+
+.icon-club{
+	background-image: url("/../lib/assets/club.svg");
+}
+
+.icon-player{
+	background-image: url("/../lib/assets/player.svg");
+}
+
+.icon-archive{
+	background-image: url("/../lib/assets/archive.svg");
+}
+
+.icon-deltournament{
+	background-image: url("/../lib/assets/deletetournament.svg");
+}
+
 .icon{
 	width: 30px;
 	height: 30px;
