@@ -818,6 +818,7 @@
 	background: no-repeat center url("/../lib/assets/round.svg");
 }
 
+/*circle with plus in it*/
 .icon-plus{
 	background: no-repeat center url("/../lib/assets/addcircle.svg");
 }
@@ -854,6 +855,10 @@
 	background: no-repeat center url("/../lib/assets/playeradd.svg");
 }
 
+.icon-playerminus{
+	background: no-repeat center url("/../lib/assets/playerremove.svg");
+}
+
 .icon-archive{
 	background: no-repeat center url("/../lib/assets/archive.svg");
 }
@@ -864,6 +869,10 @@
 
 .icon-clubplus{
 	background: no-repeat center url("/../lib/assets/clubadd.svg");
+}
+
+.icon-clubminus{
+	background: no-repeat center url("/../lib/assets/clubremove.svg");
 }
 
 .icon-garbage{

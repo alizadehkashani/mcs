@@ -1034,8 +1034,9 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	})
 
 	//add accept button
-	let doneicon = document.createElement("img");
-	doneicon.setAttribute("src", "lib/assets/done.svg");
+	let doneicon = document.createElement("div");
+	doneicon.classList.add("icon-checkmark");
+	doneicon.classList.add("icon");
 	doneicon.classList.add("workspaceicon");
 	donebuttoncontainer.appendChild(doneicon);
 
@@ -2824,8 +2825,9 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	})
 
 	//add done button
-	let doneicon = document.createElement("img");
-	doneicon.setAttribute("src", "lib/assets/done.svg");
+	let doneicon = document.createElement("div");
+	doneicon.classList.add("icon-checkmark");
+	doneicon.classList.add("icon");
 	doneicon.classList.add("workspaceicon");
 	donebuttoncontainer.appendChild(doneicon);
 
@@ -2980,11 +2982,15 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 			divclass: ["startgroupstracklabel", "flexcenter"]
 		})
 
+		//behaviour if track is clicked
 		tracklabel.addEventListener("click", async () => {
+			//make visible track is selected
 			setselectednavigation(tracklabel, "track");
 
+			//change cursor behviour to not be pointer
 			tracklabel.style.pointerEvents = "none";
 
+			//on click build groups for the track
 			await buildtrackstartgroups(
 				trackstartgroupscreatecontainer,
 				trackstartgroupslist,
@@ -2996,11 +3002,8 @@ let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
 
 			tracklabel.style.pointerEvents = "auto";
 
-
 		})
-
 	}
-
 
 }
 
@@ -3017,16 +3020,21 @@ let buildtrackstartgroups = async (
 		clearelement(listcontainer);
 
 		//create button to create new empty group
-		let creategroupbutton = document.createElement("img");
-		creategroupbutton.setAttribute("src", "lib/assets/addcircle.svg");
+		let creategroupbutton = document.createElement("div");
+		creategroupbutton.classList.add("icon-plus");
+		creategroupbutton.classList.add("icon");
 		creategroupbutton.classList.add("workspaceicon");
 		buttoncontainer.appendChild(creategroupbutton);
 		
+		//behviour if created group button is clicked
 		creategroupbutton.addEventListener("click", async () => {
+			//create new empty group
 			await createnewgroup(tid, trackid, mdnumber, rnumber);
+			//rebuild start groups table
 			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 		})
 
+		//build start groups table
 		await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
 
 	}
@@ -3169,6 +3177,7 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			divclass: ["track-group-player-move-container"]
 		});
 
+		//make move buttons only visible if hoverd over group
 		changeopacityonhover(groupcontainer, changeorderplayercontainer);
 
 		//create svg for moving group up
@@ -3224,8 +3233,10 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 		})
 		
 		//create button to add player group
-		let addplayertogroupbutton = document.createElement("img");
+		let addplayertogroupbutton = document.createElement("div");
 		addplayertogroupbutton.setAttribute("src", "lib/assets/addplayergroup.svg");
+		addplayertogroupbutton.classList.add("icon-playerplus");
+		addplayertogroupbutton.classList.add("icon");
 		addplayertogroupbutton.classList.add("workspaceicon");
 		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
 		
@@ -3241,14 +3252,16 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 			appendto: groupcontainer,
 		});
 
+		//container for delte group button
 		let removegroupbuttoncontainer = creatediv({
 			appendto: groupcontainer,
 			divclass: ["startgroupsbuttoncontainer"]
 		})
 
 		//button to delete group and players
-		let deletegroupbutton = document.createElement("img");
-		deletegroupbutton.setAttribute("src", "lib/assets/clubremove.svg");
+		let deletegroupbutton = document.createElement("div");
+		deletegroupbutton.classList.add("icon-clubminus");
+		deletegroupbutton.classList.add("icon");
 		deletegroupbutton.classList.add("workspaceicon");
 		removegroupbuttoncontainer.appendChild(deletegroupbutton);
 		
@@ -3386,8 +3399,9 @@ let startgroupsinsertplayer = async (container, groupid, playerdata) => {
 	})
 
 	//create button to remove player from group
-	let removeplayerfromgroupbutton = document.createElement("img");
-	removeplayerfromgroupbutton.setAttribute("src", "lib/assets/playerremove.svg");
+	let removeplayerfromgroupbutton = document.createElement("div");
+	removeplayerfromgroupbutton.classList.add("icon-playerminus");
+	removeplayerfromgroupbutton.classList.add("icon");
 	removeplayerfromgroupbutton.classList.add("workspaceicon");
 	removeplayerfromgroupbuttoncontainer.appendChild(removeplayerfromgroupbutton);
 
@@ -3413,6 +3427,7 @@ let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnu
 		"modal-add-player-to-group-layout"
 	);
 
+	//get all players which are currently not in a group for that track
 	let players = await getplayersnotingroup(tid, trackid, mdnumber, rnumber, groupid)
 
 	for(let i = 0; i < players.length; i++){
@@ -3432,19 +3447,32 @@ let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnu
 		}
 
 		//create button to add player group
-		let addplayertogroupbutton = document.createElement("img");
-		addplayertogroupbutton.setAttribute("src", "lib/assets/addplayergroup.svg");
+		let addplayertogroupbutton = document.createElement("div");
+		addplayertogroupbutton.classList.add("icon-playerplus");
+		addplayertogroupbutton.classList.add("icon");
 		addplayertogroupbutton.classList.add("workspaceicon");
 		playercontainer.appendChild(addplayertogroupbutton);
 		
+		//behaviour if add player button is clicked
 		addplayertogroupbutton.addEventListener("click", async () => {
+			//add player to current group
 			await addplayertogroup(tid, groupid, players[i]["playernumber"]);		
+		
+			//rebuild list of players in background
 			buildgroupplayers(playerscontainer, groupid);
+			
+			//remove player from list of available player
 			playercontainer.remove();
 		})
 
 
 	}
+	
+	//make modal invsible if checkmark is clicked
+	modal.acceptbutton.addEventListener("click", () => {
+		changeelementvisibility(modal.modalcontainer, false, true);
+		toggleoverlay(false);
+	});
 	
 }
 
