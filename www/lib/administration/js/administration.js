@@ -474,7 +474,6 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 
 	//create icon for tournament deletion
 	let deleteicon = document.createElement("div");
-	deleteicon.setAttribute("src", "lib/assets/deletetournament.svg");
 	deleteicon.classList.add("icon-deltournament");
 	deleteicon.classList.add("icon");
 	deleteicon.classList.add("workspaceicon");
@@ -1507,8 +1506,6 @@ let createnewround = async (tid, md) => {
 }
 
 let buildworkspacetrackconfiguration = async (tid) => {
-	
-	let tracks = await gettracks(tid);
 
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
@@ -1530,8 +1527,9 @@ let buildworkspacetrackconfiguration = async (tid) => {
 	});
 
 	//create icon for track creation
-	let addtrackicon = document.createElement("img");
-	addtrackicon.setAttribute("src", "lib/assets/addcircle.svg");
+	let addtrackicon = document.createElement("div");
+	addtrackicon.classList.add("icon-plus");
+	addtrackicon.classList.add("icon");
 	addtrackicon.classList.add("workspaceicon");
 	maincontainercreatetrack.appendChild(addtrackicon);
 	addtrackicon.addEventListener("click", () => {
