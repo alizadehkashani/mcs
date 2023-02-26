@@ -8,7 +8,7 @@
 	$sql = $dbconnection->prepare("SELECT * FROM tournaments WHERE tid = :tid");
 	$sql->bindParam(":tid", $data["tournmanetid"]);
 	$sql->execute();
-	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
+	$result = $sql->fetch(PDO::FETCH_ASSOC);
 
 	echo(json_encode($result));
 	

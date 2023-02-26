@@ -513,7 +513,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		type: "INPUT",
 		appendto: workspacebody
 	})
-	tournamentnameinput.value = tournamentinformation[0]["tname"];
+	tournamentnameinput.value = tournamentinformation["tname"];
 
 	//description for tournament location input
 	creatediv({
@@ -526,15 +526,34 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		type: "INPUT",
 		appendto: workspacebody
 	})
-	tournamentlocationinput.value = tournamentinformation[0]["tlocation"];
+	tournamentlocationinput.value = tournamentinformation["tlocation"];
 
-	//create container for close button
+	//label for active tournament toggle
+	creatediv({
+		appendto: workspacebody,
+		divtext: "Aktiv"
+	});
+
+	//add toggle button for active tournament
+	let togglebutton = creatediv({
+		appendto: workspacebody,
+		divclass: ["icon"]
+	});
+
+	//check if tournament is active
+	if(tournamentinformation["tactive"] == 1){
+		togglebutton.classList.add("icon-toggleon");
+	}else{
+		togglebutton.classList.add("icon-toggleoff");
+	}
+
+	//create container for accept button
 	let donebuttoncontainer = creatediv({
 		appendto: workspacefoot,
 		divid: "administrationworkspacedonecontainer"
 	})
 	
-	//add close button
+	//add accept button
 	let doneicon = document.createElement("div");
 	doneicon.classList.add("icon-checkmark");
 	doneicon.classList.add("icon");
