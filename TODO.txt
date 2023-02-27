@@ -14,6 +14,8 @@ TODO	when viewing a round, and there are no tracks created in the torunament, gi
 :noh	remove current highlight
 :e %:h/filename
 
+git diff <filename>
+
 SQL:
 show tables
 describe <table>

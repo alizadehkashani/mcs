@@ -3,7 +3,7 @@ let addEventListeners = () => {
 }
 
 //create header for main container
-let buildheader = () => {
+let buildheader = async () => {
 
 	//get main container
 	let administrationcontainer = document.getElementById("administration");
@@ -20,6 +20,16 @@ let buildheader = () => {
 		appendto: headercontainer,
 		divtext: "MCS"
 	})
+
+	//show name of current tournmanet
+	let currenttournament = await getcurrenttournament();
+	let currenttournamentname = currenttournament["tname"];
+
+	let currenttournamentnamecontainer = creatediv({
+		appendto: headercontainer,
+		divclass: ["flexleft"],
+		divtext: currenttournamentname
+	});
 }
 
 //triggers creation for main navigation
@@ -541,7 +551,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 	});
 
 	//check if tournament is active
-	if(tournamentinformation["tactive"] == 1){
+	if(tournamentinformation["tcurrent"] == 1){
 		togglebutton.classList.add("icon-toggleon");
 	}else{
 		togglebutton.classList.add("icon-toggleoff");
@@ -3693,6 +3703,26 @@ let changegrouporder = async (direction, groupdata) => {
 	let phpresponse = await movegroup.json();
 
 	return phpresponse;
+}
+
+let getcurrenttournament = async () => {
+
+	let phppath = "/lib/administration/php/getcurrenttournament.php";
+
+	let currenttournament = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify()
+	});
+
+	//php response
+	currenttournament = await currenttournament.json();
+
+	return currenttournament;
+
 }
 
 DOMready(buildheader);
