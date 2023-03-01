@@ -557,6 +557,22 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		togglebutton.classList.add("icon-toggleoff");
 	}
 
+	togglebutton.addEventListener("click", async () => {
+		
+		//if tournament is not actifve, allows to activate
+		if(tournamentinformation["tcurrent"] == 0){
+			let activate = await settcurrent(tournamentinformation["tid"]);
+			//if tournament was succsessfully activated
+			//change icon and set X
+			if(activate == 0){
+				//if matchday is currently not active, set toggle button to on
+				togglebutton.classList.remove("icon-toggleoff");
+				togglebutton.classList.add("icon-toggleon");
+
+			}
+		}
+	});
+
 	//create container for accept button
 	let donebuttoncontainer = creatediv({
 		appendto: workspacefoot,
@@ -3722,6 +3738,30 @@ let getcurrenttournament = async () => {
 	currenttournament = await currenttournament.json();
 
 	return currenttournament;
+
+}
+
+let settcurrent = async (tid) => {
+
+	tdata = {
+		tid: tid,
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/settcurrent.php";
+	let activet = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(tdata)
+	});
+
+	//php response
+	let phpresponse = await activet.json();
+	
+	return phpresponse["result"];
 
 }
 
