@@ -21,15 +21,18 @@ let buildheader = async () => {
 		divtext: "MCS"
 	})
 
-	//show name of current tournmanet
-	let currenttournament = await getcurrenttournament();
-	let currenttournamentname = currenttournament["tname"];
-
+	//create container for current tournament name
 	let currenttournamentnamecontainer = creatediv({
 		appendto: headercontainer,
+		divid: "headercurrenttournamentname",
 		divclass: ["flexleft"],
-		divtext: currenttournamentname
 	});
+	
+	//show name of current tournmanet
+	let currenttournament = await getcurrenttournament();
+	
+	//set the tournament name as  header
+	setcurrenttournamentnameheader(currenttournament["tname"]);
 }
 
 //triggers creation for main navigation
@@ -568,7 +571,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 				//if matchday is currently not active, set toggle button to on
 				togglebutton.classList.remove("icon-toggleoff");
 				togglebutton.classList.add("icon-toggleon");
-
+				setcurrenttournamentnameheader(tournamentinformation["tname"]);
 			}
 		}
 	});
@@ -3763,6 +3766,16 @@ let settcurrent = async (tid) => {
 	
 	return phpresponse["result"];
 
+}
+
+let setcurrenttournamentnameheader = (tname) => {
+	let container = getcurrenttournamentnameheadercontainer();
+	container.innerHTML = tname;
+}
+
+let getcurrenttournamentnameheadercontainer = () => {
+	let container = document.getElementById("headercurrenttournamentname");
+	return container;
 }
 
 DOMready(buildheader);
