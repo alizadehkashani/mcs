@@ -2879,12 +2879,15 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	initbutton.classList.add("workspaceicon");
 	roundinfoinputcontainer.appendChild(initbutton);
 
+	initbutton.addEventListener("click", async () => {
+		initround(tid, mdnumber, rnumber);	
+	});
+
 	//create container for done button
 	let donebuttoncontainer = creatediv({
 		appendto: workspacefoot,
 		divid: "administrationworkspacedonecontainer"
 	})
-
 
 	//add done button
 	let doneicon = document.createElement("div");
@@ -2896,7 +2899,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	//add eventlistner to done button
 	donebuttoncontainer.addEventListener("click", () =>{
 
-
+		//update round information
 		updateround(tid, mdnumber, rnumber, rdescription.value);
 	})
 
@@ -3790,6 +3793,31 @@ let setcurrenttournamentnameheader = (tname) => {
 let getcurrenttournamentnameheadercontainer = () => {
 	let container = document.getElementById("headercurrenttournamentname");
 	return container;
+}
+
+let initround = async (tid, mdnumber, rnumber) => {
+
+	rdata = {
+		tid: tid,
+		mdnumber: mdnumber,
+		rnumber: rnumber,
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/initround.php";
+	let initround = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(rdata)
+	});
+
+	//php response
+	let phpresponse = await activet.json();
+	
+	return phpresponse["result"];
 }
 
 DOMready(buildheader);
