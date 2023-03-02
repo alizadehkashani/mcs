@@ -2866,11 +2866,25 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 
 	});
 
+	//label for init button
+	let labelinitrounds = creatediv({
+		appendto: roundinfoinputcontainer,
+		divtext: "Runde Initializieren"
+	});
+
+	//add round initialization button
+	let initbutton = document.createElement("div");
+	initbutton.classList.add("icon-init");
+	initbutton.classList.add("icon");
+	initbutton.classList.add("workspaceicon");
+	roundinfoinputcontainer.appendChild(initbutton);
+
 	//create container for done button
 	let donebuttoncontainer = creatediv({
 		appendto: workspacefoot,
 		divid: "administrationworkspacedonecontainer"
 	})
+
 
 	//add done button
 	let doneicon = document.createElement("div");

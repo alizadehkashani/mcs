@@ -701,7 +701,7 @@
 .workspace-view-roundinformation-input-container{
 	display: grid;
 	grid-template-columns: 200px 200px;
-	grid-template-rows: repeat(4, 25px);
+	grid-template-rows: repeat(5, 25px);
 }
 
 .workspace-view-roundstartgroups-body{
@@ -889,6 +889,10 @@
 
 .icon-playdouble{
 	background: no-repeat center url("/../lib/assets/startgroups.svg");
+}
+
+.icon-init{
+	background: no-repeat center url("/../lib/assets/init.svg");
 }
 
 .icon{
