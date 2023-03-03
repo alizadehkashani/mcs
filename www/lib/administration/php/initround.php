@@ -37,8 +37,6 @@
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
 
-	print_r($tracks);
-
 	//loop through tracks and set first group to current group
 	for($i = 0; $i < count($tracks); $i++){
 
