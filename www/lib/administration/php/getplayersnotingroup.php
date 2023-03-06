@@ -33,4 +33,3 @@
 
 	echo(json_encode($players));
 ?>
-

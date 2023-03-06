@@ -6,14 +6,14 @@
 
 	//check if there are already matchdays existing
 	$query = "
-		SELECT rnumber
+		SELECT rid
 		FROM rounds
-		WHERE tid = :tid AND mdnumber = :mdnumber
+		WHERE tid = :tid AND mid = :mid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 

@@ -7,12 +7,12 @@
 	$query = "
 		SELECT *
 		FROM matchdays
-		WHERE tid = :tid AND mdnumber = :mdnumber
+		WHERE tid = :tid AND mid = :mid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);
 

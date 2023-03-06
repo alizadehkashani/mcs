@@ -6,11 +6,11 @@
 
 	$sql = $dbconnection->prepare("
 		SELECT * FROM rounds 
-		WHERE tid = :tid AND mdnumber = :mdnumber 
+		WHERE tid = :tid AND mid = :mid 
 		ORDER BY rnumber ASC"
 	);
 	$sql->bindParam(":tid", $data["tid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 

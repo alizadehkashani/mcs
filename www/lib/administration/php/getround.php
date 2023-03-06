@@ -7,13 +7,13 @@
 	$sql = $dbconnection->prepare("
 		SELECT * FROM rounds 
 		WHERE tid = :tid 
-		AND mdnumber = :mdnumber 
-		AND rnumber = :rnumber
+		AND mid = :mid 
+		AND rid = :rid
 	");
 
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
-	$sql->bindParam(":rnumber", $input["rnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);
 

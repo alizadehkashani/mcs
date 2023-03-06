@@ -6,9 +6,6 @@
 
 	$result = [];
 
-	$zero = 0;
-	$one = 1;
-
 	//reset all current groups of round
 	$query = "
 		UPDATE groups
@@ -19,7 +16,7 @@
 		";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":zero", $zero);
+	$sql->bindValue(":zero", 0);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":mdnumber", $data["mdnumber"]);
 	$sql->bindParam(":rnumber", $data["rnumber"]);
@@ -61,7 +58,7 @@
 			";
 
 		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":one", $one);
+		$sql->bindValue(":one", 1);
 		$sql->bindParam(":tid", $data["tid"]);
 		$sql->bindParam(":mdnumber", $data["mdnumber"]);
 		$sql->bindParam(":rnumber", $data["rnumber"]);

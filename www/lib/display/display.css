@@ -1,0 +1,18 @@
+#displaymaincontainer{
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+#displayheadmaincontainer{
+	height: 10vh;
+}
+
+#displaygroupsmaincontainer{
+	flex-grow: 1;
+}
+
+#displayfootmaincontainer{
+	height: 10vh;
+}
+

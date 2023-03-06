@@ -824,10 +824,10 @@ let getmatchdays = async (tid) => {
 	return response;
 }
 
-let getmatchday = async (tid, mdnumber) => {
+let getmatchday = async (tid, mid) => {
 
 	//set data for php script
-	let requestdata = {tid: tid, mdnumber: mdnumber};
+	let requestdata = {tid: tid, mid: mid};
 
 	//call php script 
 	let phpresponse = await fetch("/lib/administration/php/getmatchday.php", {
@@ -846,10 +846,10 @@ let getmatchday = async (tid, mdnumber) => {
 	return response;
 }
 
-let getrounds = async (tid, mdnumber) => {
+let getrounds = async (tid, mid) => {
 	
 	//set data for php script
-	let requestdata = {tid: tid, mdnumber: mdnumber};
+	let requestdata = {tid: tid, mid: mid};
 
 	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getrounds.php", {
@@ -995,8 +995,9 @@ let createnewmatchday = async (tid) => {
 	//create object for php script
 	let postdata = {tid: tid};	
 	
+	let phppath = "/lib/administration/php/creatematchday.php"
 	//call php script
-	let response = await fetch("/lib/administration/php/creatematchday.php", {
+	let response = await fetch(phppath, {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
@@ -1008,21 +1009,8 @@ let createnewmatchday = async (tid) => {
 	//response of php script
 	let phpresponse = await response.json();
 
-	return phpresponse["mdnumber"];
-
-	/*
-	if(phpresponse["result"] == 0){
-		
-
-		//alert user, that club was deleted
-		alert("Spieltag angelegt");
-
-	}else{
-		//give alert with error message
-		alert("error");
-	}
-	*/
-
+	//backend returns matchday id and its order
+	return phpresponse;
 }
 
 
@@ -1233,7 +1221,7 @@ let buildtournamentsinit = async (maincontainer) => {
 
 }
 
-let buildsinglematchday = async (container, tid, mdnumber) => {
+let buildsinglematchday = async (container, tid, mid, mdnumber) => {
 
 	let matchdaycontainer = creatediv({
 		divclass: ["navigationitem-1", "navigationhover"],
@@ -1285,7 +1273,7 @@ let buildsinglematchday = async (container, tid, mdnumber) => {
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer, "navigation");
-		buildworkspaceviewmatchday(matchdaycontainer, tid, mdnumber);
+		buildworkspaceviewmatchday(container, matchdaycontainer, tid, mid);
 	})
 
 	//add event listener for expand/collapse control of rounds
@@ -1328,9 +1316,9 @@ let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 	let matchdays = await getmatchdays(tid);
 
 	//loop through matchdays
-	for(let j = 0; j < matchdays.length; j++){
-		await buildsinglematchday(container, tid, matchdays[j]["mdnumber"]);
-		await buildroundsinit(container, tid, matchdays[j]["mdnumber"]);
+	for(let i = 0; i < matchdays.length; i++){
+		await buildsinglematchday(container, tid, matchdays[i]["mid"], i+1);
+		await buildroundsinit(container, tid, matchdays[i]["mid"]);
 	}
 }
 
@@ -1341,7 +1329,8 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 		appendto: navigationcontainer 
 	})
 
-	//set id of matchday maincontainer
+	//set id of matchday maincontainer of tournament
+	//maincontainer matchdays tournamnet id
 	maincontainermatchdays.setAttribute("id", "mc-md-" + tid);
 
 	//set container hidden
@@ -1393,17 +1382,17 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 	//add event listner to create matchday
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
 		//create new matchday and return matchday number
-		let mdnumber = await createnewmatchday(tid);
+		let mddata = await createnewmatchday(tid);
 
 		//add new matchday to navigation
-		await buildsinglematchday(containerdays, tid, mdnumber);
+		await buildsinglematchday(containerdays, tid, mddata["mid"], mddata["mdorder"]);
 
 		//build initial rounds
-		await buildroundsinit(containerdays, tid, mdnumber);
+		await buildroundsinit(containerdays, tid, mddata["mid"]);
 	})
 }
 
-let buildsingleround = async (container, tid, md, rnumber) => {
+let buildsingleround = async (container, tid, mid, rid) => {
 
 	//create container for round
 	let roundcontainer = creatediv({
@@ -1430,7 +1419,7 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 
 	//add round name
 	let roundnumber = creatediv({
-		divtext: "Runde " + rnumber, 
+		divtext: "Runde " + rid, 
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: roundiconanddescription
 	})
@@ -1440,7 +1429,7 @@ let buildsingleround = async (container, tid, md, rnumber) => {
 		setselectednavigation(roundcontainer, "navigation");
 		
 		//build workspace view round 
-		buildworkspaceviewround(tid, md, rnumber, roundcontainer);
+		buildworkspaceviewround(tid, mid, rid, roundcontainer);
 
 	})				
 
@@ -1453,18 +1442,17 @@ let buildrounds = async (container, tid, md, rebuild) => {
 		clearelement(container);
 	}
 
-
 	//get rounds
 	let rounds = await getrounds(tid, md); 
 	
 	//loop through rounds of matchday
-	for(let k = 0; k < rounds.length; k++){
-		buildsingleround(container, tid, md, rounds[k]["rnumber"]);
+	for(let i = 0; i < rounds.length; i++){
+		buildsingleround(container, tid, md, i+1);
 	}
 	
 }
 
-let buildroundsinit = async (matchdaycontainer, tid, md) => {
+let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 
 	//create maincontainer for rounds 
 	let maincontainerrounds = creatediv({
@@ -1472,7 +1460,7 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	})
 
 	//set id of rounds maincontainer
-	maincontainerrounds.setAttribute("id", "mc-r-tid-" + tid + "-md-" + md);
+	maincontainerrounds.setAttribute("id", "mc-r-tid-" + tid + "-md-" + mid);
 
 	//set container hidden
 	maincontainerrounds.style.display = "none";
@@ -1486,9 +1474,9 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	});
 
 	//set id of rounds container
-	containerrounds.setAttribute("id", "rounds-" + tid + "-" + md);
+	containerrounds.setAttribute("id", "rounds-" + tid + "-" + mid);
 
-	await buildrounds(containerrounds, tid, md);
+	await buildrounds(containerrounds, tid, mid);
 
 	//create button to create new round
 	let createroundcontainer = creatediv({
@@ -1499,10 +1487,10 @@ let buildroundsinit = async (matchdaycontainer, tid, md) => {
 	createroundcontainer.addEventListener("click", async () => {
 
 		//create new ronud and return round number
-		let roundnumber = await createnewround(tid, md);
+		let roundnumber = await createnewround(tid, mid);
 
 		//append new round to navigation
-		buildsingleround(containerrounds, tid, md, roundnumber);
+		buildsingleround(containerrounds, tid, mid, rid);
 
 	});
 
@@ -2329,7 +2317,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 }
 
-let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
+let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2354,7 +2342,7 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 	workspaceheadvariable.appendChild(matchdayinformationicon);
 	matchdayinformationicon.addEventListener("click", () => {
 		//displays matchday information
-		buildworkspacematchdayinformation(tid, mdnumber);
+		buildworkspacematchdayinformation(tid, mid);
 	})
 
 	//create icon for matchday deletion 
@@ -2364,12 +2352,17 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 	matchdaydeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdaydeletionicon);
 	matchdaydeletionicon.addEventListener("click", async () => {
+		debugger;
+		console.log(matchdayscontainer);
+		console.log(matchdayscontainer.childNodes[0]);
+		console.log(matchdayscontainer.childNodes.length);
+		/*
 		//deletematchday
-		let delmdresp = await deletematchday(tid, mdnumber);
-		console.log(delmdresp);
+		let delmdresp = await deletematchday(tid, mid);
+
 		if(delmdresp.result == 0){
 			//get container with rounds
-			let roundcontainerid = "mc-r-tid-" + tid + "-md-" + mdnumber;
+			let roundcontainerid = "mc-r-tid-" + tid + "-md-" + mid;
 			let roundcontainer = document.getElementById(roundcontainerid);
 			
 			roundcontainer.remove();
@@ -2381,14 +2374,15 @@ let buildworkspaceviewmatchday = (mdcontainer, tid, mdnumber) => {
 		}else{
 			alert(delmdresp.message);
 		}
+		*/
 	})
 
 
-	buildworkspacematchdayinformation(tid, mdnumber);
+	buildworkspacematchdayinformation(tid, mid);
 
 }
 
-let buildworkspacematchdayinformation = async (tid, mdnumber) => {
+let buildworkspacematchdayinformation = async (tid, mid) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -2404,7 +2398,7 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	workspacebody.classList.add("workspace-view-matchdayinformation-body");
 
 	//get tournament information from database
-	let matchdayinformation = await getmatchday(tid, mdnumber);
+	let matchdayinformation = await getmatchday(tid, mid);
 
 	//container to store information about basic matchday information
 	let matchdayinfoinputcontainer = creatediv({
@@ -2497,7 +2491,7 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 	});
 
 	//get number of rounds of that matchday from database
-	let numberofrounds = await getnumberofrounds(tid, mdnumber);
+	let numberofrounds = await getnumberofrounds(tid, mid);
 
 	//label for number of rounds
 	let numberofroundslabel = creatediv({
@@ -2540,8 +2534,8 @@ let buildworkspacematchdayinformation = async (tid, mdnumber) => {
 
 }
 
-let getnumberofrounds = async (tid, mdnumber) => {
-	let phpinput = {tid: tid, mdnumber: mdnumber};
+let getnumberofrounds = async (tid, mid) => {
+	let phpinput = {tid: tid, mid: mid};
 
 
 	//call php script
@@ -2691,7 +2685,7 @@ let deletematchday = async (tid, mdnumber) => {
 
 }
 
-let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => {
+let buildworkspaceviewround = async (tid, mid, rid, roundcontainer) => {
 
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2732,7 +2726,7 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 
 	//create icon for round deletion 
 	let rounddeletionicon = document.createElement("div");
-	rounddeletionicon.classList.add("icon-gargabe");
+	rounddeletionicon.classList.add("icon-garbage");
 	rounddeletionicon.classList.add("icon");
 	rounddeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(rounddeletionicon);
@@ -2753,10 +2747,10 @@ let buildworkspaceviewround = async (tid, mdnumber, rnumber, roundcontainer) => 
 		}
 	})
 
-	buildworkspaceroundinformation(tid, mdnumber, rnumber);
+	buildworkspaceroundinformation(tid, mid, rid);
 }
 
-let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
+let buildworkspaceroundinformation = async (tid, mid, rid) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -2772,7 +2766,7 @@ let buildworkspaceroundinformation = async (tid, mdnumber, rnumber) => {
 	workspacebody.classList.add("workspace-view-roundinformation-body");
 
 	//get round information from database
-	let roundinformation = await getround(tid, mdnumber, rnumber);
+	let roundinformation = await getround(tid, mid, rid);
 
 	//container to store information about basic round information
 	let roundinfoinputcontainer = creatediv({
@@ -2959,10 +2953,10 @@ let deleteround = async (tid, mdnumber, rnumber) => {
 
 }
 
-let getround = async (tid, mdnumber, rnumber) => {
+let getround = async (tid, mid, rid) => {
 
 	//set data for php script
-	let requestdata = {tid: tid, mdnumber: mdnumber, rnumber: rnumber};
+	let requestdata = {tid: tid, mid: mid, rid: rid};
 
 	//call php script 
 	let phpresponse = await fetch("/lib/administration/php/getround.php", {
@@ -3815,7 +3809,7 @@ let initround = async (tid, mdnumber, rnumber) => {
 	});
 
 	//php response
-	let phpresponse = await activet.json();
+	let phpresponse = await initround.json();
 	
 	return phpresponse["result"];
 }

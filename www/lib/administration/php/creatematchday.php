@@ -54,8 +54,11 @@
 	$sql->bindParam(":mdnumber", $nextmatchday);
 	$sql->execute();
 
+	$newmid = $dbconnection->lastInsertId();
+
 	$response["result"] = 0;
-	$response["mdnumber"] = $nextmatchday;
+	$response["mid"] = $newmid;
+	$response["mdorder"] = $nextmatchday;
 	
 	echo(json_encode($response));
 ?>
