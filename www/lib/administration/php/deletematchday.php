@@ -6,51 +6,32 @@
 
 	$response = [];
 
-	//check whats the last matchday for tournament
+	//delte rounds of that matchday
 	$query = "
-		SELECT MAX(mdnumber)
-		FROM matchdays
-		WHERE tid = :tid
+		DELETE FROM rounds
+		WHERE tid = :tid AND mid = :mid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
 	$sql->execute();
-	$maxmatchday = $sql->fetch(PDO::FETCH_ASSOC);
 
-	if($maxmatchday["MAX(mdnumber)"] == $input["mdnumber"]){
+	//delte matchday
+	$query = "
+		DELETE FROM matchdays
+		WHERE tid = :tid AND mid = :mid
+	";
 
-		//delte rounds of that matchday
-		$query = "
-			DELETE FROM rounds
-			WHERE tid = :tid AND mdnumber = :mdnumber
-		";
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->execute();
 
-		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":tid", $input["tid"]);
-		$sql->bindParam(":mdnumber", $input["mdnumber"]);
-		$sql->execute();
+	//TODO delete groups / delete group players
 
-		//delte matchday
-		$query = "
-			DELETE FROM matchdays
-			WHERE tid = :tid AND mdnumber = :mdnumber
-		";
-
-		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":tid", $input["tid"]);
-		$sql->bindParam(":mdnumber", $input["mdnumber"]);
-		$sql->execute();
-
-		$response["result"] = 0;
-		$response["message"] = "Spieltag geloescht";
-
-	}else{
-
-		$response["result"] = 1;
-		$response["message"] = "Nur der letzte Spieltag kann geloescht werden";
-
-	}
+	$response["result"] = 0;
+	$response["message"] = "Spieltag geloescht";
 
 	echo(json_encode($response));
 

@@ -1038,7 +1038,6 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 		divtext: labeltext
 	})
 
-	//debugger;
 	//create close button
 	let closeicon = document.createElement("div");
 	closeicon.classList.add("icon-cross");
@@ -1283,10 +1282,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber) => {
 		expandcollapseicon(expandcontainer, polygon);
 		
 		//id of mainer container of rounds
-		let mainconterroundsids = "mc-r-tid-" + tid + "-md-" + mdnumber; 
-
-		//get container of rounds
-		let maincontainerrounds = document.getElementById(mainconterroundsids);
+		let maincontainerrounds = matchdaycontainer.nextElementSibling;
 		
 		//get visiblity state of container
 		let roundsstate = maincontainerrounds.getAttribute("data-state");
@@ -2352,29 +2348,35 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid) => 
 	matchdaydeletionicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(matchdaydeletionicon);
 	matchdaydeletionicon.addEventListener("click", async () => {
-		debugger;
-		console.log(matchdayscontainer);
-		console.log(matchdayscontainer.childNodes[0]);
-		console.log(matchdayscontainer.childNodes.length);
-		/*
-		//deletematchday
-		let delmdresp = await deletematchday(tid, mid);
+		
+		await deletematchday(tid, mid);
+		
+		//remove rounds contianer of matchday		
+		mdcontainer.nextElementSibling.remove(); 
+		//remove container of matchday
+		mdcontainer.remove(); 
 
-		if(delmdresp.result == 0){
-			//get container with rounds
-			let roundcontainerid = "mc-r-tid-" + tid + "-md-" + mid;
-			let roundcontainer = document.getElementById(roundcontainerid);
-			
-			roundcontainer.remove();
-			mdcontainer.remove();
+		//number of containers in tournament for matchdays/rounds
+		let numberofmatchdays = matchdayscontainer.childNodes.length;
 
-			//close workspace
-			closeworkspace();
+		//counter for matchday numbering
+		let currentmdnumber = 1;
 
-		}else{
-			alert(delmdresp.message);
+		//loop through containers and renumber the matchday description
+		for(let i = 0; i < numberofmatchdays; i += 2){
+			//get container
+			let matchdaydes = matchdayscontainer.childNodes[i].childNodes[2].childNodes[1];	
+			//set matchday text
+			matchdaydes.innerHTML = "Spieltag " + currentmdnumber;
+
+			//increase current md number
+			currentmdnumber++;
+
 		}
-		*/
+
+		//close workspace
+		closeworkspace();
+
 	})
 
 
@@ -2660,11 +2662,11 @@ let setmdactive = async (tid, mdnumber) => {
 
 }
 
-let deletematchday = async (tid, mdnumber) => {
+let deletematchday = async (tid, mid) => {
 
 	mddata = {
 		tid: tid,
-		mdnumber: mdnumber,
+		mid: mid,
 	}
 
 	//call php script
