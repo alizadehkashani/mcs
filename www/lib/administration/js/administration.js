@@ -2856,8 +2856,8 @@ let buildworkspaceroundinformation = async (tid, mid, rid) => {
 
 			let rounddata = {
 				tid: roundinformation.tid,
-				mdnumber: roundinformation.mdnumber,
-				rnumber: roundinformation.rnumber
+				mid: roundinformation.mid,
+				rid: roundinformation.rid
 			}
 
 			let activate = await setractive(rounddata);
