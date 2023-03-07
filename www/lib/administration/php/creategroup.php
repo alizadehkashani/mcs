@@ -13,15 +13,15 @@
 		FROM groups 
 		WHERE tid = :tid 
 		AND trackid = :trackid
-		AND mdnumber = :mdnumber
-		AND rnumber = :rnumber
+		AND mid = :mid
+		AND rid = :rid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":trackid", $data["trackid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
-	$sql->bindParam(":rnumber", $data["rnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
 	$sql->execute();
 
 	if($sql->rowCount() == 0){//currently no groups existing
@@ -35,19 +35,19 @@
 
 		//get max group 
 		$query = "
-		SELECT MAX(grouporder)
-		FROM groups 
-		WHERE tid = :tid 
-		AND trackid = :trackid
-		AND mdnumber = :mdnumber
-		AND rnumber = :rnumber
+			SELECT MAX(grouporder)
+			FROM groups 
+			WHERE tid = :tid 
+			AND trackid = :trackid
+			AND mid = :mid
+			AND rid = :rid
 		";
 		
 		$sql = $dbconnection->prepare($query);
 		$sql->bindParam(":tid", $data["tid"]);
 		$sql->bindParam(":trackid", $data["trackid"]);
-		$sql->bindParam(":mdnumber", $data["mdnumber"]);
-		$sql->bindParam(":rnumber", $data["rnumber"]);
+		$sql->bindParam(":mid", $data["mid"]);
+		$sql->bindParam(":rid", $data["rid"]);
 		$sql->execute();
 		$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 		
@@ -60,15 +60,15 @@
 
 	//insert new group 
 	$query = "
-		INSERT INTO groups (tid, trackid, mdnumber, rnumber, grouporder)
-		VALUES (:tid, :trackid, :mdnumber, :rnumber, :grouporder)
+		INSERT INTO groups (tid, trackid, mid, rid, grouporder)
+		VALUES (:tid, :trackid, :mid, :rid, :grouporder)
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":trackid", $data["trackid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
-	$sql->bindParam(":rnumber", $data["rnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
 	$sql->bindParam(":grouporder", $grouporder);
 	$sql->execute();
 

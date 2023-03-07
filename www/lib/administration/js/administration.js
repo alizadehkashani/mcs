@@ -3063,15 +3063,17 @@ let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 			//change cursor behviour to not be pointer
 			tracklabel.style.pointerEvents = "none";
 
+			let buildgroupsdata = {
+				creategroupcontainer: trackstartgroupscreatecontainer,
+				groupslistcontainer: trackstartgroupslist,
+				tid: tid,
+				trackid: tracks[i].trackid,
+				mid: mid,
+				rid: rid
+			}
+
 			//on click build groups for the track
-			await buildtrackstartgroups(
-				trackstartgroupscreatecontainer,
-				trackstartgroupslist,
-				tid,
-				tracks[i].trackid,
-				mdnumber,
-				rnumber
-				);
+			await buildtrackstartgroups(buildgroupsdata);
 
 			tracklabel.style.pointerEvents = "auto";
 
@@ -3080,46 +3082,32 @@ let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 
 }
 
-let buildtrackstartgroups = async (
-	buttoncontainer,
-	listcontainer,
-	tid,
-	trackid,
-	mdnumber,
-	rnumber) => {
+let buildtrackstartgroups = async (groupsdata) => {
 
-
-		clearelement(buttoncontainer);
-		clearelement(listcontainer);
+		clearelement(groupsdata.creategroupcontainer);
+		clearelement(groupsdata.groupslistcontainer);
 
 		//create button to create new empty group
 		let creategroupbutton = document.createElement("div");
 		creategroupbutton.classList.add("icon-plus");
 		creategroupbutton.classList.add("icon");
 		creategroupbutton.classList.add("workspaceicon");
-		buttoncontainer.appendChild(creategroupbutton);
+		groupsdata.creategroupcontainer.appendChild(creategroupbutton);
 		
 		//behviour if created group button is clicked
 		creategroupbutton.addEventListener("click", async () => {
 			//create new empty group
-			await createnewgroup(tid, trackid, mdnumber, rnumber);
+			await createnewgroup(groupsdata);
 			//rebuild start groups table
-			await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
+			await buildstartgroupstable(groupsdata);
 		})
 
 		//build start groups table
-		await buildstartgroupstable(listcontainer, tid, trackid, mdnumber, rnumber);
+		await buildstartgroupstable(groupsdata);
 
 	}
 
-let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
-
-	groupdata = {
-		tid: tid,
-		trackid: trackid,
-		mdnumber: mdnumber,
-		rnumber: rnumber
-	}
+let createnewgroup = async (groupsdata) => {
 
 	let phppath = "/lib/administration/php/creategroup.php";
 
@@ -3129,7 +3117,7 @@ let createnewgroup = async (tid, trackid, mdnumber, rnumber) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(groupdata)
+		body: JSON.stringify(groupsdata)
 	});
 
 	//php response
