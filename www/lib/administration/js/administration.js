@@ -1379,7 +1379,6 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
 		//create new matchday and return matchday number
 		let mddata = await createnewmatchday(tid);
-		debugger;
 
 		//add new matchday to navigation
 		await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1);
@@ -1389,7 +1388,7 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 	})
 }
 
-let buildsingleround = async (container, tid, mid, rid) => {
+let buildsingleround = async (container, tid, mid, rid, roundorder) => {
 
 	//create container for round
 	let roundcontainer = creatediv({
@@ -1416,7 +1415,7 @@ let buildsingleround = async (container, tid, mid, rid) => {
 
 	//add round name
 	let roundnumber = creatediv({
-		divtext: "Runde " + rid, 
+		divtext: "Runde " + roundorder, 
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: roundiconanddescription
 	})
@@ -1426,13 +1425,13 @@ let buildsingleround = async (container, tid, mid, rid) => {
 		setselectednavigation(roundcontainer, "navigation");
 		
 		//build workspace view round 
-		buildworkspaceviewround(tid, mid, rid, roundcontainer);
+		buildworkspaceviewround(container, roundcontainer, tid, mid, rid);
 
 	})				
 
 }
 
-let buildrounds = async (container, tid, md, rebuild) => {
+let buildrounds = async (container, tid, mid, rebuild) => {
 
 	//check if rounds should be rebuild
 	if(rebuild == 1){
@@ -1440,11 +1439,11 @@ let buildrounds = async (container, tid, md, rebuild) => {
 	}
 
 	//get rounds
-	let rounds = await getrounds(tid, md); 
+	let rounds = await getrounds(tid, mid); 
 	
 	//loop through rounds of matchday
 	for(let i = 0; i < rounds.length; i++){
-		buildsingleround(container, tid, md, i+1);
+		buildsingleround(container, tid, mid, rounds[i].rid, i+1);
 	}
 	
 }
@@ -1484,10 +1483,10 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 	createroundcontainer.addEventListener("click", async () => {
 
 		//create new ronud and return round number
-		let roundnumber = await createnewround(tid, mid);
+		let rounddata = await createnewround(tid, mid);
 
 		//append new round to navigation
-		buildsingleround(containerrounds, tid, mid, rid);
+		buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1);
 
 	});
 
@@ -1517,10 +1516,10 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 
 }
 
-let createnewround = async (tid, md) => {
+let createnewround = async (tid, mid) => {
 
 	//create json for php
-	let postdata = {tid: tid, md: md};
+	let postdata = {tid: tid, mid: mid};
 
 	//call php script
 	let response = await fetch("/lib/administration/php/createround.php", {
@@ -1536,7 +1535,7 @@ let createnewround = async (tid, md) => {
 	let phpresponse = await response.json();
 
 	//return round number
-	return phpresponse["rnumber"];
+	return phpresponse;
 
 }
 
@@ -2528,7 +2527,7 @@ let buildworkspacematchdayinformation = async (tid, mid) => {
 		//data of matchday
 		let mddata = {
 			tid: tid,
-			mdnumber: mdnumber,
+			mid: mid,
 			mddescription: mddescription.value
 		}
 
@@ -2558,7 +2557,7 @@ let getnumberofrounds = async (tid, mid) => {
 let updatematchday = async (mddata) => {
 
 	//call php script
-	let createplayer = await fetch("/lib/administration/php/updatematchday.php", {
+	let updatemd = await fetch("/lib/administration/php/updatematchday.php", {
 		method: 'POST',
 		header: {
 			'Accept': 'application/json',
@@ -2568,7 +2567,7 @@ let updatematchday = async (mddata) => {
 	});
 
 	//php response
-	let phpresponse = await createplayer.json();
+	let phpresponse = await updatemd.json();
 
 }
 
@@ -2687,7 +2686,7 @@ let deletematchday = async (tid, mid) => {
 
 }
 
-let buildworkspaceviewround = async (tid, mid, rid, roundcontainer) => {
+let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, rid) => {
 
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2712,7 +2711,7 @@ let buildworkspaceviewround = async (tid, mid, rid, roundcontainer) => {
 	workspaceheadvariable.appendChild(roundinformationicon);
 	roundinformationicon.addEventListener("click", () => {
 		//displays round information
-		buildworkspaceroundinformation(tid, mdnumber, rnumber);
+		buildworkspaceroundinformation(tid, mid, rid);
 	})
 
 	//create icon for startgroups 
@@ -2723,7 +2722,7 @@ let buildworkspaceviewround = async (tid, mid, rid, roundcontainer) => {
 	workspaceheadvariable.appendChild(roundstartgroupsicon);
 	roundstartgroupsicon.addEventListener("click", () => {
 		//displays round information
-		buildworkspaceroundstartgroups(tid, mdnumber, rnumber);
+		buildworkspaceroundstartgroups(tid, mid, rid);
 	})
 
 	//create icon for round deletion 
@@ -2734,19 +2733,32 @@ let buildworkspaceviewround = async (tid, mid, rid, roundcontainer) => {
 	workspaceheadvariable.appendChild(rounddeletionicon);
 	rounddeletionicon.addEventListener("click", async () => {
 
-		//deleteround
-		let delroundresp = await deleteround(tid, mdnumber, rnumber);
-		if(delroundresp.result == 0){
-			
-			//delte round container
-			roundcontainer.remove();
+		await deleteround(tid, mid, rid);
+		
+		//remove container of round
+		roundcontainer.remove(); 
 
-			//close workspace
-			closeworkspace();
+		//number round containers in matchday
+		let numberofrounds = roundscontainer.childNodes.length;
 
-		}else{
-			alert(delroundresp.message);
+		//counter for round numbering
+		let currentroundnumber = 1;
+
+		//loop through containers and renumber the round description
+		for(let i = 0; i < numberofrounds; i++){
+			//get container
+			let rounddes = roundscontainer.childNodes[i].childNodes[3].childNodes[1];	
+			//set round text text
+			rounddes.innerHTML = "Runde " + currentroundnumber;
+
+			//increase current round number
+			currentroundnumber++;
+
 		}
+
+		//close workspace
+		closeworkspace();
+		
 	})
 
 	buildworkspaceroundinformation(tid, mid, rid);
@@ -2901,13 +2913,13 @@ let buildworkspaceroundinformation = async (tid, mid, rid) => {
 
 }
 
-let updateround = async (tid, mdnumber, rnumber, rdescription)=> {
+let updateround = async (tid, mid, rid, rdescription)=> {
 
 	//data of round
 	let rdata = {
 		tid: tid,
-		mdnumber: mdnumber,
-		rnumber: rnumber,
+		mid: mid,
+		rid: rid,
 		rdescription: rdescription
 	}
 
@@ -2929,12 +2941,12 @@ let updateround = async (tid, mdnumber, rnumber, rdescription)=> {
 }
 
 
-let deleteround = async (tid, mdnumber, rnumber) => {
+let deleteround = async (tid, mid, rid) => {
 
 	rdata = {
 		tid: tid,
-		mdnumber: mdnumber,
-		rnumber: rnumber
+		mid: mid,
+		rid: rid
 	}
 
 	//call php script
@@ -3004,7 +3016,7 @@ let setractive = async (rounddata) => {
 
 }
 
-let buildworkspaceroundstartgroups = async (tid, mdnumber, rnumber) => {
+let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();

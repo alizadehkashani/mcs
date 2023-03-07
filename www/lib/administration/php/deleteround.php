@@ -6,42 +6,23 @@
 
 	$response = [];
 
-	//check whats the last round for tournament
+
+	//delte round
 	$query = "
-		SELECT MAX(rnumber)
-		FROM rounds
-		WHERE tid = :tid AND mdnumber = :mdnumber
+		DELETE FROM rounds
+		WHERE tid = :tid
+		AND mid = :mid
+		AND rid = :rid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->execute();
-	$maxmatchday = $sql->fetch(PDO::FETCH_ASSOC);
 
-	if($maxmatchday["MAX(rnumber)"] == $input["rnumber"]){
-
-		//delte round
-		$query = "
-			DELETE FROM rounds
-			WHERE tid = :tid AND mdnumber = :mdnumber AND rnumber = :rnumber
-		";
-
-		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":tid", $input["tid"]);
-		$sql->bindParam(":mdnumber", $input["mdnumber"]);
-		$sql->bindParam(":rnumber", $input["rnumber"]);
-		$sql->execute();
-
-		$response["result"] = 0;
-		$response["message"] = "Runde geloescht";
-
-	}else{
-
-		$response["result"] = 1;
-		$response["message"] = "Nur die letzte Runde kann geloescht werden";
-
-	}
+	$response["result"] = 0;
+	$response["message"] = "Runde geloescht";
 
 	echo(json_encode($response));
 

@@ -11,16 +11,18 @@
 	$query = "
 		SELECT rnumber 
 		FROM rounds 
-		WHERE tid = :tid AND mdnumber = :md
+		WHERE tid = :tid AND mid = :mid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
-	$sql->bindParam(":md", $data["md"]);
+	$sql->bindParam(":mid", $data["mid"]);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
+	
+	$numberofrounds = $sql->rowCount();
 
-	if($sql->rowCount() == 0){//currently no rounds are existing
+	if($numberofrounds == 0){//currently no rounds are existing
 		//if there are no rounds, set rounds to one
 		$nextround = 1;
 
@@ -33,12 +35,12 @@
 		$query = "
 		SELECT MAX(rnumber)
 		FROM rounds 
-		WHERE tid = :tid AND mdnumber = :md
+		WHERE tid = :tid AND mid = :mid
 		";
 		
 		$sql = $dbconnection->prepare($query);
 		$sql->bindParam(":tid", $data["tid"]);
-		$sql->bindParam(":md", $data["md"]);
+		$sql->bindParam(":mid", $data["mid"]);
 		$sql->execute();
 		$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 		
@@ -51,18 +53,22 @@
 
 	//insert new round 
 	$query = "
-		INSERT INTO rounds (tid, mdnumber, rnumber)
-		VALUES (:tid, :md, :rnumber)
+		INSERT INTO rounds (tid, mid, rnumber)
+		VALUES (:tid, :mid, :rnumber)
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
-	$sql->bindParam(":md", $data["md"]);
+	$sql->bindParam(":mid", $data["mid"]);
 	$sql->bindParam(":rnumber", $nextround);
 	$sql->execute();
 
+	$newrid = $dbconnection->lastInsertId();
+
 	$response["result"] = 0;
+	$response["rid"] = $newrid;
 	$response["rnumber"] = $nextround;
+	$response["numberofrounds"] = $numberofrounds;
 	
 	echo(json_encode($response));
 ?>

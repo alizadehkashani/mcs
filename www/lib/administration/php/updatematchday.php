@@ -15,12 +15,12 @@
 	$query = "
 		UPDATE matchdays
 		SET mddescription = :mddescription
-		WHERE tid = :tid AND mdnumber = :mdnumber
+		WHERE tid = :tid AND mid = :mid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
 	$sql->bindParam(":mddescription", $input["mddescription"]);
 	$sql->execute();
 
