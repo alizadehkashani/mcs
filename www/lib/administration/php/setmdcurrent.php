@@ -7,9 +7,6 @@
 	
 	$data = file_get_contents("php://input");
 	$input = json_decode($data, true);
-
-	$zero = 0;
-	$one = 1;
 	
 	//array for response
 	$response = [];
@@ -23,21 +20,21 @@
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":zero", $zero);
-	$sql->bindParam(":one", $one);
+	$sql->bindValue(":zero", 0);
+	$sql->bindValue(":one", 1);
 	$sql->execute();
 	
 	//set new md current	
 	$query = "
 		UPDATE matchdays
 		SET mdcurrent = :mdcurrent 
-		WHERE tid = :tid AND mdnumber = :mdnumber 
+		WHERE tid = :tid AND mid = :mid 
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
-	$sql->bindParam(":mdcurrent", $input["mdcurrent"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindValue(":mdcurrent", 1);
 	$sql->execute();
 	
 	$response["result"] = 0;

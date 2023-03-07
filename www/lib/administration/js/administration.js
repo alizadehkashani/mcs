@@ -2472,7 +2472,7 @@ let buildworkspacematchdayinformation = async (tid, mid) => {
 
 		//if md is not actifve, allows to activate
 		if(matchdayinformation.mdcurrent == 0){
-			let activate = await setmdactive(matchdayinformation.tid, matchdayinformation.mdnumber);
+			let activate = await setmdactive(tid, mid);
 			//if md was succsessfully activated
 			//change icon and set X
 			if(activate == 0){
@@ -2636,12 +2636,11 @@ let delteplayer = async (modal, tid, cid, playernumber) => {
 
 }
 
-let setmdactive = async (tid, mdnumber) => {
+let setmdactive = async (tid, mid) => {
 
 	mddata = {
 		tid: tid,
-		mdnumber: mdnumber,
-		mdcurrent: 1
+		mid: mid,
 	}
 
 	//call php script
