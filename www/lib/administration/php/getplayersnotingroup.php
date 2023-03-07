@@ -17,8 +17,8 @@
 		ON groupplayers.groupid = groups.groupid
 		WHERE groups.tid = :tid
 		AND groups.trackid = :trackid
-		AND groups.mdnumber = :mdnumber
-		AND groups.rnumber = :rnumber)
+		AND groups.mid = :mid
+		AND groups.rid = :rid)
 		ORDER BY playernumber ASC
 		";
 
@@ -26,8 +26,8 @@
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":trackid", $input["trackid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
-	$sql->bindParam(":rnumber", $input["rnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->execute();
 	$players = $sql->fetchAll();
 

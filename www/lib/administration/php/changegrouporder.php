@@ -21,8 +21,8 @@
 	$query = "SELECT * FROM groups
 		WHERE tid = :tid
 		AND trackid = :trackid
-		AND mdnumber = :mdnumber
-		AND rnumber = :rnumber
+		AND mid = :mid
+		AND rid = :rid
 		AND grouporder" . $operand . ":grouporder
 		ORDER BY grouporder " . $order .
 		" LIMIT 1
@@ -31,8 +31,8 @@
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":trackid", $data["trackid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
-	$sql->bindParam(":rnumber", $data["rnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
 	$sql->bindParam(":grouporder", $data["grouporder"]);
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);

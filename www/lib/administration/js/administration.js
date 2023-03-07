@@ -3145,7 +3145,7 @@ let getstartgroups = async (groupsdata) => {
 }
 
 let buildstartgroupstable = async (groupsdata) => {
-	debugger;
+	
 	//clear list
 	clearelement(groupsdata.groupslistcontainer);
 
@@ -3159,8 +3159,8 @@ let buildstartgroupstable = async (groupsdata) => {
 			groupid: groups[i].groupid,
 			tid: groups[i].tid,
 			trackid: groups[i].trackid,
-			mdnumber: groups[i].mdnumber,
-			rnumber: groups[i].rnumber,
+			mid: groups[i].mid,
+			rid: groups[i].rid,
 			grouporder: groups[i].grouporder
 		}
 
@@ -3250,10 +3250,11 @@ let buildstartgroupstable = async (groupsdata) => {
 		//add eventlistner to move group up
 		polygonsvgup.addEventListener("click", async () => {
 
+			
 			let groupmove = await changegrouporder(1, groupdata);
 
 			if(groupmove.result == 0){
-				await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+				await buildstartgroupstable(groupsdata);
 			}
 		});
 
@@ -3276,7 +3277,7 @@ let buildstartgroupstable = async (groupsdata) => {
 			let groupmove = await changegrouporder(0, groupdata);
 
 			if(groupmove.result == 0){
-				await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+				await buildstartgroupstable(groupsdata);
 			}
 		});
 
@@ -3295,7 +3296,8 @@ let buildstartgroupstable = async (groupsdata) => {
 		addplayertogroupbuttoncontainer.appendChild(addplayertogroupbutton);
 		
 		addplayertogroupbutton.addEventListener("click", async () => {
-			await addplayertogroupmodal(playerscontainer, tid, trackid, mdnumber, rnumber, groups[i]["groupid"]);
+
+			await addplayertogroupmodal(groupsdata, playerscontainer, groups[i]["groupid"]);
 		})
 
 		//only show button when mous hovers over group
@@ -3320,17 +3322,9 @@ let buildstartgroupstable = async (groupsdata) => {
 		removegroupbuttoncontainer.appendChild(deletegroupbutton);
 		
 		deletegroupbutton.addEventListener("click", async () => {
-			//TODO function to delte group
-			let groupinfo = {
-				tid: tid,
-				trackid: trackid,
-				mdnumber: mdnumber,
-				rnumber: rnumber,
-				groupid: groups[i]["groupid"]
-			}
 
-			await removegroup(groupcontainer, playerscontainer, groupinfo);	
-			await buildstartgroupstable(tablecontainer, tid, trackid, mdnumber, rnumber);
+			await removegroup(groupsdata, groups[i]["groupid"], groupcontainer, playerscontainer);	
+			await buildstartgroupstable(groupsdata);
 		})
 
 		changeopacityonhover(groupcontainer, removegroupbuttoncontainer);
@@ -3469,7 +3463,7 @@ let startgroupsinsertplayer = async (container, groupid, playerdata) => {
 	changeopacityonhover(playercontainer, changeorderplayercontainer);
 }
 
-let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnumber, groupid) => {
+let addplayertogroupmodal = async (groupsdata, playerscontainer, groupid) => {
 	
 	//turn on overlay
 	toggleoverlay(true);
@@ -3482,7 +3476,7 @@ let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnu
 	);
 
 	//get all players which are currently not in a group for that track
-	let players = await getplayersnotingroup(tid, trackid, mdnumber, rnumber, groupid)
+	let players = await getplayersnotingroup(groupsdata)
 
 	for(let i = 0; i < players.length; i++){
 		let playercontainer = creatediv({
@@ -3510,7 +3504,7 @@ let addplayertogroupmodal = async (playerscontainer, tid, trackid, mdnumber, rnu
 		//behaviour if add player button is clicked
 		addplayertogroupbutton.addEventListener("click", async () => {
 			//add player to current group
-			await addplayertogroup(tid, groupid, players[i]["playernumber"]);		
+			await addplayertogroup(groupsdata.tid, groupid, players[i]["playernumber"]);		
 		
 			//rebuild list of players in background
 			buildgroupplayers(playerscontainer, groupid);
@@ -3555,14 +3549,8 @@ let addplayertogroup = async (tid, groupid, playernumber) => {
 	return phpresponse;
 }
 
-let getplayersnotingroup = async (tid, trackid, mdnumber, rnumber) => {
+let getplayersnotingroup = async (groupsdata) => {
 
-	phpdata = {
-		tid: tid,
-		trackid: trackid,
-		mdnumber: mdnumber,
-		rnumber: rnumber
-	}
 
 	let phppath = "/lib/administration/php/getplayersnotingroup.php";
 
@@ -3572,7 +3560,7 @@ let getplayersnotingroup = async (tid, trackid, mdnumber, rnumber) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(phpdata)
+		body: JSON.stringify(groupsdata)
 	});
 
 	//php response
@@ -3630,14 +3618,14 @@ let removeplayerfromgroup = async (groupid, playernumber) => {
 	return phpresponse;
 }
 
-let removegroup = async (groupcontainer, playercontainer, groupinfo) => {
+let removegroup = async (groupsdata, groupid, groupcontainer, playercontainer) => {
 
 	phpdata = {
-		tid: groupinfo.tid,
-		trackid: groupinfo.trackid,
-		mdnumber: groupinfo.mdnumber,
-		rnumber: groupinfo.rnumber,
-		groupid: groupinfo.groupid,
+		tid: groupsdata.tid,
+		trackid: groupsdata.trackid,
+		mid: groupsdata.mid,
+		rid: groupsdata.rid,
+		groupid: groupid
 
 	}
 
@@ -3655,7 +3643,11 @@ let removegroup = async (groupcontainer, playercontainer, groupinfo) => {
 	//php response
 	let phpresponse = await addplayertogroup.json();
 
+	//remove container of group
 	groupcontainer.remove();
+
+	//remove container of players
+	playercontainer.remove();
 
 	return phpresponse;
 
@@ -3702,16 +3694,8 @@ let changeplayerorder = async (direction, groupid, playernumber, playerorder) =>
 }
 
 let changegrouporder = async (direction, groupdata) => {
-
-	phpdata = {
-		direction: direction,
-		groupid: groupdata.groupid,
-		tid: groupdata.tid,
-		trackid: groupdata.trackid,
-		mdnumber: groupdata.mdnumber,
-		rnumber: groupdata.rnumber,
-		grouporder: groupdata.grouporder
-	}
+	
+	groupdata.direction = direction;
 
 	let phppath = "/lib/administration/php/changegrouporder.php";
 
@@ -3721,7 +3705,7 @@ let changegrouporder = async (direction, groupdata) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(phpdata)
+		body: JSON.stringify(groupdata)
 	});
 
 	//php response

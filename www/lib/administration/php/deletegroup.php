@@ -23,16 +23,16 @@
 		DELETE FROM groups
 		WHERE tid = :tid 
 		AND trackid = :trackid
-		AND mdnumber = :mdnumber
-		AND rnumber = :rnumber
+		AND mid = :mid
+		AND rid = :rid
 		AND groupid = :groupid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":trackid", $input["trackid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
-	$sql->bindParam(":rnumber", $input["rnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->bindParam(":groupid", $input["groupid"]);
 	$sql->execute();
 
