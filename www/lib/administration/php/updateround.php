@@ -13,13 +13,15 @@
 	$query = "
 		UPDATE rounds
 		SET rdescription = :rdescription
-		WHERE tid = :tid AND mdnumber = :mdnumber AND rnumber = :rnumber
+		WHERE tid = :tid 
+		AND mid = :mid 
+		AND rid = :rid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mdnumber", $input["mdnumber"]);
-	$sql->bindParam(":rnumber", $input["rnumber"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->bindParam(":rdescription", $input["rdescription"]);
 	$sql->execute();
 
