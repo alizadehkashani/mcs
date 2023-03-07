@@ -3125,14 +3125,7 @@ let createnewgroup = async (groupsdata) => {
 	
 }
 
-let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
-	
-	groupdata = {
-		tid: tid,
-		trackid: trackid,
-		mdnumber: mdnumber,
-		rnumber: rnumber
-	}
+let getstartgroups = async (groupsdata) => {
 
 	let phppath = "/lib/administration/php/getstartgroups.php";
 
@@ -3142,7 +3135,7 @@ let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(groupdata)
+		body: JSON.stringify(groupsdata)
 	});
 
 	//php response
@@ -3151,13 +3144,13 @@ let getstartgroups = async (tid, trackid, mdnumber, rnumber) => {
 	return phpresponse;
 }
 
-let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumber) => {
-
+let buildstartgroupstable = async (groupsdata) => {
+	debugger;
 	//clear list
-	clearelement(tablecontainer);
+	clearelement(groupsdata.groupslistcontainer);
 
 	//get groups from db
-	let groups = await getstartgroups(tid, trackid, mdnumber, rnumber);
+	let groups = await getstartgroups(groupsdata);
 
 	//loop through groups and build table
 	for(let i = 0; i < groups.length; i++){
@@ -3173,13 +3166,13 @@ let buildstartgroupstable = async (tablecontainer, tid, trackid, mdnumber, rnumb
 
 		//container showing group basic data
 		let groupcontainer = creatediv({
-			appendto: tablecontainer,
+			appendto: groupsdata.groupslistcontainer,
 			divclass: ["trackstartgroupcontainer"]
 		});
 
 		//contaienr showing players withing group
 		let playerscontainer = creatediv({
-			appendto: tablecontainer,
+			appendto: groupsdata.groupslistcontainer,
 		});
 
 		//create container for expand/collapse control

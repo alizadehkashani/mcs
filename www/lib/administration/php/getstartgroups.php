@@ -4,18 +4,19 @@
 	$json = file_get_contents("php://input");
 	$data = json_decode($json, true);
 
-	$sql = $dbconnection->prepare("
+	$query = "
 		SELECT * FROM groups 
 		WHERE tid = :tid 
 		AND trackid = :trackid
-		AND mdnumber = :mdnumber 
-		AND rnumber = :rnumber
-		ORDER BY grouporder ASC"
-	);
+		AND mid = :mid 
+		AND rid = :rid
+		ORDER BY grouporder ASC";
+
+	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":trackid", $data["trackid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
-	$sql->bindParam(":rnumber", $data["rnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
