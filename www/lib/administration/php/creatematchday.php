@@ -19,8 +19,9 @@
 	$sql->execute();
 	$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+	$numberofmatchdays = $sql->rowCount();
 	
-	if($sql->rowCount() == 0){//currently no matchdays are existing
+	if($numberofmatchdays == 0){//currently no matchdays are existing
 		//if there are no matchdays, set matchday to one
 		$nextmatchday = 1;
 		
@@ -59,6 +60,7 @@
 	$response["result"] = 0;
 	$response["mid"] = $newmid;
 	$response["mdorder"] = $nextmatchday;
+	$response["numberofmatchdays"] = $numberofmatchdays;
 	
 	echo(json_encode($response));
 ?>

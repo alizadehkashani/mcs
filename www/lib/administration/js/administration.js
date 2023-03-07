@@ -1379,9 +1379,10 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
 		//create new matchday and return matchday number
 		let mddata = await createnewmatchday(tid);
+		debugger;
 
 		//add new matchday to navigation
-		await buildsinglematchday(containerdays, tid, mddata["mid"], mddata["mdorder"]);
+		await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1);
 
 		//build initial rounds
 		await buildroundsinit(containerdays, tid, mddata["mid"]);
