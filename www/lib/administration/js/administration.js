@@ -2993,8 +2993,8 @@ let setractive = async (rounddata) => {
 
 	rdata = {
 		tid: rounddata.tid,
-		mdnumber: rounddata.mdnumber,
-		rnumber: rounddata.rnumber,
+		mid: rounddata.mid,
+		rid: rounddata.rid,
 		rcurrent: 1
 	}
 

@@ -5,7 +5,7 @@
 	$data = json_decode($json, true);
 
 	$result = [];
-	print_r($data);
+	
 	//reset all current groups of round
 	$query = "
 		UPDATE groups

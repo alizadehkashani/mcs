@@ -1,6 +1,6 @@
 <?php
 	//get db information
-	require("../../../lib/dbconfig.php");
+	require("../../lib/dbconfig.php");
 	
 	$data = file_get_contents("php://input");
 	$input = json_decode($data, true);
@@ -20,42 +20,28 @@
 	$sql->bindValue(":one", 1);
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
-
-
+	
 	//loop through tracks and get players
 	for($i = 0; $i < count($tracks); $i++){
 
 		$query = "
-			SELECT groups.trackid, players.playernumber
+			SELECT groups.groupid, groupplayers.playernumber, players.surname, players.firstname
 			FROM groups 
+			INNER JOIN tournaments ON groups.tid = tournaments.tid
+			INNER JOIN matchdays ON groups.mid = matchdays.mid
+			INNER JOIN rounds ON groups.rid = rounds.rid
+			INNER JOIN tracks ON groups.trackid = tracks.trackid
 			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
-			INNER JOIN players ON players.playernumber = groupplayers.playernumber
-			INNER JOIN matchdays on groups.mdnumber = matchdays.mdnumber
-			INNER JOIN rounds on groups.rnumber = rounds.rnumber
-			WHERE groups.tid = :tid 
-			AND groups.currentgroup = :one 
-			AND groups.trackid = :trackid
+			INNER JOIN players ON groupplayers.playernumber = players.playernumber
+			WHERE tournaments.tcurrent = :one
+			AND groups.currentgroup = :one
 			AND matchdays.mdcurrent = :one
 			AND rounds.rcurrent = :one
+			AND tracks.trackid = :trackid
+			ORDER BY groupplayers.playerorder ASC
 			";
-		/* 
-		$query = "
-			SELECT groups.trackid, players.playernumber
-			FROM groups 
-			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
-			INNER JOIN players ON players.playernumber = groupplayers.playernumber
-			INNER JOIN matchdays on groups.mdnumber = matchdays.mdnumber
-			INNER JOIN rounds on groups.rnumber = rounds.rnumber
-			WHERE groups.tid = :tid 
-			AND groups.currentgroup = :one 
-			AND groups.trackid = :trackid
-			AND matchdays.mdcurrent = :one
-			AND rounds.rcurrent = :one
-			";
-		*/
 
 		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":tid", $tracks[$i]["tid"]);
 		$sql->bindValue(":one", 1);
 		$sql->bindParam(":trackid", $tracks[$i]["trackid"]);
 		$sql->execute();
