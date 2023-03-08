@@ -3768,12 +3768,12 @@ let getcurrenttournamentnameheadercontainer = () => {
 	return container;
 }
 
-let initround = async (tid, mdnumber, rnumber) => {
+let initround = async (tid, mid, rid) => {
 
 	rdata = {
 		tid: tid,
-		mdnumber: mdnumber,
-		rnumber: rnumber,
+		mid: mid,
+		rid: rid,
 	}
 
 	//call php script
