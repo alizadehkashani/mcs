@@ -7,51 +7,92 @@
 
 	$response = [];
 	
-	//get tracks of tournament
+	
+	//get current groups of the active tournament
 	$query = "
-		SELECT tracks.trackid, tournaments.tid
+		SELECT tracks.trackid, tracks.trackdescription
 		FROM tracks
 		INNER JOIN tournaments ON tracks.tid = tournaments.tid
 		WHERE tournaments.tcurrent = :one
+		ORDER BY tracks.trackid
 		";
 
+
 	$sql = $dbconnection->prepare($query);
-	//$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindValue(":one", 1);
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
+
+	$response["tracks"] = $tracks;
+
+	//get current groups of the active tournament
+	$query = "
+		SELECT tournaments.tid, tracks.trackid, groups.groupid, rounds.rid, groups.grouporder
+		FROM tournaments
+		INNER JOIN matchdays ON tournaments.tid = matchdays.tid
+		INNER JOIN rounds ON matchdays.mid = rounds.mid
+		INNER JOIN groups ON groups.rid = rounds.rid
+		INNER JOIN tracks ON groups.trackid = tracks.trackid
+		WHERE tournaments.tcurrent = :one
+		AND matchdays.mdcurrent = :one
+		AND rounds.rcurrent = :one
+		AND groups.currentgroup = :one
+		ORDER BY tracks.trackid
+		";
+
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindValue(":one", 1);
+	$sql->execute();
+	$groups = $sql->fetchAll(PDO::FETCH_ASSOC);	
 	
 	//loop through tracks and get players
-	for($i = 0; $i < count($tracks); $i++){
+	for($i = 0; $i < count($groups); $i++){
 
+		//get current group
 		$query = "
-			SELECT groups.groupid, groupplayers.playernumber, players.surname, players.firstname
+			SELECT players.playernumber, players.surname, players.firstname
 			FROM groups 
-			INNER JOIN tournaments ON groups.tid = tournaments.tid
-			INNER JOIN matchdays ON groups.mid = matchdays.mid
-			INNER JOIN rounds ON groups.rid = rounds.rid
-			INNER JOIN tracks ON groups.trackid = tracks.trackid
 			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
 			INNER JOIN players ON groupplayers.playernumber = players.playernumber
-			WHERE tournaments.tcurrent = :one
-			AND groups.currentgroup = :one
-			AND matchdays.mdcurrent = :one
-			AND rounds.rcurrent = :one
-			AND tracks.trackid = :trackid
+			WHERE groups.groupid = :currentgroup
 			ORDER BY groupplayers.playerorder ASC
 			";
 
 		$sql = $dbconnection->prepare($query);
-		$sql->bindValue(":one", 1);
-		$sql->bindParam(":trackid", $tracks[$i]["trackid"]);
+		$sql->bindParam(":currentgroup", $groups[$i]["groupid"]);
 		$sql->execute();
 		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-		$response[$i] = $players;
-		print_r($players);
+		$response["current"][$i] = $players;
+
+		//get next group
+		$query = "
+			SELECT players.playernumber, players.surname, players.firstname
+			FROM groups 
+			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
+			INNER JOIN players ON groupplayers.playernumber = players.playernumber
+			WHERE groups.groupid = (
+						SELECT groupid
+						FROM groups
+						WHERE rid = :currentrid 
+						AND grouporder > :currentgrouporder 
+						ORDER BY grouporder ASC
+						LIMIT 1
+						)
+			ORDER BY groupplayers.playerorder ASC
+			";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":currentrid", $groups[$i]["rid"]);
+		$sql->bindParam(":currentgrouporder", $groups[$i]["grouporder"]);
+		$sql->execute();
+		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$response["next"][$i] = $players;
 	}
 
 
-	//echo(json_encode($response));
+	echo(json_encode($response));
 ?>
 
