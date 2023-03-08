@@ -11,15 +11,15 @@
 		UPDATE groups
 		SET currentgroup = :zero
 		WHERE tid = :tid
-		AND mdnumber = :mdnumber
-		AND rnumber = :rnumber
+		AND mid = :mid
+		AND rid = :rid
 		";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindValue(":zero", 0);
 	$sql->bindParam(":tid", $data["tid"]);
-	$sql->bindParam(":mdnumber", $data["mdnumber"]);
-	$sql->bindParam(":rnumber", $data["rnumber"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
 	$sql->execute();
 		
 	//get tracks of tournament
@@ -42,16 +42,16 @@
 			UPDATE groups 
 			SET currentgroup = :one
 			WHERE tid = :tid
-			AND mdnumber = :mdnumber
-			AND rnumber = :rnumber 
+			AND mid = :mid
+			AND rid = :rid 
 			AND trackid = :trackid
 			AND groupid =
 				(SELECT groupid
 					FROM groups
 					WHERE tid = :tid
 					AND trackid = :trackid
-					AND mdnumber = :mdnumber
-					AND rnumber = :rnumber 
+					AND mid = :mid
+					AND rid = :rid 
 					ORDER BY grouporder ASC
 					LIMIT 1)
 					
@@ -60,8 +60,8 @@
 		$sql = $dbconnection->prepare($query);
 		$sql->bindValue(":one", 1);
 		$sql->bindParam(":tid", $data["tid"]);
-		$sql->bindParam(":mdnumber", $data["mdnumber"]);
-		$sql->bindParam(":rnumber", $data["rnumber"]);
+		$sql->bindParam(":mid", $data["mid"]);
+		$sql->bindParam(":rid", $data["rid"]);
 		$sql->bindParam(":trackid", $tracks[$i]["trackid"]);
 		$sql->execute();
 		$result = $sql->fetch(PDO::FETCH_ASSOC);

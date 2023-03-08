@@ -2888,7 +2888,7 @@ let buildworkspaceroundinformation = async (tid, mid, rid) => {
 	roundinfoinputcontainer.appendChild(initbutton);
 
 	initbutton.addEventListener("click", async () => {
-		initround(tid, mdnumber, rnumber);	
+		initround(tid, mid, rid);	
 	});
 
 	//create container for done button
@@ -2908,7 +2908,7 @@ let buildworkspaceroundinformation = async (tid, mid, rid) => {
 	donebuttoncontainer.addEventListener("click", () =>{
 
 		//update round information
-		updateround(tid, mdnumber, rnumber, rdescription.value);
+		updateround(tid, mid, rid, rdescription.value);
 	})
 
 }
