@@ -13,7 +13,7 @@
     <body>
 	<div id = "displaymaincontainer">
 		<div id = "displayheadmaincontainer">hi</div>
-		<div id = "displaygroupsmaincontainer">hi</div>
+		<div id = "displaygroupsmaincontainer"></div>
 		<div id = "displayfootmaincontainer">hi</div>
 	</div>
     </body>

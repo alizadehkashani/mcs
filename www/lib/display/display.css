@@ -10,9 +10,60 @@
 
 #displaygroupsmaincontainer{
 	flex-grow: 1;
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	grid-template-rows: 1fr;
 }
 
 #displayfootmaincontainer{
 	height: 10vh;
 }
 
+.track-main-container{
+	display: grid;
+	grid-template-rows: 5vh 1fr;
+	grid-template-columns: 1fr;
+}
+.track-description{
+	color: var(--mcscolor);
+	font-weight: bolder;
+	font-size: 30px;
+
+}
+
+.start-groups-container{
+	display: grid;
+	grid-template-rows: 1fr 1fr;
+	grid-template-columns: 1fr;
+}
+
+.individual-group-container{
+	display: grid;
+	grid-auto-columns: 1fr;
+
+	margin: 10px;
+	border-radius: 25px;
+}
+
+.current-group-background{
+	background-color: var(--mcscolorlight);
+}
+
+.next-group-background{
+	background-color: var(--mcsgreylight);
+}
+
+.player-container{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-rows: 1fr;
+}
+
+.group-description{
+	font-weight: bolder;
+}
+
+.player-text{
+	font-size: 2vh;
+}
