@@ -1,4 +1,4 @@
-<?php
+<php
     
 ?>
 
@@ -14,7 +14,7 @@
 	<div id = "displaymaincontainer">
 		<div id = "displayheadmaincontainer">hi</div>
 		<div id = "displaygroupsmaincontainer"></div>
-		<div id = "displayfootmaincontainer">hi</div>
+		<div id = "displayfootmaincontainer"></div>
 	</div>
     </body>
 </html>

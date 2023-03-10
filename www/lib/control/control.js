@@ -19,7 +19,6 @@ let createfoot = () => {
 
 let getcurrentdata = async () => {
 
-
 	//call php script
 	let phppath = "/lib/getcurrentdata.php";
 	let currenttournamentdata = await fetch(phppath, {

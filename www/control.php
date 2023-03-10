@@ -5,13 +5,17 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="lib/mcs.css"></script>
-        <link rel="stylesheet" type="text/css" href="lib/control/css/control.css" defer></script>
-        <script src="lib/mcs.js"></script>
-        <script src="lib/control/js/control.js"></script>
+        <link rel="stylesheet" type="text/css" href="lib/control/control.css" defer></script>
+        <script src="lib/mcs.js" defer></script>
+        <script src="lib/control/control.js" defer></script>
         <title>Steuerung</title>   
     </head>
     <body>
-       <div id="control"></div>
+	<div id = "displaymaincontainer">
+		<div id = "displayheadmaincontainer">hi</div>
+		<div id = "displaygroupsmaincontainer"></div>
+		<div id = "displayfootmaincontainer"></div>
+	</div>
     </body>
 </html>
 
