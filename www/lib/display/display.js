@@ -61,9 +61,9 @@ let checkifrebuild = async () => {
 	let tinfo = await gettinfo();
 
 	//test if tournament has changed
-	if(tinfo.tid = gettidfromsession()){
-		console.log("tournament has not changed");
-		//buildgroups();
+	if(tinfo.tid != gettidfromsession()){
+		console.log("tournament has changed");
+		buildgroups();
 		return;
 	}
 	
