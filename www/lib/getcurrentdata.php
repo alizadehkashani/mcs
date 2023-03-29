@@ -7,7 +7,6 @@
 
 	$response = [];
 	
-	
 	//get current groups of the active tournament
 	$query = "
 		SELECT tracks.trackid, tracks.trackdescription
@@ -95,4 +94,3 @@
 
 	echo(json_encode($response));
 ?>
-

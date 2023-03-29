@@ -19,7 +19,6 @@ let createfoot = () => {
 
 let getcurrentdata = async () => {
 
-
 	//call php script
 	let phppath = "/lib/getcurrentdata.php";
 	let currenttournamentdata = await fetch(phppath, {
@@ -37,8 +36,69 @@ let getcurrentdata = async () => {
 	return phpresponse;
 }
 
+let setsessiontinfo = (tid, mid, rid) => {
+	sessionStorage.setItem("tid", tid);
+	sessionStorage.setItem("mid", mid);
+	sessionStorage.setItem("rid", rid);
+
+}
+
+let setsessiontrackgroup = (trackid, groupid) => {
+	sessionStorage.setItem("track" + trackid + "group", groupid);
+}
+
+let clearsessionstorage = () => {
+	window.sessionStorage.clear();
+}
+
+let gettidfromsession = () => sessionStorage.tid;
+let getmidfromsession = () => sessionStorage.mid;
+let getridfromsession = () => sessionStorage.rid;
+
+let checkifrebuild = async () => {
+	
+	//get current tournament information
+	let tinfo = await gettinfo();
+
+	//test if tournament has changed
+	if(tinfo.tid = gettidfromsession()){
+		console.log("tournament has not changed");
+		//buildgroups();
+		return;
+	}
+	
+	//test if matchday has changed
+	//test if round has changed
+	
+	//check if any group has changed
+
+}
+
 let buildgroups = async () => {
+	//clear session storage
+	clearsessionstorage();
+
+	//get current tournament information
+	let tinfo = await gettinfo();
+	
+	//set session storage with tournament info
+	setsessiontinfo(tinfo["tid"], tinfo["mid"], tinfo["rid"]);
+
+	//get current groups of tracks
+	let trackgroups = await getcurrentgrouptrack();
+	
+	//set current groups of tracks in session
+	for(let i = 0; i < trackgroups.length; i++){
+		setsessiontrackgroup(trackgroups[i]["trackid"], trackgroups[i]["groupid"]);
+	}
+
+	//get main container from page
 	let groupscontainer = getgroupsmaincontainer();
+	
+	//clear container
+	clearelement(groupscontainer);
+
+	//get current data from database
 	let groupsdata = await getcurrentdata();	
 	
 	for(i = 0; i < groupsdata.tracks.length; i++){
@@ -50,16 +110,23 @@ let buildgroups = async () => {
 		//add track descirption
 		let trackdescription = createtrackdescription(trackmaincontainer, trackname );
 		//create container for current and next groups
-		let startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
+		window.startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
 
 		let cgrpdes = "Aktuelle Gruppe";
 		let cgrpclass = "current-group-background";
-		createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
+		if(groupsdata["current"][i] != undefined){
+			createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
+		}else{
+			break;
+		}
 
 		let ngrpdes = "N&aumlchste Gruppe";
 		let ngrpclass = "next-group-background";
-		createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
+		if(groupsdata["next"][i].length != 0){
+			createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
+		}
 	}
+
 }
 
 let createsinglegroup = (parent, groupdata, groupdescription, groupclass) => {	
@@ -139,7 +206,55 @@ let createtrackdescription = (parent, description) => {
 
 	});
 
+};
+
+let gettinfo = async () => {
+
+	//call php script
+	let phppath = "/lib/getcurrenttournamentinfo.php";
+	let tinfo = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify()
+	});
+
+	//php response
+	let response = await tinfo.json();
+	
+	return response;
+
+}
+
+let getcurrentgrouptrack = async () => {
+
+	//call php script
+	let phppath = "/lib/getcurrentgrouptrack.php";
+	let trackgroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify()
+	});
+
+	//php response
+	let response = await trackgroup.json();
+	
+	return response;
+
+}
+let rebuild = async () => {
+	let rebuild = window.setInterval(async function(){
+		await checkifrebuild();
+	}, 1000);
 }
 
 DOMready(buildgroups);
+DOMready(rebuild);
 DOMready(createfoot);
+
+//DOMready(rebuild);
