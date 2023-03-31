@@ -48,6 +48,7 @@
 .start-groups-container{
 	display: grid;
 	grid-column-start: 2;
+	grid-row-start: 1;
 	grid-template-rows: 1fr 1fr;
 	grid-template-columns: 1fr;
 }
@@ -62,6 +63,14 @@
 
 .current-group-background{
 	background-color: var(--mcscolorlight);
+}
+
+.current-group-text::after{
+	content: "Aktuelle Gruppe";
+}
+
+.next-group-text::after{
+	content: "N&aumlchste Gruppe";
 }
 
 .next-group-background{
@@ -82,4 +91,20 @@
 
 .player-text{
 	font-size: 2vh;
+}
+
+.control-arrow-back{
+	grid-column-start: 1;
+}
+
+.control-arrow-forward{
+	grid-column-start: 3;
+}
+
+.icon-arrow-back{
+	background: no-repeat center url("/../lib/assets/arrow_back.svg");
+}
+
+.icon-arrow-forward{
+	background: no-repeat center url("/../lib/assets/arrow_forward.svg");
 }

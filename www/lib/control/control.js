@@ -60,27 +60,54 @@ let buildgroups = async () => {
 		let trackdescription = createtrackdescription(trackmaincontainer, trackname );
 		//create control for control and group
 		let groupcontrolcontainer = creategroupcontrolcontainer(trackmaincontainer);
+
+		//create back arrow
+		createbackarrow(groupcontrolcontainer);
+		
 		//create container for current and next groups
 		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
 
-		let cgrpdes = "Aktuelle Gruppe";
-		let cgrpclass = "current-group-background";
+		//create container for arrow button back
+		let forwardarrow = creatediv({
+			appendto: groupcontrolcontainer,
+			divclass: ["icon-arrow-forward", "control-arrow-forward"]
+		});
+		
 		if(groupsdata["current"][i] != undefined){
-			createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
+			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
 		}else{
 			break;
 		}
 
-		let ngrpdes = "N&aumlchste Gruppe";
-		let ngrpclass = "next-group-background";
 		if(groupsdata["next"][i].length != 0){
-			createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
+			createsinglegroup(startgroupscontainer, groupsdata["next"][i], 1);
 		}
 	}
 
 }
 
-let createsinglegroup = (parent, groupdata, groupdescription, groupclass) => {	
+let createbackarrow = (parent) => {
+	let backarrow = creatediv({
+		appendto: parent,
+		divclass: ["icon-arrow-back", "control-arrow-back"]
+	});
+
+	backarrow.addEventListener("click", () => {
+		console.log("hi");
+	});
+
+}
+
+let createsinglegroup = (parent, groupdata, order) => {	
+	let groupclass;
+	switch(order){
+		case 0:
+			groupclass = ["current-group-background"];
+			break;
+		case 1: 
+			groupclass = ["next-group-background"];
+			break;
+	}
 	//container for holding group description and players
 	let groupcontainer = creatediv({
 		appendto: parent,
@@ -88,7 +115,7 @@ let createsinglegroup = (parent, groupdata, groupdescription, groupclass) => {
 	});
 
 	//add groupd description
-	creategroupdescription(groupcontainer, groupdescription);
+	creategroupdescription(groupcontainer, order);
 
 	//add players
 	for(j = 0; j < groupdata.length; j++){
@@ -121,12 +148,27 @@ let createplayer = (parent, playerdata) => {
 	});
 }
 
-let creategroupdescription = (parent, description) => {
+let creategroupdescription = (parent, order) => {
 	let descriptioncontainer = creatediv({
 		appendto: parent,
 		divclass: ["group-description", "flexcenter"],
 	});
-	descriptioncontainer.innerHTML = description;
+
+	let spanclass;
+	switch(order) {
+		case 0:
+			spanclass =["current-group-text"];
+			break;
+		case 1:
+			spanclass = ["next-group-text"];
+			break;
+	}
+
+	let grouptext = creatediv({
+		type: "span",
+		appendto: descriptioncontainer,
+		divclass: spanclass
+	});
 }
 
 let creategroupcontrolcontainer = (parent) => {
