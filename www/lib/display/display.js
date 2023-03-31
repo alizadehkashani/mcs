@@ -51,9 +51,14 @@ let clearsessionstorage = () => {
 	window.sessionStorage.clear();
 }
 
+//get information from session
 let gettidfromsession = () => sessionStorage.tid;
 let getmidfromsession = () => sessionStorage.mid;
 let getridfromsession = () => sessionStorage.rid;
+
+//get current group on track from session
+let getgroupoftrackfromsession = (trackid) => sessionStorage.getItem("track" + trackid + "group");
+
 
 let checkifrebuild = async () => {
 	
@@ -81,8 +86,16 @@ let checkifrebuild = async () => {
 		return;
 	}
 	
+	//get groups on tracks
+	let grouptracks = await getcurrentgrouptrack();
 	//check if any group has changed
-
+	for(let i = 0; i < grouptracks.length; i++){
+		let currentgroupoftrack = getgroupoftrackfromsession(grouptracks[i]["trackid"]);
+		if(grouptracks[i]["groupid"] != currentgroupoftrack){
+			buildgroups();
+			return;
+		}
+	}
 }
 
 let buildgroups = async () => {
