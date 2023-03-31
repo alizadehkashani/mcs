@@ -134,7 +134,7 @@ let buildgroups = async () => {
 		//add track descirption
 		let trackdescription = createtrackdescription(trackmaincontainer, trackname );
 		//create container for current and next groups
-		window.startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
+		let startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
 
 		let cgrpdes = "Aktuelle Gruppe";
 		let cgrpclass = "current-group-background";

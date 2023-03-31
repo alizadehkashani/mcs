@@ -37,7 +37,17 @@ let getcurrentdata = async () => {
 }
 
 let buildgroups = async () => {
+
+	//get current groups of tracks
+	let trackgroups = await getcurrentgrouptrack();
+
+	//get main container from page
 	let groupscontainer = getgroupsmaincontainer();
+	
+	//clear container
+	clearelement(groupscontainer);
+
+	//get current data from database
 	let groupsdata = await getcurrentdata();	
 	
 	for(i = 0; i < groupsdata.tracks.length; i++){
@@ -48,17 +58,26 @@ let buildgroups = async () => {
 		let trackname = groupsdata["tracks"][i].trackdescription;
 		//add track descirption
 		let trackdescription = createtrackdescription(trackmaincontainer, trackname );
+		//create control for control and group
+		let groupcontrolcontainer = creategroupcontrolcontainer(trackmaincontainer);
 		//create container for current and next groups
-		let startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
+		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
 
 		let cgrpdes = "Aktuelle Gruppe";
 		let cgrpclass = "current-group-background";
-		createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
+		if(groupsdata["current"][i] != undefined){
+			createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
+		}else{
+			break;
+		}
 
 		let ngrpdes = "N&aumlchste Gruppe";
 		let ngrpclass = "next-group-background";
-		createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
+		if(groupsdata["next"][i].length != 0){
+			createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
+		}
 	}
+
 }
 
 let createsinglegroup = (parent, groupdata, groupdescription, groupclass) => {	
@@ -110,6 +129,15 @@ let creategroupdescription = (parent, description) => {
 	descriptioncontainer.innerHTML = description;
 }
 
+let creategroupcontrolcontainer = (parent) => {
+	let groupcontrolcontainer = creatediv({
+		appendto: parent,
+		divclass: ["groups-control-container"]
+	});
+
+	return groupcontrolcontainer;
+}
+
 let createstartgroupscontainer = (parent) => {
 	let startgroupscontainer = creatediv({
 		appendto: parent,
@@ -137,6 +165,46 @@ let createtrackdescription = (parent, description) => {
 		divtext: description
 
 	});
+
+};
+
+let gettinfo = async () => {
+
+	//call php script
+	let phppath = "/lib/getcurrenttournamentinfo.php";
+	let tinfo = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify()
+	});
+
+	//php response
+	let response = await tinfo.json();
+	
+	return response;
+
+}
+
+let getcurrentgrouptrack = async () => {
+
+	//call php script
+	let phppath = "/lib/getcurrentgrouptrack.php";
+	let trackgroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify()
+	});
+
+	//php response
+	let response = await trackgroup.json();
+	
+	return response;
 
 }
 
