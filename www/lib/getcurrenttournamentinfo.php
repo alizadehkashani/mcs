@@ -11,8 +11,8 @@
 	$query = "
 		SELECT tournaments.tid, matchdays.mid, rounds.rid
 		FROM tournaments
-		LEFT JOIN matchdays ON tournaments.tid = matchdays.tid
-		LEFT JOIN rounds ON tournaments.tid = rounds.tid
+		INNER JOIN matchdays ON tournaments.tid = matchdays.tid
+		INNER JOIN rounds ON tournaments.tid = rounds.tid
 		WHERE tournaments.tcurrent = :one
 		AND matchdays.mdcurrent = :one
 		AND rounds.rcurrent = :one	

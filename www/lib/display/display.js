@@ -68,7 +68,18 @@ let checkifrebuild = async () => {
 	}
 	
 	//test if matchday has changed
+	if(tinfo.mid != getmidfromsession()){
+		console.log("matchday has changed");
+		buildgroups();
+		return;
+	}
+	
 	//test if round has changed
+	if(tinfo.rid != getridfromsession()){
+		console.log("round has changed");
+		buildgroups();
+		return;
+	}
 	
 	//check if any group has changed
 

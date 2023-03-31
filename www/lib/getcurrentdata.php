@@ -67,7 +67,7 @@
 
 		//get next group
 		$query = "
-			SELECT players.playernumber, players.surname, players.firstname
+			SELECT groups.groupid, players.playernumber, players.surname, players.firstname
 			FROM groups 
 			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
 			INNER JOIN players ON groupplayers.playernumber = players.playernumber
@@ -75,6 +75,7 @@
 						SELECT groupid
 						FROM groups
 						WHERE rid = :currentrid 
+						AND trackid = :currenttrack
 						AND grouporder > :currentgrouporder 
 						ORDER BY grouporder ASC
 						LIMIT 1
@@ -84,6 +85,7 @@
 
 		$sql = $dbconnection->prepare($query);
 		$sql->bindParam(":currentrid", $groups[$i]["rid"]);
+		$sql->bindParam(":currenttrack", $groups[$i]["trackid"]);
 		$sql->bindParam(":currentgrouporder", $groups[$i]["grouporder"]);
 		$sql->execute();
 		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
