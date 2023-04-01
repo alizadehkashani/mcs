@@ -62,16 +62,12 @@ let buildgroups = async () => {
 		let groupcontrolcontainer = creategroupcontrolcontainer(trackmaincontainer);
 
 		//create back arrow
-		createbackarrow(groupcontrolcontainer);
+		createarrow(groupcontrolcontainer, groupsdata["tracks"][i]["groupid"], 0);
+		//create forward arrow
+		createarrow(groupcontrolcontainer, groupsdata["tracks"][i]["groupid"], 1);
 		
 		//create container for current and next groups
 		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
-
-		//create container for arrow button back
-		let forwardarrow = creatediv({
-			appendto: groupcontrolcontainer,
-			divclass: ["icon-arrow-forward", "control-arrow-forward"]
-		});
 		
 		if(groupsdata["current"][i] != undefined){
 			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
@@ -86,15 +82,50 @@ let buildgroups = async () => {
 
 }
 
-let createbackarrow = (parent) => {
-	let backarrow = creatediv({
+let createarrow = (parent, currentgroupid, direction) => {
+	switch(direction){
+		case 0:
+			arrowclass = "control-arrow-back";
+			arrowicon = "icon-arrow-back";
+			break;
+		case 1:
+			arrowclass = "control-arrow-forward";
+			arrowicon = "icon-arrow-forward";
+			break;
+	}
+			
+	let arrow = creatediv({
 		appendto: parent,
-		divclass: ["icon-arrow-back", "control-arrow-back"]
+		divclass: [arrowclass, arrowicon]
 	});
 
-	backarrow.addEventListener("click", () => {
+	arrow.addEventListener("click", async () => {
 		console.log("hi");
+		let newgroup = await changegroup(currentgroupid, direction);
 	});
+
+}
+
+let changegroup = async (currentgroupid, direction) => {
+	groupdata = {
+		currentgroup: currentgroupid,
+		direction: direction
+	}
+	//call php script
+	let phppath = "/lib/changegroup.php";
+	let newgroup = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(groupdata)
+	});
+
+	//php response
+	newgroup = await newgroup.json();
+	
+	return newgroup;
 
 }
 

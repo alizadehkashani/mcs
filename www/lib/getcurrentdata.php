@@ -7,15 +7,27 @@
 
 	$response = [];
 	
-	//get current groups of the active tournament
+	//get tournament information
 	$query = "
-		SELECT tracks.trackid, tracks.trackdescription
-		FROM tracks
-		INNER JOIN tournaments ON tracks.tid = tournaments.tid
+		SELECT tracks.trackid, tracks.trackdescription, groups.groupid 
+		FROM tournaments
+		INNER JOIN matchdays ON tournaments.tid = matchdays.tid
+		INNER JOIN rounds 
+			ON tournaments.tid = rounds.tid
+			AND matchdays.mid = rounds.mid
+		INNER JOIN groups 
+			ON tournaments.tid = groups.tid
+			AND matchdays.mid = groups.mid
+			AND rounds.rid = groups.rid
+		INNER JOIN tracks 
+			ON tournaments.tid = tracks.tid
+			AND tracks.trackid = groups.trackid
 		WHERE tournaments.tcurrent = :one
-		ORDER BY tracks.trackid
+		AND matchdays.mdcurrent = :one
+		AND rounds.rcurrent = :one
+		AND groups.currentgroup = :one
+		ORDER BY tracks.trackid ASC
 		";
-
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindValue(":one", 1);
