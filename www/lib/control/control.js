@@ -36,8 +36,62 @@ let getcurrentdata = async () => {
 	return phpresponse;
 }
 
+
+let setsessiontinfo = (tid, mid, rid) => {
+	sessionStorage.setItem("tid", tid);
+	sessionStorage.setItem("mid", mid);
+	sessionStorage.setItem("rid", rid);
+
+}
+
+//get information from session
+let gettidfromsession = () => sessionStorage.tid;
+let getmidfromsession = () => sessionStorage.mid;
+let getridfromsession = () => sessionStorage.rid;
+
+let clearsessionstorage = () => {
+	window.sessionStorage.clear();
+}
+
+let checkifrebuild = async () => {
+	
+	//get current tournament information
+	let tinfo = await gettinfo();
+
+	//test if tournament has changed
+	if(tinfo.tid != gettidfromsession()){
+		console.log("tournament has changed");
+		buildgroups();
+		return;
+	}
+	
+	//test if matchday has changed
+	if(tinfo.mid != getmidfromsession()){
+		console.log("matchday has changed");
+		buildgroups();
+		return;
+	}
+	
+	//test if round has changed
+	if(tinfo.rid != getridfromsession()){
+		console.log("round has changed");
+		buildgroups();
+		return;
+	}
+	
+}
+
 let buildgroups = async () => {
 
+	//clear session storage
+	clearsessionstorage();
+	
+	//get current tournament information
+	let tinfo = await gettinfo();
+	
+	//set session storage with tournament info
+	setsessiontinfo(tinfo["tid"], tinfo["mid"], tinfo["rid"]);
+	
 	//get current groups of tracks
 	let trackgroups = await getcurrentgrouptrack();
 
@@ -281,5 +335,12 @@ let getcurrentgrouptrack = async () => {
 
 }
 
+let rebuild = async () => {
+	let rebuild = window.setInterval(async function(){
+		await checkifrebuild();
+	}, 10000);
+}
+
 DOMready(buildgroups);
+DOMready(rebuild);
 DOMready(createfoot);
