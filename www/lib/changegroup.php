@@ -36,7 +36,7 @@
 	}
 
 	//get the group above/below the current group
-	$query = "SELECT * FROM groups
+	$query = "SELECT groupid, grouporder FROM groups
 		WHERE tid = :tid
 		AND trackid = :trackid
 		AND mid = :mid
@@ -54,6 +54,8 @@
 	$sql->bindParam(":grouporder", $currentgroupdata["grouporder"]);
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);
+
+	print_r($result);
 
 	if($sql->rowCount() > 0){//if a player is found
 
@@ -82,9 +84,51 @@
 		$response["result"] = 0;
 		$response["message"] = "group changed";
 
-		//get all data from current group
+		//get players from new current group
+		$query = "
+			SELECT players.playernumber, players.surname, players.firstname
+			FROM groups 
+			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
+			INNER JOIN players ON groupplayers.playernumber = players.playernumber
+			WHERE groups.groupid = :currentgroup
+			ORDER BY groupplayers.playerorder ASC
+			";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":currentgroup", $result["groupid"]);
+		$sql->execute();
+		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$response["current"] = $players;
+
 		//determine next group
 		//get all data from next group
+		$query = "
+			SELECT groups.groupid, players.playernumber, players.surname, players.firstname
+			FROM groups 
+			INNER JOIN groupplayers ON groups.groupid = groupplayers.groupid
+			INNER JOIN players ON groupplayers.playernumber = players.playernumber
+			WHERE groups.groupid = (
+						SELECT groupid
+						FROM groups
+						WHERE rid = :currentrid 
+						AND trackid = :currenttrack
+						AND grouporder > :currentgrouporder 
+						ORDER BY grouporder ASC
+						LIMIT 1
+						)
+			ORDER BY groupplayers.playerorder ASC
+			";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":currentrid", $data["rid"]);
+		$sql->bindParam(":currenttrack", $data["trackid"]);
+		$sql->bindParam(":currentgrouporder", $result["grouporder"]);
+		$sql->execute();
+		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+		$response["next"] = $players;
+
 
 	}else{//if there is no group above/below
 		$response["result"] = 1;

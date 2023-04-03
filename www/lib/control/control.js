@@ -122,9 +122,9 @@ let buildgroups = async () => {
 		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
 
 		//create back arrow
-		createarrow(tinfo, trackid, startgroupscontainer, 0);
+		createarrow(tinfo, trackid, groupcontrolcontainer, 0);
 		//create forward arrow
-		createarrow(tinfo, trackid, startgroupscontainer, 1);
+		createarrow(tinfo, trackid, groupcontrolcontainer, 1);
 		
 		
 		if(groupsdata["current"][i] != undefined){
