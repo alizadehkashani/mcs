@@ -115,13 +115,17 @@ let buildgroups = async () => {
 		//create control for control and group
 		let groupcontrolcontainer = creategroupcontrolcontainer(trackmaincontainer);
 
-		//create back arrow
-		createarrow(groupcontrolcontainer, groupsdata["tracks"][i]["groupid"], 0);
-		//create forward arrow
-		createarrow(groupcontrolcontainer, groupsdata["tracks"][i]["groupid"], 1);
-		
+		//tinfo.trackid = groupsdata["tracks"][i].trackid;
+		let trackid = groupsdata["tracks"][i].trackid;
+
 		//create container for current and next groups
 		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
+
+		//create back arrow
+		createarrow(tinfo, trackid, startgroupscontainer, 0);
+		//create forward arrow
+		createarrow(tinfo, trackid, startgroupscontainer, 1);
+		
 		
 		if(groupsdata["current"][i] != undefined){
 			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
@@ -136,7 +140,7 @@ let buildgroups = async () => {
 
 }
 
-let createarrow = (parent, currentgroupid, direction) => {
+let createarrow = async (tinfo, trackid, parent, direction) => {
 	switch(direction){
 		case 0:
 			arrowclass = "control-arrow-back";
@@ -153,16 +157,21 @@ let createarrow = (parent, currentgroupid, direction) => {
 		divclass: [arrowclass, arrowicon]
 	});
 
+	console.log(arrow);
+
 	arrow.addEventListener("click", async () => {
-		console.log("hi");
-		let newgroup = await changegroup(currentgroupid, direction);
+
+		let newgroup = await changegroup(tinfo, trackid, direction);
 	});
 
 }
 
-let changegroup = async (currentgroupid, direction) => {
+let changegroup = async (tinfo, trackid, direction) => {
 	groupdata = {
-		currentgroup: currentgroupid,
+		tid: tinfo.tid,
+		mid: tinfo.mid,
+		rid: tinfo.rid,
+		trackid: trackid,
 		direction: direction
 	}
 	//call php script

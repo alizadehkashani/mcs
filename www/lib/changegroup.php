@@ -8,14 +8,21 @@
 
 	//get data of current group
 	$query = "SELECT * FROM groups
-		WHERE groupid = :currentgroup
+		WHERE tid = :tid
+		AND mid = :mid
+		AND rid = :rid
+		AND trackid = :trackid
+		AND currentgroup = :one
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":currentgroup", $data["currentgroup"]);
+	$sql->bindParam(":tid", $data["tid"]);
+	$sql->bindParam(":mid", $data["mid"]);
+	$sql->bindParam(":rid", $data["rid"]);
+	$sql->bindParam(":trackid", $data["trackid"]);
+	$sql->bindValue(":one", 1);
 	$sql->execute();
 	$currentgroupdata = $sql->fetch(PDO::FETCH_ASSOC);
-	print_r($currentgroupdata);
 	
 	//direction in which the group should be moved
 	//if direction is 0 then the group will be moved up
@@ -38,7 +45,6 @@
 		ORDER BY grouporder " . $order .
 		" LIMIT 1
 	";
-	//echo($query);
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $currentgroupdata["tid"]);
@@ -48,7 +54,6 @@
 	$sql->bindParam(":grouporder", $currentgroupdata["grouporder"]);
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);
-	print_r($result);
 
 	if($sql->rowCount() > 0){//if a player is found
 
@@ -76,6 +81,10 @@
 
 		$response["result"] = 0;
 		$response["message"] = "group changed";
+
+		//get all data from current group
+		//determine next group
+		//get all data from next group
 
 	}else{//if there is no group above/below
 		$response["result"] = 1;
