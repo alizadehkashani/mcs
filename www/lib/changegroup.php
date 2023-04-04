@@ -55,8 +55,6 @@
 	$sql->execute();
 	$result = $sql->fetch(PDO::FETCH_ASSOC);
 
-	print_r($result);
-
 	if($sql->rowCount() > 0){//if a player is found
 
 		//set currentgroup not current group

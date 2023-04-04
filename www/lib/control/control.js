@@ -122,10 +122,9 @@ let buildgroups = async () => {
 		let startgroupscontainer = createstartgroupscontainer(groupcontrolcontainer);
 
 		//create back arrow
-		createarrow(tinfo, trackid, groupcontrolcontainer, 0);
+		createarrow(tinfo, trackid, groupcontrolcontainer, 0, startgroupscontainer);
 		//create forward arrow
-		createarrow(tinfo, trackid, groupcontrolcontainer, 1);
-		
+		createarrow(tinfo, trackid, groupcontrolcontainer, 1, startgroupscontainer);
 		
 		if(groupsdata["current"][i] != undefined){
 			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
@@ -140,7 +139,7 @@ let buildgroups = async () => {
 
 }
 
-let createarrow = async (tinfo, trackid, parent, direction) => {
+let createarrow = async (tinfo, trackid, parent, direction, groupscontainer) => {
 	switch(direction){
 		case 0:
 			arrowclass = "control-arrow-back";
@@ -157,11 +156,21 @@ let createarrow = async (tinfo, trackid, parent, direction) => {
 		divclass: [arrowclass, arrowicon]
 	});
 
-	console.log(arrow);
-
 	arrow.addEventListener("click", async () => {
 
 		let newgroup = await changegroup(tinfo, trackid, direction);
+		
+		if(newgroup["current"] != undefined){
+
+			clearelement(groupscontainer);
+			
+			createsinglegroup(groupscontainer, newgroup["current"], 0);
+
+			if(newgroup["next"].length != 0){
+				createsinglegroup(groupscontainer, newgroup["next"], 1);
+			}
+		}
+
 	});
 
 }
@@ -193,6 +202,7 @@ let changegroup = async (tinfo, trackid, direction) => {
 }
 
 let createsinglegroup = (parent, groupdata, order) => {	
+
 	let groupclass;
 	switch(order){
 		case 0:
