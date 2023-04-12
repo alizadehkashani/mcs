@@ -562,7 +562,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 
 	togglebutton.addEventListener("click", async () => {
 		
-		//if tournament is not actifve, allows to activate
+		//if tournament is not active, allows to activate
 		if(tournamentinformation["tcurrent"] == 0){
 			let activate = await settcurrent(tournamentinformation["tid"]);
 			//if tournament was succsessfully activated
@@ -1124,7 +1124,14 @@ let buildtournamentsinit = async (maincontainer) => {
 		
 		//add icon to tournament
 		let tournamenticon = document.createElement("div");
-		tournamenticon.classList.add("icon-tournament");
+		switch(tournaments[i]["tcurrent"]){
+			case 1:
+				tournamenticon.classList.add("icon-tournament-active");
+				break;
+			case 0:
+				tournamenticon.classList.add("icon-tournament");
+				break;
+		}
 		tournamenticon.classList.add("icon");
 		tournamenticonanddescription.appendChild(tournamenticon);
 		

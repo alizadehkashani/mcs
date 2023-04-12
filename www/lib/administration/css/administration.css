@@ -810,6 +810,11 @@
 	background: no-repeat center url("/../lib/administration/assets/tournament.svg");
 }
 
+.icon-tournament-active{
+	background: no-repeat center url("/../lib/administration/assets/tournamentactive.svg");
+}
+
+
 .icon-matchday{
 	background: no-repeat center url("/../lib/assets/matchday.svg");
 }
