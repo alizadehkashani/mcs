@@ -1227,7 +1227,7 @@ let buildtournamentsinit = async (maincontainer) => {
 
 }
 
-let buildsinglematchday = async (container, tid, mid, mdnumber) => {
+let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 
 	let matchdaycontainer = creatediv({
 		divclass: ["navigationitem-1", "navigationhover"],
@@ -1265,7 +1265,14 @@ let buildsinglematchday = async (container, tid, mid, mdnumber) => {
 
 	//add icon to matchday
 	let matchdayicon = document.createElement("div");
-	matchdayicon.classList.add("icon-matchday");
+	switch(mdactive){
+		case 1:
+			matchdayicon.classList.add("icon-matchday-active");
+			break;
+		case 0:
+			matchdayicon.classList.add("icon-matchday");
+			break;
+	}
 	matchdayicon.classList.add("icon");
 	matchdayiconanddescription.appendChild(matchdayicon);
 
@@ -1320,7 +1327,7 @@ let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 
 	//loop through matchdays
 	for(let i = 0; i < matchdays.length; i++){
-		await buildsinglematchday(container, tid, matchdays[i]["mid"], i+1);
+		await buildsinglematchday(container, tid, matchdays[i]["mid"], i+1, matchdays[i]["mdcurrent"]);
 		await buildroundsinit(container, tid, matchdays[i]["mid"]);
 	}
 }
@@ -1388,14 +1395,14 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 		let mddata = await createnewmatchday(tid);
 
 		//add new matchday to navigation
-		await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1);
+		await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1, 0);
 
 		//build initial rounds
 		await buildroundsinit(containerdays, tid, mddata["mid"]);
 	})
 }
 
-let buildsingleround = async (container, tid, mid, rid, roundorder) => {
+let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => {
 
 	//create container for round
 	let roundcontainer = creatediv({
@@ -1408,7 +1415,7 @@ let buildsingleround = async (container, tid, mid, rid, roundorder) => {
 	creatediv({appendto: roundcontainer});
 	creatediv({appendto: roundcontainer});
 
-	//add matchday description icon container
+	//add round description icon container
 	let roundiconanddescription = creatediv({
 		divclass: ["navigation-icon-description", "navigationitemhover"],
 		appendto: roundcontainer
@@ -1417,6 +1424,14 @@ let buildsingleround = async (container, tid, mid, rid, roundorder) => {
 	//add icon to round
 	let roundicon = document.createElement("div");
 	roundicon.classList.add("icon-round");
+	switch(ractive){
+		case 1:
+			roundicon.classList.add("icon-round-active");
+			break;
+		case 0:
+			roundicon.classList.add("icon-round");
+			break;
+	}
 	roundicon.classList.add("icon");
 	roundiconanddescription.appendChild(roundicon);
 
@@ -1447,10 +1462,10 @@ let buildrounds = async (container, tid, mid, rebuild) => {
 
 	//get rounds
 	let rounds = await getrounds(tid, mid); 
-	
+		
 	//loop through rounds of matchday
 	for(let i = 0; i < rounds.length; i++){
-		buildsingleround(container, tid, mid, rounds[i].rid, i+1);
+		buildsingleround(container, tid, mid, rounds[i].rid, i+1, rounds[i]["rcurrent"]);
 	}
 	
 }
@@ -1493,7 +1508,7 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 		let rounddata = await createnewround(tid, mid);
 
 		//append new round to navigation
-		buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1);
+		buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1, 0);
 
 	});
 

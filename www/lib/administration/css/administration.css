@@ -819,8 +819,16 @@
 	background: no-repeat center url("/../lib/assets/matchday.svg");
 }
 
+.icon-matchday-active{
+	background: no-repeat center url("/../lib/assets/matchdayactive.svg");
+}
+
 .icon-round{
 	background: no-repeat center url("/../lib/assets/round.svg");
+}
+
+.icon-round-active{
+	background: no-repeat center url("/../lib/assets/roundactive.svg");
 }
 
 /*circle with plus in it*/
