@@ -25,6 +25,26 @@
 	$sql->bindParam(":zero", $zero);
 	$sql->bindParam(":one", $one);
 	$sql->execute();
+
+	//set all matchdays not current
+	$query = "
+		UPDATE matchdays
+		SET mdcurrent = :zero 
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindValue(":zero", 0);
+	$sql->execute();
+	
+	//set all rounds not current
+	$query = "
+		UPDATE rounds
+		SET rcurrent = :zero 
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindValue(":zero", 0);
+	$sql->execute();
 	
 	//set new tournament current	
 	$query = "
