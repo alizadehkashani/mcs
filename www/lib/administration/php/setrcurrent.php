@@ -8,6 +8,25 @@
 	//array for response
 	$response = [];
 
+	//check if the matchday of the round is active
+	$query = "SELECT *
+		FROM matchdays
+		WHERE tid = :tid
+		AND mid = :mid
+		";
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->execute();
+	$tournament = $sql->fetch(PDO::FETCH_ASSOC);
+
+	if($tournament["mdcurrent"] == 0){
+		$response["result"] = 1;
+		$response["message"] = "Spieltag ist nicht aktiv";
+		echo(json_encode($response));
+		exit();
+	}
+
 	//set all rounds not current
 	$query = "
 		UPDATE rounds

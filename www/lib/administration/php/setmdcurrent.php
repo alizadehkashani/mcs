@@ -11,6 +11,23 @@
 	//array for response
 	$response = [];
 
+	//check if the tournament of the matchday is active
+	$query = "SELECT *
+		FROM tournaments
+		WHERE tid = :tid
+		";
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->execute();
+	$tournament = $sql->fetch(PDO::FETCH_ASSOC);
+
+	if($tournament["tcurrent"] == 0){
+		$response["result"] = 1;
+		$response["message"] = "Turnier ist nicht aktiv";
+		echo(json_encode($response));
+		exit();
+	}
+
 	//set currently active md not current
 	$query = "
 		UPDATE matchdays
