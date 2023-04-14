@@ -574,6 +574,8 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv, tourname
 				togglebutton.classList.add("icon-toggleon");
 				setcurrenttournamentnameheader(tournamentinformation["tname"]);
 				replaceclassindoc("icon-tournament-active", "icon-tournament");
+				replaceclassindoc("icon-matchday-active", "icon-matchday");
+				replaceclassindoc("icon-round-active", "icon-round");
 				tournamenticon.classList.remove("icon-tournament");
 				tournamenticon.classList.add("icon-tournament-active");
 
@@ -1452,7 +1454,7 @@ let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => 
 		setselectednavigation(roundcontainer, "navigation");
 		
 		//build workspace view round 
-		buildworkspaceviewround(container, roundcontainer, tid, mid, rid);
+		buildworkspaceviewround(container, roundcontainer, tid, mid, rid, roundicon);
 
 	})				
 
@@ -2509,6 +2511,7 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 				activemd.innerHTML = "X";
 
 				replaceclassindoc("icon-matchday-active", "icon-matchday");
+				replaceclassindoc("icon-round-active", "icon-round");
 				matchdayicon.classList.remove("icon-matchday");
 				matchdayicon.classList.add("icon-matchday-active");
 
@@ -2717,7 +2720,7 @@ let deletematchday = async (tid, mid) => {
 
 }
 
-let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, rid) => {
+let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, rid, roundicon) => {
 
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2742,7 +2745,7 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 	workspaceheadvariable.appendChild(roundinformationicon);
 	roundinformationicon.addEventListener("click", () => {
 		//displays round information
-		buildworkspaceroundinformation(tid, mid, rid);
+		buildworkspaceroundinformation(tid, mid, rid, roundicon);
 	})
 
 	//create icon for startgroups 
@@ -2792,10 +2795,10 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 		
 	})
 
-	buildworkspaceroundinformation(tid, mid, rid);
+	buildworkspaceroundinformation(tid, mid, rid, roundicon);
 }
 
-let buildworkspaceroundinformation = async (tid, mid, rid) => {
+let buildworkspaceroundinformation = async (tid, mid, rid, roundicon) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -2899,6 +2902,10 @@ let buildworkspaceroundinformation = async (tid, mid, rid) => {
 				setcurrentbutton.classList.remove("icon-toggleoff");
 				setcurrentbutton.classList.add("icon-toggleon");
 				activer.innerHTML = "X";
+
+				replaceclassindoc("icon-round-active", "icon-round");
+				roundicon.classList.remove("icon-round");
+				roundicon.classList.add("icon-round-active");
 
 			}
 		}

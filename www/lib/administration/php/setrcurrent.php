@@ -8,20 +8,14 @@
 	//array for response
 	$response = [];
 
-	//set currently active round not current
+	//set all rounds not current
 	$query = "
 		UPDATE rounds
 		SET rcurrent = :zero 
-		WHERE tid = :tid 
-		AND mid = :mid 
-		AND rcurrent = :one
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":mid", $input["mid"]);
 	$sql->bindValue(":zero", 0);
-	$sql->bindValue(":one", 1);
 	$sql->execute();
 	
 	//set new round current	
@@ -44,5 +38,4 @@
 	$response["message"] = "Runde aktiv";
 
 	echo(json_encode($response));
-
 ?>
