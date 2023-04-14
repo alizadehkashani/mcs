@@ -1291,7 +1291,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer, "navigation");
-		buildworkspaceviewmatchday(container, matchdaycontainer, tid, mid);
+		buildworkspaceviewmatchday(container, matchdaycontainer, tid, mid, matchdayicon);
 	})
 
 	//add event listener for expand/collapse control of rounds
@@ -2340,7 +2340,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 }
 
-let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid) => {
+let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid, matchdayicon) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2365,7 +2365,7 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid) => 
 	workspaceheadvariable.appendChild(matchdayinformationicon);
 	matchdayinformationicon.addEventListener("click", () => {
 		//displays matchday information
-		buildworkspacematchdayinformation(tid, mid);
+		buildworkspacematchdayinformation(tid, mid, matchdayicon);
 	})
 
 	//create icon for matchday deletion 
@@ -2407,11 +2407,11 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid) => 
 	})
 
 
-	buildworkspacematchdayinformation(tid, mid);
+	buildworkspacematchdayinformation(tid, mid, matchdayicon);
 
 }
 
-let buildworkspacematchdayinformation = async (tid, mid) => {
+let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -2507,6 +2507,10 @@ let buildworkspacematchdayinformation = async (tid, mid) => {
 				setcurrentbutton.classList.remove("icon-toggleoff");
 				setcurrentbutton.classList.add("icon-toggleon");
 				activemd.innerHTML = "X";
+
+				replaceclassindoc("icon-matchday-active", "icon-matchday");
+				matchdayicon.classList.remove("icon-matchday");
+				matchdayicon.classList.add("icon-matchday-active");
 
 			}
 		}
