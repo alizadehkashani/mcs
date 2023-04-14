@@ -421,7 +421,7 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 
 }
 
-let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
+let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -493,11 +493,11 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv) => {
 	workspaceheadvariable.appendChild(deleteicon);
 
 	//build standard view, tournament information
-	buildworkspacetournamentinformation(id, tournamentnamediv);
+	buildworkspacetournamentinformation(id, tournamentnamediv, tournamenticon);
 
 }
 
-let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
+let buildworkspacetournamentinformation = async (id, tournamentnamediv, tournamenticon) => {
 		
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
@@ -560,6 +560,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 		togglebutton.classList.add("icon-toggleoff");
 	}
 
+	
 	togglebutton.addEventListener("click", async () => {
 		
 		//if tournament is not active, allows to activate
@@ -572,6 +573,10 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv) => {
 				togglebutton.classList.remove("icon-toggleoff");
 				togglebutton.classList.add("icon-toggleon");
 				setcurrenttournamentnameheader(tournamentinformation["tname"]);
+				replaceclassindoc("icon-tournament-active", "icon-tournament");
+				tournamenticon.classList.remove("icon-tournament");
+				tournamenticon.classList.add("icon-tournament-active");
+
 			}
 		}
 	});
@@ -1145,7 +1150,7 @@ let buildtournamentsinit = async (maincontainer) => {
 		//add event lisnter if tournmant is selected
 		tournamenticonanddescription.addEventListener("click", async () => {
 			setselectednavigation(tournament, "navigation");
-			await buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname);
+			await buildworkspaceviewtournament(tournaments[i]["tid"], tournamentname, tournamenticon);
 		})
 
 		//-------------------------------BUILD MATCHDAYS--------------------------------	
@@ -3813,6 +3818,15 @@ let initround = async (tid, mid, rid) => {
 	let phpresponse = await initround.json();
 	
 	return phpresponse["result"];
+}
+
+let replaceclassindoc = (currentclass, newclass) => {
+	let elements = document.querySelectorAll("." + currentclass);
+	for(let i = 0; i < elements.length; i++){
+		elements[i].classList.remove(currentclass);	
+		elements[i].classList.add(newclass);
+	}
+
 }
 
 DOMready(buildheader);
