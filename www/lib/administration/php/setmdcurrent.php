@@ -24,6 +24,16 @@
 	$sql->bindValue(":one", 1);
 	$sql->execute();
 	
+	//set all rounds not current
+	$query = "
+		UPDATE rounds
+		SET rcurrent = :zero 
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindValue(":zero", 0);
+	$sql->execute();
+	
 	//set new md current	
 	$query = "
 		UPDATE matchdays
