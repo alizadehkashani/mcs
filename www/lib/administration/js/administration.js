@@ -1994,6 +1994,26 @@ let clubsdropdown = async (tid) => {
 	return clubselection;
 }
 
+let genderdropdown = () => {
+	let genderselect = document.createElement("select");	
+
+	let options = {
+		0: {id: "M", text: "M\u00e4nnlich"},
+		1: {id: "M", text: "Weiblich"},
+		2: {id: "D", text: "Divers"}
+	}
+
+	for(let i = 0; i < Object.keys(options).length; i++){
+		let option = document.createElement("option");
+		option.value = options[i].id;
+		option.text = options[i].text;
+		genderselect.appendChild(option);
+	}
+
+	return genderselect;
+
+}
+
 let buildplayerstable = async (container, tid, cid) => {
 	//empty table
 	clearelement(container);
@@ -2118,14 +2138,8 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 	});
 
 	//create input for gender 
-	let genderinput = creatediv({
-		type: "INPUT",
-		appendto: modal.modalbody
-	});
-	//limit input length gender
-	genderinput.addEventListener("input", () => {
-		genderinput.value = limitinput(1, genderinput);
-	});
+	let genderinput = genderdropdown();
+	modal.modalbody.appendChild(genderinput);
 
 	//create label for surname 
 	let surnamelabel = creatediv({
