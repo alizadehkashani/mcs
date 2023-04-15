@@ -93,6 +93,11 @@
 	font-size: 2vh;
 }
 
+.control-arrow:active{
+	background-size: 120%;
+	
+}
+
 .control-arrow-back{
 	grid-column-start: 1;
 }

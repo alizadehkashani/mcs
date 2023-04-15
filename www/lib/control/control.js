@@ -153,7 +153,7 @@ let createarrow = async (tinfo, trackid, parent, direction, groupscontainer) => 
 			
 	let arrow = creatediv({
 		appendto: parent,
-		divclass: [arrowclass, arrowicon]
+		divclass: [arrowclass, arrowicon, "control-arrow"]
 	});
 
 	arrow.addEventListener("click", async () => {

@@ -6,9 +6,11 @@
 
 	$response = [];
 
+	print_r($input);
+
 	//delete player from any existing groups
 	$query = "
-		DELETE FROM groupplayers;
+		DELETE FROM groupplayers
 		WHERE tid = :tid 
 		AND playernumber = :playernumber
 	";
@@ -17,6 +19,7 @@
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
+
 	
 	//delete player from player master
 	$query = "
