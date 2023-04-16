@@ -4,6 +4,7 @@
 
 <html>
     <head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel="stylesheet" type="text/css" href="lib/mcs.css"></script>
         <link rel="stylesheet" type="text/css" href="lib/control/control.css" defer></script>
         <script src="lib/mcs.js" defer></script>
