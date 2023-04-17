@@ -465,7 +465,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	clubconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(clubconfig);
 	clubconfig.addEventListener("click", () => {
-		buildworkspaceclubinformation(id);
+		await buildworkspaceclubinformation(id);
 	})
 
 	//create icon for player configuration
@@ -475,7 +475,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", () => {
-		buildworkspaceplayerconfig(id);
+		await buildworkspaceplayerconfig(id);
 	})	
 
 	//create icon for tournament archive
