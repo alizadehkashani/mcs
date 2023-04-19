@@ -66,9 +66,9 @@
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindValue(":zero", 0);
-	$sql->bindParam(":tid", $data["tid"]);
-	$sql->bindParam(":mid", $data["mid"]);
-	$sql->bindParam(":rid", $data["rid"]);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->bindParam(":rid", $input["rid"]);
 	$sql->execute();
 		
 	//get tracks of tournament
@@ -79,7 +79,7 @@
 		";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $data["tid"]);
+	$sql->bindParam(":tid", $input["tid"]);
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
 
@@ -108,9 +108,9 @@
 
 		$sql = $dbconnection->prepare($query);
 		$sql->bindValue(":one", 1);
-		$sql->bindParam(":tid", $data["tid"]);
-		$sql->bindParam(":mid", $data["mid"]);
-		$sql->bindParam(":rid", $data["rid"]);
+		$sql->bindParam(":tid", $input["tid"]);
+		$sql->bindParam(":mid", $input["mid"]);
+		$sql->bindParam(":rid", $input["rid"]);
 		$sql->bindParam(":trackid", $tracks[$i]["trackid"]);
 		$sql->execute();
 		$result = $sql->fetch(PDO::FETCH_ASSOC);
