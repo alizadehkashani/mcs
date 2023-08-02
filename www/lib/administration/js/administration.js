@@ -1272,7 +1272,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 
 	//add icon to matchday
 	let matchdayicon = document.createElement("div");
-	switch(parsInt(mdactive)){
+	switch(parseInt(mdactive)){
 		case 1:
 			matchdayicon.classList.add("icon-matchday-active");
 			break;
