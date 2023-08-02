@@ -2,7 +2,7 @@
 
 	require("../lib/config.php");
 	
-	header("Location: /administration.php");
+	header("Location: /display.php");
 	exit();
 
 ?>
