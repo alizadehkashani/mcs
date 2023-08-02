@@ -6,6 +6,7 @@
 	$username = $config['username'];
 	$password = $config['password'];
 
+
 	try{
 		//try conencting to db
 		$dbconnection = new PDO("mysql:host=$servername; dbname=$dbname; charset=utf8", $username, $password);

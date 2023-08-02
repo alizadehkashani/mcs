@@ -1131,7 +1131,7 @@ let buildtournamentsinit = async (maincontainer) => {
 		
 		//add icon to tournament
 		let tournamenticon = document.createElement("div");
-		switch(tournaments[i]["tcurrent"]){
+		switch(parseInt(tournaments[i]["tcurrent"])){
 			case 1:
 				tournamenticon.classList.add("icon-tournament-active");
 				break;
@@ -1272,7 +1272,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 
 	//add icon to matchday
 	let matchdayicon = document.createElement("div");
-	switch(mdactive){
+	switch(parsInt(mdactive)){
 		case 1:
 			matchdayicon.classList.add("icon-matchday-active");
 			break;
@@ -1431,7 +1431,7 @@ let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => 
 	//add icon to round
 	let roundicon = document.createElement("div");
 	roundicon.classList.add("icon-round");
-	switch(ractive){
+	switch(parseInt(ractive)){
 		case 1:
 			roundicon.classList.add("icon-round-active");
 			break;
