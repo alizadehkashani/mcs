@@ -2128,7 +2128,7 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 	});
 	//limit input length playernumber
 	playernumberinput.addEventListener("input", () => {
-		playernumberinput.value = limitinput(3, playernumberinput);
+		playernumberinput.value = limitinput(5, playernumberinput);
 	});
 
 	//create label for gender 
