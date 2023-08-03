@@ -7,7 +7,7 @@
 
 	//get tournament information
 	$query = "
-		SELECT tracks.trackid, groups.groupid 
+		SELECT tracks.trackid, groups.groupid, groups.grouporder, tracks.tid, groups.mid, groups.rid
 		FROM tournaments
 		INNER JOIN matchdays ON tournaments.tid = matchdays.tid
 		INNER JOIN rounds 
@@ -31,7 +31,32 @@
 	$sql->bindValue(":one", 1);
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
-	
+
+	//var_dump($tracks);
+
+	for($i = 0; $i < count($tracks); $i++){
+		$query = "
+			SELECT COUNT(*) FROM groups
+			WHERE grouporder <= :grouporder 
+			AND tid = :tid
+			AND trackid = :trackid
+			AND mid = :mid
+			AND rid = :rid
+			";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":grouporder", $tracks[$i]["grouporder"]);
+		$sql->bindParam(":tid", $tracks[$i]["tid"]);
+		$sql->bindParam(":trackid", $tracks[$i]["trackid"]);
+		$sql->bindParam(":mid", $tracks[$i]["mid"]);
+		$sql->bindParam(":rid", $tracks[$i]["rid"]);
+
+		$sql->execute();
+		$groupnumber = $sql->fetch(PDO::FETCH_ASSOC);
+
+		$tracks[$i]["startnumber"] = $groupnumber["COUNT(*)"];
+			
+	}
 
 	echo(json_encode($tracks));
 ?>

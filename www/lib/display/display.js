@@ -136,7 +136,7 @@ let buildgroups = async () => {
 		//create container for current and next groups
 		let startgroupscontainer = createstartgroupscontainer(trackmaincontainer);
 
-		let cgrpdes = "Aktuelle Gruppe";
+		let cgrpdes = "Aktuelle Gruppe " + trackgroups[i]["startnumber"];
 		let cgrpclass = "current-group-background";
 		if(groupsdata["current"][i] != undefined){
 			createsinglegroup(startgroupscontainer, groupsdata["current"][i], cgrpdes, cgrpclass);
@@ -144,7 +144,9 @@ let buildgroups = async () => {
 			break;
 		}
 
-		let ngrpdes = "N&aumlchste Gruppe";
+		let nextgroupstartnumber = parseInt(trackgroups[i]["startnumber"]) + 1;
+
+		let ngrpdes = "N&aumlchste Gruppe " + nextgroupstartnumber;
 		let ngrpclass = "next-group-background";
 		if(groupsdata["next"][i].length != 0){
 			createsinglegroup(startgroupscontainer, groupsdata["next"][i], ngrpdes, ngrpclass);
