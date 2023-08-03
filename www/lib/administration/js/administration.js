@@ -3134,6 +3134,7 @@ let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 
 }
 
+
 let buildtrackstartgroups = async (groupsdata) => {
 
 		clearelement(groupsdata.creategroupcontainer);
@@ -3196,7 +3197,15 @@ let getstartgroups = async (groupsdata) => {
 	return phpresponse;
 }
 
+var trackgroupsbeingbuild = false;
+
 let buildstartgroupstable = async (groupsdata) => {
+	
+	if(trackgroupsbeingbuild){
+		return;
+	};
+
+	trackgroupsbeingbuild = true;
 	
 	//clear list
 	clearelement(groupsdata.groupslistcontainer);
@@ -3386,6 +3395,8 @@ let buildstartgroupstable = async (groupsdata) => {
 		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
 
 	}
+
+	trackgroupsbeingbuild = false;
 
 }
 

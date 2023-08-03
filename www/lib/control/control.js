@@ -125,7 +125,7 @@ let buildgroups = async () => {
 		createarrow(tinfo, trackid, groupcontrolcontainer, 0, startgroupscontainer);
 		//create forward arrow
 		createarrow(tinfo, trackid, groupcontrolcontainer, 1, startgroupscontainer);
-		
+
 		if(groupsdata["current"][i] != undefined){
 			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
 		}else{
