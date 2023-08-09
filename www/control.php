@@ -14,7 +14,7 @@
     </head>
     <body>
 	<div id = "displaymaincontainer">
-		<div id = "displayheadmaincontainer">hi</div>
+		<div id = "displayheadmaincontainer"></div>
 		<div id = "displaygroupsmaincontainer"></div>
 		<div id = "displayfootmaincontainer"></div>
 	</div>
