@@ -3887,6 +3887,10 @@ let tournamentsdropdown = async () => {
 		option.text = tournaments[i]["tname"];
 		tournamentselection.appendChild(option);
 	}
+
+	tournamentselection.addEventListener("change", async () => {
+		console.log(tournamentselection.value);
+	});
 	
 	return tournamentselection;
 
