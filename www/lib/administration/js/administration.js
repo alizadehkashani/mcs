@@ -33,6 +33,14 @@ let buildheader = async () => {
 	
 	//set the tournament name as  header
 	setcurrenttournamentnameheader(currenttournament["tname"]);
+
+	//TODO create navigation for tournametns
+	headercontainer.appendChild(await tournamentsdropdown());
+	
+	let filler0 = creatediv({
+		appendto: headercontainer
+	});
+
 }
 
 //triggers creation for main navigation
@@ -54,7 +62,7 @@ let buildnavigation = () => {
 	})
 
 	//trigger creation of variable navigation and constant navigation
-	buildvariablenavigation(navigationvariablecontainer);
+	//buildvariablenavigation(navigationvariablecontainer);
 	buildconstantnavigation(navigationcontainer);
 
 }
@@ -3862,6 +3870,26 @@ let replaceclassindoc = (currentclass, newclass) => {
 		elements[i].classList.remove(currentclass);	
 		elements[i].classList.add(newclass);
 	}
+
+}
+
+let tournamentsdropdown = async () => {
+
+	let tournaments = await gettournaments();
+
+	//create dropdown selection for tournaments
+	let tournamentselection = document.createElement("select");
+	tournamentselection.setAttribute("id", "t-select-dropdown");
+
+	for(let i = 0; i < tournaments.length; i++){
+		let option = document.createElement("option");
+		option.value = tournaments[i]["tid"];
+		option.text = tournaments[i]["tname"];
+		tournamentselection.appendChild(option);
+	}
+	
+	return tournamentselection;
+
 
 }
 
