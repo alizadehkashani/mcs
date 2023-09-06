@@ -34,17 +34,16 @@ let buildheader = async () => {
 	//set the tournament name as  header
 	setcurrenttournamentnameheader(currenttournament["tname"]);
 
-	//TODO create navigation for tournametns
-	headercontainer.appendChild(await tournamentsdropdown());
-	
-	let filler0 = creatediv({
-		appendto: headercontainer
-	});
+	//create navigation for tournametns
+	//create selection
+	let tournamentsdropdown = await buildtournamentsdropdown();
+	//append selection to header container
+	headercontainer.appendChild(tournamentsdropdown );
 
 }
 
 //triggers creation for main navigation
-let buildnavigation = () => {
+let buildnavigation = async () => {
 		
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -62,6 +61,11 @@ let buildnavigation = () => {
 	})
 
 	//trigger creation of variable navigation and constant navigation
+	let tdata = await gettournamentdata();
+	console.log(tdata);
+	tdata = await gettournamentdata("2");
+	console.log(tdata);
+
 	//buildvariablenavigation(navigationvariablecontainer);
 	buildconstantnavigation(navigationcontainer);
 
@@ -3873,7 +3877,7 @@ let replaceclassindoc = (currentclass, newclass) => {
 
 }
 
-let tournamentsdropdown = async () => {
+let buildtournamentsdropdown = async () => {
 
 	let tournaments = await gettournaments();
 
@@ -3886,6 +3890,10 @@ let tournamentsdropdown = async () => {
 		option.value = tournaments[i]["tid"];
 		option.text = tournaments[i]["tname"];
 		tournamentselection.appendChild(option);
+
+		if(tournaments[i]["active"] = "1"){
+			tournamentselection.value = tournaments[i]["tid"];
+		}
 	}
 
 	tournamentselection.addEventListener("change", async () => {
@@ -3894,6 +3902,25 @@ let tournamentsdropdown = async () => {
 	
 	return tournamentselection;
 
+
+}
+
+let gettournamentdata = async (tid) => {
+	tid = {tid: tid};
+	let phppath = "/lib/administration/php/gettournamentdata.php";
+	let tdata = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(tid)
+	});
+
+	//php response
+	let phpresponse = await tdata.json();
+	
+	return phpresponse["tdata"];
 
 }
 
