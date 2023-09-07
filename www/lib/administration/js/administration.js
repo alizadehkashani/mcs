@@ -61,22 +61,94 @@ let buildnavigation = async () => {
 	})
 
 	//trigger creation of variable navigation and constant navigation
-	let tdata = await gettournamentdata();
-	console.log(tdata);
-	tdata = await gettournamentdata("2");
-	console.log(tdata);
-
 	//buildvariablenavigation(navigationvariablecontainer);
 	buildconstantnavigation(navigationcontainer);
 
 }
 
 //builds the upper part of the navigation
-let buildvariablenavigation = async (maincontainer) => {
+let buildvariablenavigation = async (tid) => {
 
+	let maincontainer = document.getElementById("navigationvariablecontainer");
 	clearelement(maincontainer);
 
-	await buildtournamentsinit(maincontainer);
+	let tdata = await gettournamentdata(tid);
+	console.log(tdata);
+
+	//TODO build matchdays/rounds for tournament
+	//TODO add buttons to create new matchday/round
+	
+	//check if php response is not empty
+	if(tdata.length != 0){
+		let i = 0;
+		let currentmdbuild = 0;
+
+
+		while(i < tdata.length){ 	
+			if(tdata[i]["mid"] != currentmdbuild){
+				console.log("build matchday");
+				currentmdbuild = tdata[i]["mid"];
+				if(tdata[i]["rid"] != null){
+					console.log("build rounds container");
+
+					while(currentmdbuild === tdata[i]["mid"]){
+						if(tdata[i]["rid"] != null){
+							console.log("build round");
+						}
+
+						currentmdbuild = tdata[i]["mid"];
+
+						i++;
+					}
+
+				}else{
+					currentmdbuild = tdata[i]["mid"];
+
+					i++;
+				}
+			}
+	}
+
+
+		/*
+		//if the current matchday being build changes create the new match
+		//if the matchday is the same, build the round
+		while(i < tdata.length){
+			if(tdata[i]["mid"] != currentmdbuild){
+
+				//build matchday
+				//buildsinglematchday(maincontainer, tdata[i]["mdcurrent"]);	
+				console.log("build matchday");
+				currentmdbuild = tdata[i]["mid"];
+
+				//if there are rounds build container for rounds
+				if(tdata[i]["rid"] != null){
+					console.log("build rounds container");
+				}
+
+				//loop through rounds of the matchday
+				//if the matchday changes break loop
+				while(currentmdbuild === tdata[i]["mid"] && i < tdata.length){
+					if(tdata[i]["rid"] != null){
+						console.log("build round");
+					}
+
+					currentmdbuild = tdata[i]["mid"];
+
+					i++;
+				}
+
+			}
+					
+
+		}
+		*/
+	}
+	
+	//create button for new matchday
+	await buildmatchdaycreatebutton(maincontainer, tid);
+
+	//await buildtournamentsinit(maincontainer);
 }
 
 
@@ -1246,16 +1318,16 @@ let buildtournamentsinit = async (maincontainer) => {
 
 }
 
-let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
+let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) => {
 
 	let matchdaycontainer = creatediv({
-		divclass: ["navigationitem-1", "navigationhover"],
+		divclass: ["navigationitem-0", "navigationhover"],
 		appendto: container,
 	})
-
+	/*
 	//create filler div
 	creatediv({appendto: matchdaycontainer});
-	
+	*/	
 	//create container for expand/collapse control
 	let expandcontainer = creatediv({
 		appendto: matchdaycontainer,
@@ -1284,7 +1356,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 
 	//add icon to matchday
 	let matchdayicon = document.createElement("div");
-	switch(parseInt(mdactive)){
+	switch(parseInt(mdcurrent)){
 		case 1:
 			matchdayicon.classList.add("icon-matchday-active");
 			break;
@@ -1294,7 +1366,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 	}
 	matchdayicon.classList.add("icon");
 	matchdayiconanddescription.appendChild(matchdayicon);
-
+	/*
 	//add matchday name
 	let matchdaynumber = creatediv({
 		divtext: "Spieltag " + mdnumber,
@@ -1331,6 +1403,7 @@ let buildsinglematchday = async (container, tid, mid, mdnumber, mdactive) => {
 		}
 		
 	})
+	*/
 
 }
 
@@ -1363,22 +1436,25 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 	maincontainermatchdays.setAttribute("id", "mc-md-" + tid);
 
 	//set container hidden
-	maincontainermatchdays.style.display = "none";
+	//maincontainermatchdays.style.display = "none";
 
 	//set data state to hidden 
-	maincontainermatchdays.setAttribute("data-state", "hidden");
+	//maincontainermatchdays.setAttribute("data-state", "hidden");
 
 	//create container for days
+	/*
 	let containerdays = creatediv({
 		appendto: maincontainermatchdays
 	});
+	*/
 	
 	//set id of days container
-	containerdays.setAttribute("id", "matchdays-" + tid);
+	//containerdays.setAttribute("id", "matchdays-" + tid);
 	
 	//build matchdays for tournament
-	await buildmatchdays(navigationcontainer, containerdays, tid, 0);
+	//await buildmatchdays(navigationcontainer, containerdays, tid, 0);
 
+	/*
 	//--------create button to create new matchday--------
 	let creatematchdaycontainer = creatediv({
 		divclass: ["navigationitem-1", "navigationhover"],
@@ -1419,6 +1495,49 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 		//build initial rounds
 		await buildroundsinit(containerdays, tid, mddata["mid"]);
 	})
+	*/
+}
+
+let buildmatchdaycreatebutton = async (mainvarnavcontainer, tid) => {
+	let creatematchdaycontainer = creatediv({
+		divclass: ["navigationitem-0", "navigationhover"],
+		appendto: mainvarnavcontainer,
+	})
+	
+	//create filler div
+	creatediv({appendto: creatematchdaycontainer});
+	
+	// add matchday description icon container
+	let creatematchdayiconanddescription = creatediv({
+		divclass: ["navigation-icon-description", "navigationitemhover"],
+		appendto: creatematchdaycontainer
+	})
+
+	//add icon to create matchday
+	let creatematchdayicon = document.createElement("div");
+	creatematchdayicon.classList.add("icon-plus");
+	creatematchdayicon.classList.add("icon");
+	creatematchdayiconanddescription.appendChild(creatematchdayicon);
+
+	//add description to create matchday button
+	let creatematchdaydescription = creatediv({
+		divtext: "Neu",
+		divclass: ["flexleft", "navigationdescription"],
+		appendto: creatematchdayiconanddescription
+	})
+
+	//add event listner to create matchday
+	creatematchdayiconanddescription.addEventListener("click", async () =>{
+		//create new matchday and return matchday number
+		let mddata = await createnewmatchday(tid);
+
+		//add new matchday to navigation
+		//await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1, 0);
+
+		//build initial rounds
+		//await buildroundsinit(containerdays, tid, mddata["mid"]);
+	})
+
 }
 
 let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => {
@@ -3898,6 +4017,7 @@ let buildtournamentsdropdown = async () => {
 
 	tournamentselection.addEventListener("change", async () => {
 		console.log(tournamentselection.value);
+		await buildvariablenavigation(tournamentselection.value);
 	});
 	
 	return tournamentselection;
@@ -3920,7 +4040,7 @@ let gettournamentdata = async (tid) => {
 	//php response
 	let phpresponse = await tdata.json();
 	
-	return phpresponse["tdata"];
+	return phpresponse;
 
 }
 
