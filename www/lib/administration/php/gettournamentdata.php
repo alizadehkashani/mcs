@@ -9,7 +9,7 @@
 	if(empty($data["tid"])){
 
 		$sql = $dbconnection->prepare("
-			SELECT tournaments.tid, matchdays.mid, matchdays.mdcurrent, rounds.rid 
+			SELECT tournaments.tid, matchdays.mid, matchdays.mdcurrent, rounds.rid, rounds.rcurrent
 			FROM tournaments
 			JOIN matchdays ON tournaments.tid = matchdays.tid
 			LEFT JOIN rounds ON matchdays.mid = rounds.mid
@@ -22,7 +22,7 @@
 	}else{
 
 		$sql = $dbconnection->prepare("
-			SELECT tournaments.tid, matchdays.mid, matchdays.mdcurrent, rounds.rid 
+			SELECT tournaments.tid, matchdays.mid, matchdays.mdcurrent, rounds.rid, rounds.rcurrent
 			FROM tournaments
 			JOIN matchdays ON tournaments.tid = matchdays.tid
 			LEFT JOIN rounds ON matchdays.mid = rounds.mid
@@ -33,21 +33,6 @@
 		$result = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 	}
-
-
-	//$tournamentdata["tdata"] = $result;	
-
-/*
-	$sql = $dbconnection->prepare("
-		SELECT * FROM matchdays
-		WHERE tid = :tid
-	");
-	$sql->bindParam(":tid", $tournamentdata["tdata"]["tid"]);
-	$sql->execute();
-	$result = $sql->fetch(PDO::FETCH_ASSOC);
-
-	$tournamentdata["tdata"]["matchdays"] = $result;
-*/
 
 	echo(json_encode($result));
 ?>

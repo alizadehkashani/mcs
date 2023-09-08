@@ -82,18 +82,30 @@ let buildvariablenavigation = async (tid) => {
 	if(tdata.length != 0){
 		let i = 0;
 		let currentmdbuild = 0;
-
+		let numbermdbuild = 0;
+		let numberrdbuild;
 
 		while(i < tdata.length){ 	
 			if(tdata[i]["mid"] != currentmdbuild){
+
 				console.log("build matchday");
+
 				currentmdbuild = tdata[i]["mid"];
+				numbermdbuild++;
+
+				buildsinglematchday(maincontainer, tdata[i], numbermdbuild);
+
+				console.log("build rounds container");
+				let rdscontainer = await buildroundsinit(maincontainer);
+
 				if(tdata[i]["rid"] != null){
-					console.log("build rounds container");
+					numberrdbuild = 1;
 
 					while(currentmdbuild === tdata[i]["mid"]){
 						if(tdata[i]["rid"] != null){
 							console.log("build round");
+							buildsingleround(rdscontainer, tdata[i], numberrdbuild);
+							numberrdbuild++;
 						}
 
 						currentmdbuild = tdata[i]["mid"];
@@ -107,42 +119,9 @@ let buildvariablenavigation = async (tid) => {
 					i++;
 				}
 			}
-	}
-
-
-		/*
-		//if the current matchday being build changes create the new match
-		//if the matchday is the same, build the round
-		while(i < tdata.length){
-			if(tdata[i]["mid"] != currentmdbuild){
-
-				//build matchday
-				//buildsinglematchday(maincontainer, tdata[i]["mdcurrent"]);	
-				console.log("build matchday");
-				currentmdbuild = tdata[i]["mid"];
-
-				//if there are rounds build container for rounds
-				if(tdata[i]["rid"] != null){
-					console.log("build rounds container");
-				}
-
-				//loop through rounds of the matchday
-				//if the matchday changes break loop
-				while(currentmdbuild === tdata[i]["mid"] && i < tdata.length){
-					if(tdata[i]["rid"] != null){
-						console.log("build round");
-					}
-
-					currentmdbuild = tdata[i]["mid"];
-
-					i++;
-				}
-
-			}
-					
-
 		}
-		*/
+
+
 	}
 	
 	//create button for new matchday
@@ -1173,6 +1152,7 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	}
 }
 
+/*
 let buildtournamentsinit = async (maincontainer) => {
 
 	//get the tournaments from the database
@@ -1317,8 +1297,9 @@ let buildtournamentsinit = async (maincontainer) => {
 
 
 }
+*/
 
-let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) => {
+let buildsinglematchday = async (container, mddata, mdnumber) => {
 
 	let matchdaycontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationhover"],
@@ -1356,7 +1337,7 @@ let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) =
 
 	//add icon to matchday
 	let matchdayicon = document.createElement("div");
-	switch(parseInt(mdcurrent)){
+	switch(parseInt(mddata["mdcurrent"])){
 		case 1:
 			matchdayicon.classList.add("icon-matchday-active");
 			break;
@@ -1366,7 +1347,7 @@ let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) =
 	}
 	matchdayicon.classList.add("icon");
 	matchdayiconanddescription.appendChild(matchdayicon);
-	/*
+	
 	//add matchday name
 	let matchdaynumber = creatediv({
 		divtext: "Spieltag " + mdnumber,
@@ -1374,11 +1355,13 @@ let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) =
 		appendto: matchdayiconanddescription
 	})
 
+
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer, "navigation");
 		buildworkspaceviewmatchday(container, matchdaycontainer, tid, mid, matchdayicon);
 	})
+
 
 	//add event listener for expand/collapse control of rounds
 	polygonsvg.addEventListener("click", () => {
@@ -1403,10 +1386,10 @@ let buildsinglematchday = async (container, mdcurrent/*tid, mid, mdnumber, */) =
 		}
 		
 	})
-	*/
 
 }
 
+/*
 let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 	
 	//check if matchdays should be rebuild
@@ -1423,6 +1406,7 @@ let buildmatchdays = async (navigationcontainer, container, tid, rebuild) => {
 		await buildroundsinit(container, tid, matchdays[i]["mid"]);
 	}
 }
+*/
 
 let buildmatchdaysinit = async (navigationcontainer, tid) => {
 
@@ -1540,18 +1524,20 @@ let buildmatchdaycreatebutton = async (mainvarnavcontainer, tid) => {
 
 }
 
-let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => {
+let buildsingleround = async (container, rdata, roundorder ) => {
 
 	//create container for round
 	let roundcontainer = creatediv({
-		divclass: ["navigationitem-2", "navigationhover"],
+		divclass: ["navigationitem-1", "navigationhover"],
 		appendto: container,
 	})
 
 	//create filler div
 	creatediv({appendto: roundcontainer});
+	/*
 	creatediv({appendto: roundcontainer});
 	creatediv({appendto: roundcontainer});
+	*/
 
 	//add round description icon container
 	let roundiconanddescription = creatediv({
@@ -1562,7 +1548,7 @@ let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => 
 	//add icon to round
 	let roundicon = document.createElement("div");
 	roundicon.classList.add("icon-round");
-	switch(parseInt(ractive)){
+	switch(parseInt(rdata["rcurrent"])){
 		case 1:
 			roundicon.classList.add("icon-round-active");
 			break;
@@ -1585,7 +1571,7 @@ let buildsingleround = async (container, tid, mid, rid, roundorder, ractive) => 
 		setselectednavigation(roundcontainer, "navigation");
 		
 		//build workspace view round 
-		buildworkspaceviewround(container, roundcontainer, tid, mid, rid, roundicon);
+		//buildworkspaceviewround(container, roundcontainer, tid, mid, rid, roundicon);
 
 	})				
 
@@ -1608,15 +1594,17 @@ let buildrounds = async (container, tid, mid, rebuild) => {
 	
 }
 
-let buildroundsinit = async (matchdaycontainer, tid, mid) => {
+let buildroundsinit = async (maincontainer/*, tid, mid*/) => {
 
 	//create maincontainer for rounds 
 	let maincontainerrounds = creatediv({
-		appendto: matchdaycontainer
+		appendto: maincontainer
 	})
 
+	/*
 	//set id of rounds maincontainer
 	maincontainerrounds.setAttribute("id", "mc-r-tid-" + tid + "-md-" + mid);
+	*/
 
 	//set container hidden
 	maincontainerrounds.style.display = "none";
@@ -1624,14 +1612,19 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 	//set data state to hidden 
 	maincontainerrounds.setAttribute("data-state", "hidden");
 	
+	/*
 	//create container for rounds
 	let containerrounds = creatediv({
 		appendto: maincontainerrounds
 	});
+	*/
 
+	/*
 	//set id of rounds container
 	containerrounds.setAttribute("id", "rounds-" + tid + "-" + mid);
+	*/
 
+	/*
 	await buildrounds(containerrounds, tid, mid);
 
 	//create button to create new round
@@ -1650,8 +1643,10 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 
 	});
 
+	*/
 	//create filler div
-	creatediv({appendto: createroundcontainer});
+	//creatediv({appendto: createroundcontainer});
+	/*
 	creatediv({appendto: createroundcontainer});
 	creatediv({appendto: createroundcontainer});
 
@@ -1673,6 +1668,8 @@ let buildroundsinit = async (matchdaycontainer, tid, mid) => {
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: createroundiconanddescription
 	})
+	*/
+	return maincontainerrounds;
 
 }
 
