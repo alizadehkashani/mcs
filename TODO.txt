@@ -9,7 +9,7 @@ DONE	add functionallity to delete tracks
 
 git diff <filename>
 
-token test
+token tes
 
 SQL:
 show tables
