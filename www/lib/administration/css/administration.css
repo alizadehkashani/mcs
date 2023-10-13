@@ -188,7 +188,7 @@
 
 .navigationitem-1{
 	display: grid;
-	grid-template-columns: 30px 30px 1fr;
+	grid-template-columns: 30px 1fr;
 	grid-template-rows: 30px;
 	
 	padding-left: 10px;
