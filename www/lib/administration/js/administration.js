@@ -69,14 +69,17 @@ let buildnavigation = async () => {
 //builds the upper part of the navigation
 let buildvariablenavigation = async (tid) => {
 
+	//get maincontainer for variable navigation
 	let maincontainer = document.getElementById("navigationvariablecontainer");
+	//clear the main container
 	clearelement(maincontainer);
 
+	//get data from selected tournament
 	let tdata = await gettournamentdata(tid);
-	console.log(tdata);
 
-	//TODO build matchdays/rounds for tournament
+	//****
 	//TODO add buttons to create new matchday/round
+	//****
 	
 	//check if php response is not empty
 	if(tdata.length != 0){
@@ -85,37 +88,53 @@ let buildvariablenavigation = async (tid) => {
 		let numbermdbuild = 0;
 		let numberrdbuild;
 
+		//loop through php response
 		while(i < tdata.length){ 	
+			//check if the current matchday being build
+			//is the matchday for the current index in the arary
+			//if the current matchday being build does not match the current index
 			if(tdata[i]["mid"] != currentmdbuild){
 
-				console.log("build matchday");
-
+				//set the new matchday to the current one being build
 				currentmdbuild = tdata[i]["mid"];
+				//increase the number of matchdays which have been build
 				numbermdbuild++;
 
+				//build the matchday
 				buildsinglematchday(maincontainer, tdata[i], numbermdbuild);
 
-				console.log("build rounds container");
+				//build container for the rounds of the matchday
 				let rdscontainer = await buildroundsinit(maincontainer);
 
+				//check if matchday has any rounds
 				if(tdata[i]["rid"] != null){
+					//if the matchday has rounds
+					//set number rounds build to one
 					numberrdbuild = 1;
 
+					//while still in the same matchday
+					//build the rounds
+					//break loop if the matchday changes
 					while(currentmdbuild === tdata[i]["mid"]){
+						//if round exists
 						if(tdata[i]["rid"] != null){
-							console.log("build round");
+							//build single rounds
 							buildsingleround(rdscontainer, tdata[i], numberrdbuild);
+							//incrase number rounds build
 							numberrdbuild++;
 						}
 
 						currentmdbuild = tdata[i]["mid"];
 
+						//increase variable for array loop
 						i++;
 					}
 
 				}else{
+					//if the matchday changes do not build round
 					currentmdbuild = tdata[i]["mid"];
 
+					//increase variable for array loop
 					i++;
 				}
 			}
