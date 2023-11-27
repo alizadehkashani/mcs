@@ -79,6 +79,7 @@ let buildvariablenavigation = async (tid) => {
 
 	//****
 	//TODO add buttons to create new matchday/round
+	//TODO add functionallity to create matchday/round button
 	//****
 	
 	//check if php response is not empty
@@ -91,7 +92,7 @@ let buildvariablenavigation = async (tid) => {
 		//loop through php response
 		while(i < tdata.length){ 	
 			//check if the current matchday being build
-			//is the matchday for the current index in the arary
+			//is the matchday for the current index in the arrary
 			//if the current matchday being build does not match the current index
 			if(tdata[i]["mid"] != currentmdbuild){
 
@@ -104,7 +105,7 @@ let buildvariablenavigation = async (tid) => {
 				buildsinglematchday(maincontainer, tdata[i], numbermdbuild);
 
 				//build container for the rounds of the matchday
-				let rdscontainer = await buildroundsinit(maincontainer);
+				let rdscontainer = buildroundsinit(maincontainer);
 
 				//check if matchday has any rounds
 				if(tdata[i]["rid"] != null){
@@ -118,7 +119,7 @@ let buildvariablenavigation = async (tid) => {
 					while(currentmdbuild === tdata[i]["mid"]){
 						//if round exists
 						if(tdata[i]["rid"] != null){
-							//build single rounds
+							//build single round
 							buildsingleround(rdscontainer, tdata[i], numberrdbuild);
 							//incrase number rounds build
 							numberrdbuild++;
@@ -1378,7 +1379,7 @@ let buildsinglematchday = async (container, mddata, mdnumber) => {
 	//add event lisnter if matchday is selected
 	matchdayiconanddescription.addEventListener("click", () => {
 		setselectednavigation(matchdaycontainer, "navigation");
-		buildworkspaceviewmatchday(container, matchdaycontainer, tid, mid, matchdayicon);
+		buildworkspaceviewmatchday(container, matchdaycontainer, mddata.tid, mddata.mid, matchdayicon);
 	})
 
 
@@ -4032,12 +4033,11 @@ let buildtournamentsdropdown = async () => {
 	}
 
 	tournamentselection.addEventListener("change", async () => {
-		console.log(tournamentselection.value);
+		closeworkspace();
 		await buildvariablenavigation(tournamentselection.value);
 	});
 	
 	return tournamentselection;
-
 
 }
 
