@@ -2560,7 +2560,7 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid, mat
 		mdcontainer.remove(); 
 
 		//number of containers in tournament for matchdays/rounds
-		let numberofmatchdays = matchdayscontainer.childNodes.length;
+		let numberofmatchdays = matchdayscontainer.childNodes.length - 1;
 
 		//counter for matchday numbering
 		let currentmdnumber = 1;
@@ -2568,7 +2568,7 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid, mat
 		//loop through containers and renumber the matchday description
 		for(let i = 0; i < numberofmatchdays; i += 2){
 			//get container
-			let matchdaydes = matchdayscontainer.childNodes[i].childNodes[2].childNodes[1];	
+			let matchdaydes = matchdayscontainer.childNodes[i].childNodes[1].childNodes[1];	
 			//set matchday text
 			matchdaydes.innerHTML = "Spieltag " + currentmdnumber;
 
