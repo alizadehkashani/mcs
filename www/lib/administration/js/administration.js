@@ -78,8 +78,9 @@ let buildvariablenavigation = async (tid) => {
 	let tdata = await gettournamentdata(tid);
 
 	//****
-	//TODO add buttons to create new matchday/round
+	//TODO add buttons to create new round
 	//TODO add functionallity to create matchday/round button
+	//TODO when creating new matchday/round add to navigation
 	//****
 	
 	//check if php response is not empty
@@ -120,6 +121,7 @@ let buildvariablenavigation = async (tid) => {
 						//if round exists
 						if(tdata[i]["rid"] != null){
 							//build single round
+							console.log("round build");
 							buildsingleround(rdscontainer, tdata[i], numberrdbuild);
 							//incrase number rounds build
 							numberrdbuild++;
@@ -1614,7 +1616,7 @@ let buildrounds = async (container, tid, mid, rebuild) => {
 	
 }
 
-let buildroundsinit = async (maincontainer/*, tid, mid*/) => {
+let buildroundsinit = (maincontainer/*, tid, mid*/) => {
 
 	//create maincontainer for rounds 
 	let maincontainerrounds = creatediv({
@@ -1646,29 +1648,39 @@ let buildroundsinit = async (maincontainer/*, tid, mid*/) => {
 
 	/*
 	await buildrounds(containerrounds, tid, mid);
+	*/
+
+	//create container for individual rounds
+	let individualrounds = creatediv({
+		appendto: maincontainerrounds
+	});
+
+	//create container for create button under individual rounds container
+	let createbuttoncontainer = creatediv({
+		appendto: maincontainerrounds
+	});
+
 
 	//create button to create new round
 	let createroundcontainer = creatediv({
-		divclass: ["navigationitem-2", "navigationhover"],
-		appendto: maincontainerrounds,
+		divclass: ["navigationitem-1", "navigationhover"],
+		appendto: createbuttoncontainer,
 	})
 
 	createroundcontainer.addEventListener("click", async () => {
 
 		//create new ronud and return round number
-		let rounddata = await createnewround(tid, mid);
+		//let rounddata = await createnewround(tid, mid);
 
 		//append new round to navigation
-		buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1, 0);
+		//buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1, 0);
 
 	});
 
-	*/
 	//create filler div
+	creatediv({appendto: createroundcontainer});
 	//creatediv({appendto: createroundcontainer});
-	/*
-	creatediv({appendto: createroundcontainer});
-	creatediv({appendto: createroundcontainer});
+	//creatediv({appendto: createroundcontainer});
 
 	// add rounds description icon container
 	let createroundiconanddescription = creatediv({
@@ -1688,8 +1700,8 @@ let buildroundsinit = async (maincontainer/*, tid, mid*/) => {
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: createroundiconanddescription
 	})
-	*/
-	return maincontainerrounds;
+
+	return individualrounds;
 
 }
 
