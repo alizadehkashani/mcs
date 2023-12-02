@@ -61,6 +61,7 @@
 	$response["mid"] = $newmid;
 	$response["mdorder"] = $nextmatchday;
 	$response["numberofmatchdays"] = $numberofmatchdays;
+	$response["mdcurrent"] = 0;
 	
 	echo(json_encode($response));
 ?>

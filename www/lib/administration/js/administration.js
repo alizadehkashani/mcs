@@ -83,6 +83,11 @@ let buildvariablenavigation = async (tid) => {
 	//TODO when creating new matchday/round add to navigation
 	//****
 	
+	//create container for individual matchdays
+	let individualmdcontainer = creatediv({
+		appendto: maincontainer
+	});
+	
 	//check if php response is not empty
 	if(tdata.length != 0){
 		let i = 0;
@@ -103,10 +108,10 @@ let buildvariablenavigation = async (tid) => {
 				numbermdbuild++;
 
 				//build the matchday
-				buildsinglematchday(maincontainer, tdata[i], numbermdbuild);
+				buildsinglematchday(individualmdcontainer, tdata[i], numbermdbuild);
 
 				//build container for the rounds of the matchday
-				let rdscontainer = buildroundsinit(maincontainer);
+				let rdscontainer = buildroundsinit(individualmdcontainer, tid, tdata[i]["mid"]);
 
 				//check if matchday has any rounds
 				if(tdata[i]["rid"] != null){
@@ -121,7 +126,6 @@ let buildvariablenavigation = async (tid) => {
 						//if round exists
 						if(tdata[i]["rid"] != null){
 							//build single round
-							console.log("round build");
 							buildsingleround(rdscontainer, tdata[i], numberrdbuild);
 							//incrase number rounds build
 							numberrdbuild++;
@@ -146,8 +150,13 @@ let buildvariablenavigation = async (tid) => {
 
 	}
 	
+	//create div for create matchday button on bottom
+	let creatematchdaybuttoncontainer = creatediv({
+		appendto: maincontainer
+	});
+
 	//create button for new matchday
-	await buildmatchdaycreatebutton(maincontainer, tid);
+	await buildmatchdaycreatebutton(creatematchdaybuttoncontainer, individualmdcontainer, tid);
 
 	//await buildtournamentsinit(maincontainer);
 }
@@ -1489,9 +1498,11 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 		divclass: ["flexleft", "navigationdescription"],
 		appendto: creatematchdayiconanddescription
 	})
+	*/
 
 	//add event listner to create matchday
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
+		/*
 		//create new matchday and return matchday number
 		let mddata = await createnewmatchday(tid);
 
@@ -1500,11 +1511,11 @@ let buildmatchdaysinit = async (navigationcontainer, tid) => {
 
 		//build initial rounds
 		await buildroundsinit(containerdays, tid, mddata["mid"]);
-	})
 	*/
+	})
 }
 
-let buildmatchdaycreatebutton = async (mainvarnavcontainer, tid) => {
+let buildmatchdaycreatebutton = async (mainvarnavcontainer, matchdayscontainer, tid) => {
 	let creatematchdaycontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationhover"],
 		appendto: mainvarnavcontainer,
@@ -1534,14 +1545,15 @@ let buildmatchdaycreatebutton = async (mainvarnavcontainer, tid) => {
 
 	//add event listner to create matchday
 	creatematchdayiconanddescription.addEventListener("click", async () =>{
+
 		//create new matchday and return matchday number
 		let mddata = await createnewmatchday(tid);
 
 		//add new matchday to navigation
-		//await buildsinglematchday(containerdays, tid, mddata.mid, mddata.numberofmatchdays + 1, 0);
+		await buildsinglematchday(matchdayscontainer, mddata, mddata.numberofmatchdays + 1);
 
 		//build initial rounds
-		//await buildroundsinit(containerdays, tid, mddata["mid"]);
+		await buildroundsinit(matchdayscontainer, tid, mddata["mid"]);
 	})
 
 }
@@ -1550,14 +1562,14 @@ let buildsingleround = async (container, rdata, roundorder ) => {
 
 	//create container for round
 	let roundcontainer = creatediv({
-		divclass: ["navigationitem-1", "navigationhover"],
+		divclass: ["navigationitem-2", "navigationhover"],
 		appendto: container,
 	})
 
 	//create filler div
 	creatediv({appendto: roundcontainer});
-	/*
 	creatediv({appendto: roundcontainer});
+	/*
 	creatediv({appendto: roundcontainer});
 	*/
 
@@ -1616,7 +1628,7 @@ let buildrounds = async (container, tid, mid, rebuild) => {
 	
 }
 
-let buildroundsinit = (maincontainer/*, tid, mid*/) => {
+let buildroundsinit = (maincontainer, tid, mid) => {
 
 	//create maincontainer for rounds 
 	let maincontainerrounds = creatediv({
@@ -1663,14 +1675,16 @@ let buildroundsinit = (maincontainer/*, tid, mid*/) => {
 
 	//create button to create new round
 	let createroundcontainer = creatediv({
-		divclass: ["navigationitem-1", "navigationhover"],
+		divclass: ["navigationitem-2", "navigationhover"],
 		appendto: createbuttoncontainer,
 	})
 
 	createroundcontainer.addEventListener("click", async () => {
+		console.log("create new round");
+		console.log("tid: " + tid + " mid: " + mid);
 
 		//create new ronud and return round number
-		//let rounddata = await createnewround(tid, mid);
+		let rounddata = await createnewround(tid, mid);
 
 		//append new round to navigation
 		//buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1, 0);
@@ -1679,7 +1693,7 @@ let buildroundsinit = (maincontainer/*, tid, mid*/) => {
 
 	//create filler div
 	creatediv({appendto: createroundcontainer});
-	//creatediv({appendto: createroundcontainer});
+	creatediv({appendto: createroundcontainer});
 	//creatediv({appendto: createroundcontainer});
 
 	// add rounds description icon container
