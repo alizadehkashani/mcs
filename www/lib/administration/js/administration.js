@@ -1603,9 +1603,11 @@ let buildsingleround = async (container, rdata, roundorder ) => {
 	//add event lisnter if round is selected
 	roundiconanddescription.addEventListener("click", () => {
 		setselectednavigation(roundcontainer, "navigation");
+
+		console.log(rdata);
 		
 		//build workspace view round 
-		//buildworkspaceviewround(container, roundcontainer, tid, mid, rid, roundicon);
+		buildworkspaceviewround(container, roundcontainer, rdata, roundicon);
 
 	})				
 
@@ -1685,9 +1687,11 @@ let buildroundsinit = (maincontainer, tid, mid) => {
 
 		//create new ronud and return round number
 		let rounddata = await createnewround(tid, mid);
+		console.log(rounddata);
 
 		//append new round to navigation
-		//buildsingleround(containerrounds, tid, mid, rounddata.rid, rounddata.numberofrounds + 1, 0);
+		let rdata = {tid: tid, mid: mid, rid: rounddata.rid, rcurrent: 0};
+		buildsingleround(individualrounds, rdata, rounddata.numberofrounds + 1, 0);
 
 	});
 
@@ -2908,7 +2912,7 @@ let deletematchday = async (tid, mid) => {
 
 }
 
-let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, rid, roundicon) => {
+let buildworkspaceviewround = async (roundscontainer, roundcontainer, rdata, roundicon) => {
 
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -2933,7 +2937,7 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 	workspaceheadvariable.appendChild(roundinformationicon);
 	roundinformationicon.addEventListener("click", () => {
 		//displays round information
-		buildworkspaceroundinformation(tid, mid, rid, roundicon);
+		buildworkspaceroundinformation(rdata, roundicon);
 	})
 
 	//create icon for startgroups 
@@ -2944,7 +2948,7 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 	workspaceheadvariable.appendChild(roundstartgroupsicon);
 	roundstartgroupsicon.addEventListener("click", () => {
 		//displays round information
-		buildworkspaceroundstartgroups(tid, mid, rid);
+		buildworkspaceroundstartgroups(rdata);
 	})
 
 	//create icon for round deletion 
@@ -2955,7 +2959,7 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 	workspaceheadvariable.appendChild(rounddeletionicon);
 	rounddeletionicon.addEventListener("click", async () => {
 
-		await deleteround(tid, mid, rid);
+		await deleteround(rdata);
 		
 		//remove container of round
 		roundcontainer.remove(); 
@@ -2969,7 +2973,7 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 		//loop through containers and renumber the round description
 		for(let i = 0; i < numberofrounds; i++){
 			//get container
-			let rounddes = roundscontainer.childNodes[i].childNodes[3].childNodes[1];	
+			let rounddes = roundscontainer.childNodes[i].childNodes[2].childNodes[1];	
 			//set round text text
 			rounddes.innerHTML = "Runde " + currentroundnumber;
 
@@ -2983,10 +2987,10 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, tid, mid, 
 		
 	})
 
-	buildworkspaceroundinformation(tid, mid, rid, roundicon);
+	buildworkspaceroundinformation(rdata, roundicon);
 }
 
-let buildworkspaceroundinformation = async (tid, mid, rid, roundicon) => {
+let buildworkspaceroundinformation = async (rdata, roundicon) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -3002,7 +3006,7 @@ let buildworkspaceroundinformation = async (tid, mid, rid, roundicon) => {
 	workspacebody.classList.add("workspace-view-roundinformation-body");
 
 	//get round information from database
-	let roundinformation = await getround(tid, mid, rid);
+	let roundinformation = await getround(rdata["tid"], rdata["mid"], rdata["rid"]);
 
 	//container to store information about basic round information
 	let roundinfoinputcontainer = creatediv({
@@ -3167,13 +3171,7 @@ let updateround = async (tid, mid, rid, rdescription)=> {
 }
 
 
-let deleteround = async (tid, mid, rid) => {
-
-	rdata = {
-		tid: tid,
-		mid: mid,
-		rid: rid
-	}
+let deleteround = async (rdata) => {
 
 	//call php script
 	let phppath = "/lib/administration/php/deleteround.php";
@@ -3242,7 +3240,7 @@ let setractive = async (rounddata) => {
 
 }
 
-let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
+let buildworkspaceroundstartgroups = async (rdata) => {
 
 	//get workspace body
 	let workspacebody = getworkspacebody();
@@ -3270,9 +3268,9 @@ let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 		appendto: workspacebody,
 		divid: "trackstartgroupslist"
 	})
-
+	
 	//get tracks from db
-	let tracks = await gettracks(tid);
+	let tracks = await gettracks(rdata["tid"]);
 
 	for(let i = 0; i < tracks.length; i++){
 		let tracklabel = creatediv({
@@ -3292,10 +3290,10 @@ let buildworkspaceroundstartgroups = async (tid, mid, rid) => {
 			let buildgroupsdata = {
 				creategroupcontainer: trackstartgroupscreatecontainer,
 				groupslistcontainer: trackstartgroupslist,
-				tid: tid,
+				tid: rdata["tid"],
 				trackid: tracks[i].trackid,
-				mid: mid,
-				rid: rid
+				mid: rdata["mid"],
+				rid: rdata["rid"]
 			}
 
 			//on click build groups for the track
