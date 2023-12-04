@@ -9,22 +9,20 @@
 	//delte players
 	$query = "
 		DELETE FROM players
-		WHERE tid = :tid AND cid = :cid
+		WHERE cid = :cid
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":cid", $data["cid"]);
 	$sql->execute();
 	
 	//delte club
 	$query = "
 		DELETE FROM clubs
-		WHERE tid = :tid AND cid = :cid
+		WHERE cid = :cid
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":cid", $data["cid"]);
 	$sql->execute();
 	

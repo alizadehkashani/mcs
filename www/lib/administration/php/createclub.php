@@ -8,12 +8,11 @@
 
 		
 	$query = "
-		INSERT INTO clubs (tid, cname)
-		VALUES (:tid, :cname)
+		INSERT INTO clubs (cname)
+		VALUES (:cname)
 	";
 	
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":cname", $data["cname"]);
 	$sql->execute();
 	

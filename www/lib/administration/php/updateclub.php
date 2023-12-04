@@ -9,12 +9,11 @@
 	$query = "
 		UPDATE clubs
 		SET cname = :cname
-		WHERE tid = :tid AND cid = :cid
+		WHERE cid = :cid
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":cname", $data["cname"]);
-	$sql->bindParam(":tid", $data["tid"]);
 	$sql->bindParam(":cid", $data["cid"]);
 	$sql->execute();
 	

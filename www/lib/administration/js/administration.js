@@ -73,8 +73,7 @@ let buildnavigation = async () => {
 		appendto: navigationcontainer
 	})
 
-	//trigger creation of variable navigation and constant navigation
-	//buildvariablenavigation(navigationvariablecontainer);
+	//build constant navigation
 	buildconstantnavigation(navigationcontainer);
 
 }
@@ -230,30 +229,65 @@ let buildconstantnavigation = (maincontainer) => {
 	creatediv({appendto: settingscontainer});
 
 	//container for icon and description
-	let sesstingsiconanddescription = creatediv({
+	let settingsinconanddescription = creatediv({
 		divclass: ["navigation-icon-description"],
 		appendto: settingscontainer
 	})
 
-	sesstingsiconanddescription.addEventListener("click", () => { 
+	settingsinconanddescription.addEventListener("click", () => { 
 		setselectednavigation(settingscontainer, "navigation");
-		buildsettings;
+		buildsettingsworkspace();
 	})
 
 	let settingsicon = document.createElement("img");
 	settingsicon.setAttribute("src", "lib/administration/assets/settings.svg");
 	settingsicon.classList.add("navigationicon");
-	sesstingsiconanddescription.appendChild(settingsicon);
+	settingsinconanddescription.appendChild(settingsicon);
 
-	creatediv({
-		appendto: sesstingsiconanddescription,
+	let settingsdescription = creatediv({
+		appendto: settingsinconanddescription,
 		divclass: ["flexleft", "navigationdescription"],
 		divtext: "Einstellungen"
 	})
 }
 
-let buildsettings = () => {
+let buildsettingsworkspace = () => {
+	console.log("build settings");
+	
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+	let workspacebody = getworkspacebody();
+	let workspacefoot = getworkspacefoot();
+	let workspaceheadvariable = getworkspaceheadvariable();
 
+	//clear workspace
+	clearworkspace();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+
+	//create icon for club configuration
+	let clubconfig = document.createElement("div");
+	clubconfig.classList.add("icon-club");
+	clubconfig.classList.add("icon");
+	clubconfig.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(clubconfig);
+	clubconfig.addEventListener("click", async () => {
+		await buildworkspaceclubinformation();
+	})
+
+	//create icon for player configuration
+	let playerconfig = document.createElement("div");
+	playerconfig.classList.add("icon-player");
+	playerconfig.classList.add("icon");
+	playerconfig.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(playerconfig);
+	playerconfig.addEventListener("click", async () => {
+		//await buildworkspaceplayerconfig(id);
+	})	
 }
 
 let buildworkspace = () => {
@@ -452,7 +486,7 @@ let createnewtournament = async (description, location) => {
 
 }
 
-let createnewclub = async (tid, clubnameinput, modalcontainer) => {
+let createnewclub = async (clubnameinput, modalcontainer) => {
 	
 	//test if input field is filled
 	if(clubnameinput.value == ""){
@@ -461,7 +495,7 @@ let createnewclub = async (tid, clubnameinput, modalcontainer) => {
 	}
 	
 	//create object for php script
-	let postdata = {tid: tid, cname: clubnameinput.value};	
+	let postdata = {cname: clubnameinput.value};	
 	
 	//call php script
 	let response = await fetch("/lib/administration/php/createclub.php", {
@@ -482,9 +516,7 @@ let createnewclub = async (tid, clubnameinput, modalcontainer) => {
 		clubnameinput.value = "";
 		
 		//rebuild clubs table
-		await fillclubstable(tid);
-		
-		
+		await fillclubstable();
 
 		//deactivate modal and overlay
 		changeelementvisibility(modalcontainer, false, true);
@@ -557,16 +589,6 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	workspaceheadvariable.appendChild(trackconfig);
 	trackconfig.addEventListener("click", async () => {
 		await buildworkspacetrackconfiguration(id);
-	})
-
-	//create icon for club configuration
-	let clubconfig = document.createElement("div");
-	clubconfig.classList.add("icon-club");
-	clubconfig.classList.add("icon");
-	clubconfig.classList.add("workspaceicon");
-	workspaceheadvariable.appendChild(clubconfig);
-	clubconfig.addEventListener("click", async () => {
-		await buildworkspaceclubinformation(id);
 	})
 
 	//create icon for player configuration
@@ -703,7 +725,7 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv, tourname
 
 }
 
-let buildworkspaceclubinformation = async (tid) => {
+let buildworkspaceclubinformation = async () => {
 	
 	//clear workspace boody and foot
 	clearworkspacebody();
@@ -727,7 +749,7 @@ let buildworkspaceclubinformation = async (tid) => {
 	createclubbutton.classList.add("workspaceicon");
 	createclubbuttoncontainer.appendChild(createclubbutton);
 	createclubbutton.addEventListener("click", () => {
-		buildmodalcreateclub(tid);
+		buildmodalcreateclub();
 	})
 
 	//create container for clubs table
@@ -737,13 +759,13 @@ let buildworkspaceclubinformation = async (tid) => {
 	})
 
 	//fill table with clubs
-	await fillclubstable(tid);
+	await fillclubstable();
 	
 }
 
-let fillclubstable = async (tid) => {
+let fillclubstable = async () => {
 	
-	let clubs = await getclubs(tid);
+	let clubs = await getclubs();
 
 	let tablecontainer = document.getElementById("clubs-table");
 	
@@ -760,14 +782,14 @@ let fillclubstable = async (tid) => {
 		})
 
 		clubrow.addEventListener("click", () =>{
-			buildmodalviewclub(tid, clubs[i]["cid"]);
+			buildmodalviewclub(clubs[i]["cid"]);
 		})
 	}
 }
 
-let buildmodalviewclub = async (tid, clubid) => {
+let buildmodalviewclub = async (clubid) => {
 
-	let club = await getclub(tid, clubid);
+	let club = await getclub(clubid);
 	
 	let modal = createbasicmodal(
 		"modal-view-club", 
@@ -802,22 +824,22 @@ let buildmodalviewclub = async (tid, clubid) => {
 	deleteclubcuttoncontainer.appendChild(deleteclubbutton);
 
 	deleteclubcuttoncontainer.addEventListener("click", () => {
-		deleteclub(tid, clubid);
+		deleteclub(clubid);
 		changeelementvisibility(modal.modalcontainer, false, true);
 		toggleoverlay(false);
 	})	
 
 	modal.acceptbutton.addEventListener("click", () => {
-		updateclub(tid, clubid, clubname.value);
+		updateclub(clubid, clubname.value);
 	})
 
 	toggleoverlay(true);
 	
 }
 
-let deleteclub = async (tid, cid) => {
+let deleteclub = async (cid) => {
 	//set data for php script
-	let requestdata = {tid: tid, cid: cid};
+	let requestdata = {cid: cid};
 
 	//call php script
 	let phpresponse = await fetch("/lib/administration/php/deleteclub.php", {
@@ -834,16 +856,16 @@ let deleteclub = async (tid, cid) => {
 
 	//rebuild table if no error
 	if(response.result == 0){
-		await fillclubstable(tid);
+		await fillclubstable();
 	}else{
 		alert("Error");
 	}
 }
 
-let updateclub = async (tid, cid, cname) => {
+let updateclub = async (cid, cname) => {
 
 	//set data for php script
-	let requestdata = {tid: tid, cid: cid, cname: cname};
+	let requestdata = {cid: cid, cname: cname};
 
 	//call php script
 	let phpresponse = await fetch("/lib/administration/php/updateclub.php", {
@@ -860,16 +882,16 @@ let updateclub = async (tid, cid, cname) => {
 
 	//if no error build clubs table
 	if(response.result == 0){
-		await fillclubstable(tid);
+		await fillclubstable();
 	}else{
 		alert("Error");
 	}
 }
 
-let getclub = async (tid, cid) => {
+let getclub = async (cid) => {
 
 	//set data for php script
-	let requestdata = {tid: tid, cid: cid};
+	let requestdata = {cid: cid};
 
 	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getclub.php", {
@@ -888,10 +910,7 @@ let getclub = async (tid, cid) => {
 	return response;
 }
 
-let getclubs = async (tid) => {
-
-	//set data for php script
-	let requestdata = {tid: tid};
+let getclubs = async () => {
 
 	//call php script
 	let phpresponse = await fetch("/lib/administration/php/getclubs.php", {
@@ -899,8 +918,7 @@ let getclubs = async (tid) => {
 		headers: {
 			'Accept': 'application/jsono',
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(requestdata)
+		}
 	});
 
 	//variable for php response
@@ -1070,7 +1088,7 @@ let buildmodalcreatetournament = () => {
 	toggleoverlay(true);
 }
 
-let buildmodalcreateclub = (tid) => {
+let buildmodalcreateclub = () => {
 	
 	//create modal
 	let modal = createbasicmodal(
@@ -1092,7 +1110,7 @@ let buildmodalcreateclub = (tid) => {
 	})
 
 	modal.acceptbutton.addEventListener("click", () => {
-		createnewclub(tid, clubname, modal.modalcontainer);
+		createnewclub(clubname, modal.modalcontainer);
 	})
 
 	toggleoverlay(true);
