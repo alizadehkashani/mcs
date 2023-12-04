@@ -47,7 +47,6 @@ let buildheader = async () => {
 	tournamentinformationicon.classList.add("workspaceicon");
 	headercontainer.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", async () => {
-		console.log(tournamentsdropdown.value);
 		//await buildworkspacetournamentinformation(id, tournamentnamediv);
 		await buildworkspaceviewtournament(tournamentsdropdown.value);
 	})
@@ -141,6 +140,9 @@ let buildvariablenavigation = async (tid) => {
 
 						//increase variable for array loop
 						i++;
+						if(i == tdata.length){
+							break;
+						}
 					}
 
 				}else{
