@@ -3792,6 +3792,7 @@ let buildtournamentsdropdown = async () => {
 	tournamentselection.addEventListener("change", async () => {
 		closeworkspace();
 		await buildvariablenavigation(tournamentselection.value);
+		await buildworkspaceviewtournament(tournamentselection.value);
 	});
 	
 	return tournamentselection;
