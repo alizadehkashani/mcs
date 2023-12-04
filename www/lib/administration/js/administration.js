@@ -40,6 +40,18 @@ let buildheader = async () => {
 	//append selection to header container
 	headercontainer.appendChild(tournamentsdropdown );
 
+	//add icon for tournament information
+	let tournamentinformationicon = document.createElement("div");
+	tournamentinformationicon.classList.add("icon-info");
+	tournamentinformationicon.classList.add("icon");
+	tournamentinformationicon.classList.add("workspaceicon");
+	headercontainer.appendChild(tournamentinformationicon);
+	tournamentinformationicon.addEventListener("click", async () => {
+		console.log(tournamentsdropdown.value);
+		//await buildworkspacetournamentinformation(id, tournamentnamediv);
+		await buildworkspaceviewtournament(tournamentsdropdown.value);
+	})
+
 
 }
 
@@ -587,7 +599,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 }
 
 let buildworkspacetournamentinformation = async (id, tournamentnamediv, tournamenticon) => {
-		
+
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
 
