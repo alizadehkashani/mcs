@@ -2244,7 +2244,7 @@ let buildmodaleditplayer = async (playernumber) => {
 		//create json for php
 		playerdata = {
 			cid: clubssel.value,
-			playernumber: playernumberinput.value,
+			playernumber: playerdata["playernumber"],
 			gender: genderinput.value,
 			surname: surnameinput.value,
 			firstname: firstnameinput.value
