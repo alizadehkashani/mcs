@@ -565,6 +565,9 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 
 	//clear workspace
 	clearworkspace();
+
+	//deselct any currently selected navigation items
+	deselectallnavigation("selectednavigation");
 	
 	//remove width limit
 	workspace.style.width = "";
@@ -3779,8 +3782,13 @@ let buildtournamentsdropdown = async () => {
 	}
 
 	tournamentselection.addEventListener("change", async () => {
+		//close current workspace
 		closeworkspace();
+		//deselect in navigation
+		deselectallnavigation("selectednavigation");
+		//build tournament data
 		await buildvariablenavigation(tournamentselection.value);
+		//view tournament information
 		await buildworkspaceviewtournament(tournamentselection.value);
 	});
 	
