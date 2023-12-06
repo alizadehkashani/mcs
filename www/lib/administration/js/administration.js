@@ -602,7 +602,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", async () => {
-		//await buildworkspaceplayerconfig(id);
+		await buildworkspaceplayerintconfig(id);
 	})	
 
 	//create icon for tournament archive
@@ -1877,20 +1877,54 @@ let buildworkspaceplayerconfig = async () => {
 	})
 
 	await buildplayerstable(playerstable);
-	
+}
 
-	/*
-	//create container for players selection
-	let playerselectioncontainer = creatediv({
-		divid: "container-player-select",
+let buildworkspaceplayerintconfig = async (tid) => {
+	
+	console.log("show players in tournament: " + tid);
+	
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+
+	//get workspace body
+	let workspacebody = getworkspacebody();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-player-config");
+
+	//create player button container
+	let addplayercontainer = creatediv({
+		divclass: ["flexcenter"],
 		appendto: workspacebody
 	});
 
-	//on click, build player table with current club selection
-	runplayersearch.addEventListener("click", async () => {
-		await buildplayerstable(playerstable);
+	//add container for players table
+	let playerstable = creatediv({
+		appendto: workspacebody,
+		divid: "workspace-players-table"
 	});
-	*/
+
+	//add button to add player to tournament
+	let addplayersvg = document.createElement("div");
+	addplayersvg.classList.add("icon-playerplus");
+	addplayersvg.classList.add("icon");
+	addplayersvg.classList.add("workspaceicon");
+	addplayercontainer.appendChild(addplayersvg);
+	addplayersvg.addEventListener("click", async () => {
+		buildmodaladdplayertotournament(playerstable); 
+		//toggleoverlay(true);
+	})
+
+	await buildplayersintournamenttable(playerstable);
+
+
+}
+
+let buildmodaladdplayertotournament(playerstable) = async () => {
 
 }
 
@@ -1945,6 +1979,52 @@ let buildplayerstable = async (container) => {
 	for(let i = 0; i < players.length; i++){
 		buildsingleplayer(container, players[i]);
 	}
+}
+
+let buildplayersintournamenttable = async (container) => {
+	//empty table
+	clearelement(container);
+
+	//get players
+	let players = await getplayersintournament(tid);
+
+	//loop through players and insert into tables
+	for(let i = 0; i < players.length; i++){
+		buildsingleplayer(container, players[i]);
+	}
+}
+
+let getplayers = async () => {
+
+	//call php script to fetch players
+	let players = await fetch("/lib/administration/php/getplayers.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		}
+	});
+
+	//return players
+	return players.json();
+
+}
+
+let getplayersintournament = async (tid) => {
+
+	//call php script to fetch players
+	let players = await fetch("/lib/administration/php/getplayersintournament.php", {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON,stringify({tid: tid})
+	});
+
+	//return players
+	return players.json();
+
 }
 
 let getplayer = async (playernumber) => {
@@ -2124,8 +2204,8 @@ let buildmodalcreateplayer = async (playerstable) => {
 			surnameinput.value = "";
 			firstnameinput.value = "";
 
-			//build table again with cid which new player was created in
-			//await buildplayerstable(playerstable); 
+			//build table again
+			await buildplayerstable(playerstable); 
 		}
 	});
 
