@@ -2164,13 +2164,8 @@ let buildmodaleditplayer = async (playernumber) => {
 
 	//create input for playernumber 
 	let playernumberinput = creatediv({
-		type: "INPUT",
+		divtext: playerdata["playernumber"],
 		appendto: playerinfo
-	});
-	playernumberinput.value = playerdata["playernumber"];
-	//limit input length playernumber
-	playernumberinput.addEventListener("input", () => {
-		playernumberinput.value = limitinput(3, playernumberinput);
 	});
 
 	//create label for gender 
