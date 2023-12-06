@@ -254,7 +254,6 @@ let buildconstantnavigation = (maincontainer) => {
 }
 
 let buildsettingsworkspace = () => {
-	console.log("build settings");
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -288,7 +287,7 @@ let buildsettingsworkspace = () => {
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", async () => {
-		//await buildworkspaceplayerconfig(id);
+		await buildworkspaceplayerconfig();
 	})	
 }
 
@@ -600,7 +599,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", async () => {
-		await buildworkspaceplayerconfig(id);
+		//await buildworkspaceplayerconfig(id);
 	})	
 
 	//create icon for tournament archive
@@ -1836,7 +1835,7 @@ let deletetrack = async (tid, trackid) => {
 	return await phpresponse.json();
 }
 
-let buildworkspaceplayerconfig = async (tid) => {
+let buildworkspaceplayerconfig = async () => {
 	
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
@@ -1851,34 +1850,16 @@ let buildworkspaceplayerconfig = async (tid) => {
 	//add class to workspace body
 	workspacebody.classList.add("workspace-player-config");
 
-	//create container for players selection
-	let playerselectioncontainer = creatediv({
-		divid: "container-player-select",
+	//create player button container
+	let addplayercontainer = creatediv({
+		divclass: ["flexcenter"],
 		appendto: workspacebody
 	});
 
-	//create label for club selection
-	creatediv({
-		divtext: "Verein",
-		divclass: ["flexcenter"],
-		appendto: playerselectioncontainer
-	});
-
-	//build dropdown for clubs
-	let clubselection = await clubsdropdown(tid);
-	playerselectioncontainer.appendChild(clubselection);
-
-	//add button to build players table depending on club selection
-	let runplayersearch = creatediv({
-		appendto: playerselectioncontainer,
-		divtext: "Suchen",
-		divclass: ["mcsbutton"]
-	});
-	
-	//create player butoon container
-	let addplayercontainer = creatediv({
-		divclass: ["flexcenter"],
-		appendto: playerselectioncontainer
+	//add container for players table
+	let playerstable = creatediv({
+		appendto: workspacebody,
+		divid: "workspace-players-table"
 	});
 
 	//add button to create new player
@@ -1888,27 +1869,32 @@ let buildworkspaceplayerconfig = async (tid) => {
 	addplayersvg.classList.add("workspaceicon");
 	addplayercontainer.appendChild(addplayersvg);
 	addplayersvg.addEventListener("click", async () => {
-		buildmodalcreateplayer(tid, clubselection.value); 
+		buildmodalcreateplayer(playerstable); 
 		toggleoverlay(true);
 	})
 
-	//add container for players table
-	let playerstable = creatediv({
-		appendto: workspacebody,
-		divid: "workspace-players-table"
+	await buildplayerstable(playerstable);
+	
+
+	/*
+	//create container for players selection
+	let playerselectioncontainer = creatediv({
+		divid: "container-player-select",
+		appendto: workspacebody
 	});
 
 	//on click, build player table with current club selection
 	runplayersearch.addEventListener("click", async () => {
-		await buildplayerstable(playerstable, tid, clubselection.value);
+		await buildplayerstable(playerstable);
 	});
+	*/
 
 }
 
-let clubsdropdown = async (tid) => {
+let clubsdropdown = async () => {
 
 	//get clubs from database
-	let clubs = await getclubs(tid);
+	let clubs = await getclubs();
 
 	//create drop down selection for club
 	let clubselection = document.createElement("select");
@@ -1945,20 +1931,20 @@ let genderdropdown = () => {
 
 }
 
-let buildplayerstable = async (container, tid, cid) => {
+let buildplayerstable = async (container) => {
 	//empty table
 	clearelement(container);
 
 	//get players
-	let players = await getplayers(tid, cid, 0);
+	let players = await getplayers();
 
 	//loop through players and insert into tables
 	for(let i = 0; i < players.length; i++){
-		buildsingleplayer(container, players[i], tid);
+		buildsingleplayer(container, players[i]);
 	}
 }
 
-let getplayer = async (tid, playernumber) => {
+let getplayer = async (playernumber) => {
 
 	let player = await fetch("/lib/administration/php/getplayer.php", {
 		method: 'POST',
@@ -1966,13 +1952,13 @@ let getplayer = async (tid, playernumber) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({tid: tid, playernumber: playernumber})
+		body: JSON.stringify({playernumber: playernumber})
 	});
 
 	return await player.json();
 }
 
-let buildsingleplayer = async (container, playerdata, tid) => {
+let buildsingleplayer = async (container, playerdata) => {
 	//create row
 	let row = creatediv({
 		appendto: container,
@@ -1980,7 +1966,7 @@ let buildsingleplayer = async (container, playerdata, tid) => {
 	});
 	//add event listner to when to display player
 	row.addEventListener("click", async () => {
-		await buildmodaleditplayer(tid, playerdata.playernumber);
+		await buildmodaleditplayer(playerdata.playernumber);
 		toggleoverlay(true);
 	});
 
@@ -2009,7 +1995,7 @@ let buildsingleplayer = async (container, playerdata, tid) => {
 	});
 }
 
-let getplayers = async (tid, cid, all) => {
+let getplayers = async () => {
 
 	//call php script to fetch players
 	let players = await fetch("/lib/administration/php/getplayers.php", {
@@ -2017,8 +2003,7 @@ let getplayers = async (tid, cid, all) => {
 		header: {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({tid: tid, cid: cid, all: all})
+		}
 	});
 
 	//return players
@@ -2026,7 +2011,7 @@ let getplayers = async (tid, cid, all) => {
 
 }
 
-let buildmodalcreateplayer = async (tid, currentclub) => {
+let buildmodalcreateplayer = async (playerstable) => {
 
 	//create modal
 	let modal = createbasicmodal(
@@ -2042,8 +2027,7 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 	});
 
 	//create club selection
-	let clubssel = await clubsdropdown(tid);
-	clubssel.value = currentclub;
+	let clubssel = await clubsdropdown();
 	modal.modalbody.appendChild(clubssel);
 
 	//create label for playernumber 
@@ -2108,7 +2092,6 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 	modal.acceptbutton.addEventListener("click", async () =>{
 		//create json for php
 		phpinput = {
-			tid: tid,
 			cid: clubssel.value,
 			playernumber: playernumberinput.value,
 			gender: genderinput.value,
@@ -2139,13 +2122,13 @@ let buildmodalcreateplayer = async (tid, currentclub) => {
 			firstnameinput.value = "";
 
 			//build table again with cid which new player was created in
-			await buildplayerstable(document.getElementById("workspace-players-table"), tid, clubssel.value); 
+			//await buildplayerstable(playerstable); 
 		}
 	});
 
 }
 
-let buildmodaleditplayer = async (tid, playernumber) => {
+let buildmodaleditplayer = async (playernumber) => {
 
 	//create modal
 	let modal = createbasicmodal(
@@ -2155,7 +2138,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	);
 
 	//get playerdata from db
-	let playerdata = await getplayer(tid, playernumber);
+	let playerdata = await getplayer(playernumber);
 
 	let playerinfo = creatediv({
 		appendto: modal.modalbody,
@@ -2169,7 +2152,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	});
 
 	//create club selection
-	let clubssel = await clubsdropdown(tid);
+	let clubssel = await clubsdropdown();
 	clubssel.value = playerdata["cid"];
 	playerinfo.appendChild(clubssel);
 
@@ -2257,15 +2240,7 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	//add eventlistener to deletebutton
 	deleteplayerbuttoncontainer.addEventListener("click", async () => {
 		//delete player
-		delteplayer(
-			modal.modalcontainer, 
-			playerdata.tid, 
-			playerdata.cid, 
-			playerdata.playernumber
-		);
-
-
-
+		deleteplayer(modal.modalcontainer, playerdata.playernumber);
 	});
 
 	//add event listner to accept button
@@ -2273,7 +2248,6 @@ let buildmodaleditplayer = async (tid, playernumber) => {
 	modal.acceptbutton.addEventListener("click", async () => {
 		//create json for php
 		playerdata = {
-			tid: tid,
 			cid: clubssel.value,
 			playernumber: playernumberinput.value,
 			gender: genderinput.value,
@@ -2579,7 +2553,7 @@ let updateplayer = async (playerdata, modalcontainer) => {
 
 }
 
-let delteplayer = async (modal, tid, cid, playernumber) => {
+let deleteplayer = async (modal, tid, cid, playernumber) => {
 
 	//data of player which should be deleted
 	playerdata = {

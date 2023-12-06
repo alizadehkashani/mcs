@@ -12,11 +12,10 @@
 	$query = "
 		UPDATE players
 		SET cid = :cid, gender = :gender, surname = :surname, firstname = :firstname
-		WHERE tid = :tid AND playernumber = :playernumber
+		WHERE playernumber = :playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":cid", $input["cid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->bindParam(":gender", $input["gender"]);

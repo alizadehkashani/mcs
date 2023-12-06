@@ -12,11 +12,10 @@
 	$query = "
 		SELECT playernumber
 		FROM players
-		WHERE tid = :tid AND playernumber = :playernumber
+		WHERE playernumber = :playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
 
@@ -32,12 +31,11 @@
 	
 		//query to insert new player 
 		$query = "
-			INSERT INTO players (tid, cid, playernumber, gender, surname, firstname)
-			VALUES (:tid, :cid, :playernumber, :gender, :surname, :firstname)
+			INSERT INTO players (cid, playernumber, gender, surname, firstname)
+			VALUES (:cid, :playernumber, :gender, :surname, :firstname)
 		";
 
 		$sql = $dbconnection->prepare($query);
-		$sql->bindParam(":tid", $input["tid"]);
 		$sql->bindParam(":cid", $input["cid"]);
 		$sql->bindParam(":playernumber", $input["playernumber"]);
 		$sql->bindParam(":gender", $input["gender"]);

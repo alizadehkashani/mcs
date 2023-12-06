@@ -11,12 +11,10 @@
 	//delete player from any existing groups
 	$query = "
 		DELETE FROM groupplayers
-		WHERE tid = :tid 
 		AND playernumber = :playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
 
@@ -24,14 +22,10 @@
 	//delete player from player master
 	$query = "
 		DELETE FROM players
-		WHERE tid = :tid 
-		AND cid = :cid
-		AND playernumber = :playernumber
+		WHERE playernumber = :playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":cid", $input["cid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
 

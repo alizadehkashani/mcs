@@ -10,11 +10,10 @@
 	$query = "
 		SELECT *
 		FROM players
-		WHERE tid = :tid AND playernumber = :playernumber 
+		WHERE playernumber = :playernumber 
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
 	$player = $sql->fetch(PDO::FETCH_ASSOC);
