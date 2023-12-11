@@ -10,12 +10,12 @@
 	//change select to new table
 	$query = "
 		SELECT *
-		FROM players
+		FROM playersintournament
 		WHERE tid = :tid
 	";
 
 	$sql = $dbconnection->prepare($query);
-	$sql->bindParam(":tid", $data["tid"];
+	$sql->bindParam(":tid", $input["tid"]);
 	$sql->execute();
 	$players = $sql->fetchAll(PDO::FETCH_ASSOC);
 

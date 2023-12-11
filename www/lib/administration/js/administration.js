@@ -1881,8 +1881,6 @@ let buildworkspaceplayerconfig = async () => {
 
 let buildworkspaceplayerintconfig = async (tid) => {
 	
-	console.log("show players in tournament: " + tid);
-	
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
 
@@ -1915,16 +1913,16 @@ let buildworkspaceplayerintconfig = async (tid) => {
 	addplayersvg.classList.add("workspaceicon");
 	addplayercontainer.appendChild(addplayersvg);
 	addplayersvg.addEventListener("click", async () => {
-		buildmodaladdplayertotournament(playerstable); 
+		buildmodaladdplayertotournament(playerstable, tid); 
 		//toggleoverlay(true);
 	})
 
-	await buildplayersintournamenttable(playerstable);
+	await buildplayersintournamenttable(playerstable, tid);
 
 
 }
 
-let buildmodaladdplayertotournament(playerstable) = async () => {
+let buildmodaladdplayertotournament = async (playerstable) => {
 
 }
 
@@ -1981,7 +1979,7 @@ let buildplayerstable = async (container) => {
 	}
 }
 
-let buildplayersintournamenttable = async (container) => {
+let buildplayersintournamenttable = async (container, tid) => {
 	//empty table
 	clearelement(container);
 
@@ -1990,7 +1988,7 @@ let buildplayersintournamenttable = async (container) => {
 
 	//loop through players and insert into tables
 	for(let i = 0; i < players.length; i++){
-		buildsingleplayer(container, players[i]);
+		buildsingleplayerintournament(container, players[i]);
 	}
 }
 
@@ -2019,7 +2017,7 @@ let getplayersintournament = async (tid) => {
 			'Accept': 'application/json',
 			'Content-Type': 'application/json'
 		},
-		body: JSON,stringify({tid: tid})
+		body: JSON.stringify({tid: tid})
 	});
 
 	//return players
@@ -2078,20 +2076,49 @@ let buildsingleplayer = async (container, playerdata) => {
 	});
 }
 
-let getplayers = async () => {
-
-	//call php script to fetch players
-	let players = await fetch("/lib/administration/php/getplayers.php", {
-		method: 'POST',
-		header: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json'
-		}
+let buildsingleplayerintournament = async (container, playerdata) => {
+	//create row
+	let row = creatediv({
+		appendto: container,
+		divclass: ["player-row-tournament"]
+	});
+	//add event listner to when to display player
+	row.addEventListener("click", async () => {
+		//await buildmodaleditplayer(playerdata.playernumber);
+		//toggleoverlay(true);
 	});
 
-	//return players
-	return players.json();
+	//add playernumber
+	creatediv({
+		divtext: playerdata.playernumber,
+		appendto: row
+	});
+	
+	//add playernumber
+	creatediv({
+		divtext: playerdata.startnumber,
+		appendto: row
+	});
 
+	/*
+	//add player gender
+	creatediv({
+		divtext: playerdata.gender,
+		appendto: row
+	});
+
+	//add player surname
+	creatediv({
+		divtext: playerdata.surname,
+		appendto: row
+	});
+
+	//add player firstname
+	creatediv({
+		divtext: playerdata.firstname,
+		appendto: row
+	});
+	*/
 }
 
 let buildmodalcreateplayer = async (playerstable) => {
