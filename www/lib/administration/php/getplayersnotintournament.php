@@ -9,7 +9,7 @@
 
 	//change select to new table
 	$query = "
-		SELECT *
+		SELECT playernumber, surname, firstname
 		FROM players
 		WHERE playernumber NOT IN
 			(SELECT playernumber
@@ -20,7 +20,7 @@
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->execute();
-	$players = $sql->fetchAll(PDO::FETCH_ASSOC);
+	$players = $sql->fetchAll();
 
 	echo(json_encode($players));
 ?>

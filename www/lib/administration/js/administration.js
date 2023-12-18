@@ -1922,24 +1922,22 @@ let buildworkspaceplayerintconfig = async (tid) => {
 }
 
 let buildmodaladdplayertotournament = async (tid, playerstable) => {
-	console.log(tid, playerstable);
 	console.log(await getplayersnotintournament(tid)); 
 	
-	/*
 	//turn on overlay
 	toggleoverlay(true);
 
 	//create modal
 	let modal = createbasicmodal(
 		"modal-add-player-to-group",
-		"Spieler Gruppe hinzufuegen",
-		"modal-add-player-to-group-layout"
+		"Spieler Turnier hinzufuegen",
+		"modal-add-player-to-tournament-layout"
 	);
 
 	//get all players which are currently not in a group for that track
-	let players = await getplayersnotingroup(groupsdata)
+	let playersnotintournament = await await getplayersnotintournament(tid) 
 
-	for(let i = 0; i < players.length; i++){
+	for(let i = 0; i < playersnotintournament.length; i++){
 		let playercontainer = creatediv({
 			appendto: modal.modalbody,
 			divclass: ["addplayertogroup-playercontainer"]
@@ -1950,25 +1948,25 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 
 			creatediv({
 				appendto: playercontainer,
-				divtext: players[i][j]
+				divtext: playersnotintournament[i][j]
 			})
 
 		}
 
 		//create button to add player group
-		let addplayertogroupbutton = document.createElement("div");
-		addplayertogroupbutton.classList.add("icon-playerplus");
-		addplayertogroupbutton.classList.add("icon");
-		addplayertogroupbutton.classList.add("workspaceicon");
-		playercontainer.appendChild(addplayertogroupbutton);
+		let addplayertotournamentbutton = document.createElement("div");
+		addplayertotournamentbutton.classList.add("icon-playerplus");
+		addplayertotournamentbutton.classList.add("icon");
+		addplayertotournamentbutton.classList.add("workspaceicon");
+		playercontainer.appendChild(addplayertotournamentbutton);
 		
 		//behaviour if add player button is clicked
-		addplayertogroupbutton.addEventListener("click", async () => {
+		addplayertotournamentbutton.addEventListener("click", async () => {
 			//add player to current group
-			await addplayertogroup(groupsdata.tid, groupid, players[i]["playernumber"]);		
-		
+			console.log(playersnotintournament[i]["playernumber"]);	
+
 			//rebuild list of players in background
-			buildgroupplayers(playerscontainer, groupid);
+			await buildplayersintournamenttable(playerstable, tid);
 			
 			//remove player from list of available player
 			playercontainer.remove();
@@ -1982,7 +1980,6 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		changeelementvisibility(modal.modalcontainer, false, true);
 		toggleoverlay(false);
 	});
-	*/
 }
 
 let clubsdropdown = async () => {
@@ -2086,7 +2083,6 @@ let getplayersintournament = async (tid) => {
 
 let getplayersnotintournament = async (tid) => {
 
-	debugger;
 	//call php script to fetch players
 	let players = await fetch("/lib/administration/php/getplayersnotintournament.php", {
 		method: 'POST',
@@ -3651,7 +3647,7 @@ let addplayertogroupmodal = async (groupsdata, playerscontainer, groupid) => {
 			await addplayertogroup(groupsdata.tid, groupid, players[i]["playernumber"]);		
 		
 			//rebuild list of players in background
-			buildgroupplayers(playerscontainer, groupid);
+			await buildgroupplayers(playerscontainer, groupid);
 			
 			//remove player from list of available player
 			playercontainer.remove();

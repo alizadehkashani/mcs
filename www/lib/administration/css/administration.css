@@ -808,6 +808,22 @@
 	cursor: pointer;
 }
 
+#modal-add-player-to-tournament-layout{
+
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-auto-rows: 30px;
+	grid-row-gap: 5px;
+	overflow-y: auto;
+
+}
+
+.addplayertotournament-playercontainer{
+	display: grid;
+	grid-template-columns: 50px 1fr 1fr 30px;
+	grid-template-rows: 1fr;
+}
+
 .startgroupsbuttoncontainer{
 	opacity: 0;
 }
