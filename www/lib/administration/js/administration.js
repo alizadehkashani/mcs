@@ -703,8 +703,6 @@ let buildworkspacetournamentinformation = async (id, tournamentnamediv, tourname
 				replaceclassindoc("icon-tournament-active", "icon-tournament");
 				replaceclassindoc("icon-matchday-active", "icon-matchday");
 				replaceclassindoc("icon-round-active", "icon-round");
-				tournamenticon.classList.remove("icon-tournament");
-				tournamenticon.classList.add("icon-tournament-active");
 
 			}
 		}
@@ -1934,7 +1932,7 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		"modal-add-player-to-tournament-layout"
 	);
 
-	//get all players which are currently not in a group for that track
+	//get all players which are not in the tournament from global list
 	let playersnotintournament = await await getplayersnotintournament(tid) 
 
 	for(let i = 0; i < playersnotintournament.length; i++){
@@ -1963,7 +1961,8 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		//behaviour if add player button is clicked
 		addplayertotournamentbutton.addEventListener("click", async () => {
 			//add player to current group
-			console.log(playersnotintournament[i]["playernumber"]);	
+			console.log(tid, playersnotintournament[i]["playernumber"]);	
+			await addplayertotournament(tid, playersnotintournament[i]["playernumber"]);
 
 			//rebuild list of players in background
 			await buildplayersintournamenttable(playerstable, tid);
@@ -1980,6 +1979,30 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		changeelementvisibility(modal.modalcontainer, false, true);
 		toggleoverlay(false);
 	});
+}
+
+let addplayertotournament = async (tid, playernumber) => {
+
+	phpdata = {
+		tid: tid,
+		playernumber: playernumber,
+	}
+
+	let phppath = "/lib/administration/php/addplayertotournament.php";
+
+	let addplayertotournament = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(phpdata)
+	});
+
+	//php response
+	let phpresponse = await addplayertotournament.json();
+
+	return phpresponse;
 }
 
 let clubsdropdown = async () => {

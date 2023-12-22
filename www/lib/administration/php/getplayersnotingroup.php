@@ -8,7 +8,7 @@
 	$response = [];
 
 	$query = "
-	SELECT playernumber, surname, firstname FROM players 
+	SELECT playernumber, surname, firstname FROM playersintournament 
 	WHERE tid = :tid
 	AND playernumber NOT IN(
 		SELECT groupplayers.playernumber
