@@ -8,9 +8,12 @@
 	$response = [];
 
 	$query = "
-	SELECT playernumber, surname, firstname FROM playersintournament 
-	WHERE tid = :tid
-	AND playernumber NOT IN(
+	SELECT players.playernumber, players.surname, players.firstname 
+	FROM players 
+	INNER JOIN playersintournament
+	ON players.playernumber = playersintournament.playernumber
+	WHERE playersintournament.tid = :tid
+	AND players.playernumber NOT IN(
 		SELECT groupplayers.playernumber
 		FROM groups
 		INNER JOIN groupplayers 
