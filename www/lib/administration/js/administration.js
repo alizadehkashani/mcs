@@ -555,7 +555,7 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 
 }
 
-let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon) => {
+let buildworkspaceviewtournament = async (id) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -618,6 +618,11 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	deleteicon.classList.add("icon");
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
+	deleteicon.addEventListener("click", async () => {
+		console.log(id);
+		//await deletetournament(id);
+		//
+	});
 
 	//build standard view, tournament information
 	await buildworkspacetournamentinformation(id, tournamentnamediv, tournamenticon);
@@ -4011,6 +4016,28 @@ let buildtournamentsdropdown = async () => {
 let gettournamentdata = async (tid) => {
 	tid = {tid: tid};
 	let phppath = "/lib/administration/php/gettournamentdata.php";
+	let tdata = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(tid)
+	});
+
+	//php response
+	let phpresponse = await tdata.json();
+	
+	return phpresponse;
+
+}
+
+let deletetournament = async (tid) => {
+
+	//data for php script
+	tid = {tid: tid};
+
+	let phppath = "/lib/administration/php/deletetournament.php";
 	let tdata = await fetch(phppath, {
 		method: 'POST',
 		header: {
