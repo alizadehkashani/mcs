@@ -6,6 +6,32 @@
 
 	$response = [];
 
+	//delete players in groups of that matchday
+	$query = "
+		DELETE FROM groupplayers
+		WHERE groupid IN 
+			(SELECT groupid FROM groups
+				WHERE tid = :tid 
+				AND mid = :mid)
+
+	";
+
+	//delete groups of  that matchday
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->execute();
+	
+	$query = "
+		DELETE FROM groups
+		WHERE tid = :tid AND mid = :mid
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":tid", $input["tid"]);
+	$sql->bindParam(":mid", $input["mid"]);
+	$sql->execute();
+
 	//delte rounds of that matchday
 	$query = "
 		DELETE FROM rounds
@@ -17,7 +43,7 @@
 	$sql->bindParam(":mid", $input["mid"]);
 	$sql->execute();
 
-	//delte matchday
+	//delete matchday
 	$query = "
 		DELETE FROM matchdays
 		WHERE tid = :tid AND mid = :mid
@@ -27,8 +53,6 @@
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->bindParam(":mid", $input["mid"]);
 	$sql->execute();
-
-	//TODO delete groups / delete group players
 
 	$response["result"] = 0;
 	$response["message"] = "Spieltag geloescht";
