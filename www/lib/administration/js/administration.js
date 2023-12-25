@@ -620,7 +620,7 @@ let buildworkspaceviewtournament = async (id, tournamentnamediv, tournamenticon)
 	workspaceheadvariable.appendChild(deleteicon);
 
 	//build standard view, tournament information
-	buildworkspacetournamentinformation(id, tournamentnamediv, tournamenticon);
+	await buildworkspacetournamentinformation(id, tournamentnamediv, tournamenticon);
 
 }
 
@@ -3973,17 +3973,26 @@ let buildtournamentsdropdown = async () => {
 	let tournamentselection = document.createElement("select");
 	tournamentselection.setAttribute("id", "t-select-dropdown");
 
+	//create drop down selection for each tournament
 	for(let i = 0; i < tournaments.length; i++){
 		let option = document.createElement("option");
 		option.value = tournaments[i]["tid"];
 		option.text = tournaments[i]["tname"];
 		tournamentselection.appendChild(option);
 
+		//set the default option to the active tournament
+		//and build navigation and information for tournament
 		if(tournaments[i]["active"] = "1"){
 			tournamentselection.value = tournaments[i]["tid"];
+			//build tournament data
+			await buildvariablenavigation(tournaments[i]["tid"]);
+			//view tournament information
+			await buildworkspaceviewtournament(tournaments[i]["tid"]);
+
 		}
 	}
 
+	//when a tournament is selected in the drop down list
 	tournamentselection.addEventListener("change", async () => {
 		//close current workspace
 		closeworkspace();
