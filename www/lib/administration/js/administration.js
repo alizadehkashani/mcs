@@ -555,7 +555,7 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 
 }
 
-let buildworkspaceviewtournament = async (id) => {
+let buildworkspaceviewtournament = async (id, dropdown) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -619,9 +619,20 @@ let buildworkspaceviewtournament = async (id) => {
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
 	deleteicon.addEventListener("click", async () => {
-		console.log(id);
+		//remove option from dropdown
+		removeoptionfromselection(dropdown, id);
+		//clear variable navigation
+		clearid("navigationvariablecontainer");
+		//clear workspace
+		closeworkspace();
+		//remove releated tournament data from db
 		//await deletetournament(id);
 		//
+		console.log(dropdown.value);
+		//build tournament data
+		await buildvariablenavigation(dropdown.value);
+		//view tournament information
+		await buildworkspaceviewtournament(dropdown.value, dropdown);
 	});
 
 	//build standard view, tournament information
@@ -3978,6 +3989,9 @@ let buildtournamentsdropdown = async () => {
 	let tournamentselection = document.createElement("select");
 	tournamentselection.setAttribute("id", "t-select-dropdown");
 
+	//variable for current tournament
+	let currenttournament;
+
 	//create drop down selection for each tournament
 	for(let i = 0; i < tournaments.length; i++){
 		let option = document.createElement("option");
@@ -3985,18 +3999,20 @@ let buildtournamentsdropdown = async () => {
 		option.text = tournaments[i]["tname"];
 		tournamentselection.appendChild(option);
 
-		//set the default option to the active tournament
-		//and build navigation and information for tournament
 		if(tournaments[i]["active"] = "1"){
 			tournamentselection.value = tournaments[i]["tid"];
-			//when the tournament is active, automatically build information
 
 		}
+
+		//build navigation and information for tournament
 		if(tournaments[i]["tcurrent"] == "1"){
+			//when the tournament is active, automatically build information
 			//build tournament data
 			await buildvariablenavigation(tournaments[i]["tid"]);
 			//view tournament information
-			await buildworkspaceviewtournament(tournaments[i]["tid"]);
+			await buildworkspaceviewtournament(tournaments[i]["tid"], tournamentselection);
+			//store id of current tournament
+			currenttournament = tournaments[i]["tid"];
 		}
 
 	}
@@ -4010,8 +4026,11 @@ let buildtournamentsdropdown = async () => {
 		//build tournament data
 		await buildvariablenavigation(tournamentselection.value);
 		//view tournament information
-		await buildworkspaceviewtournament(tournamentselection.value);
+		await buildworkspaceviewtournament(tournamentselection.value, tournamentselection);
 	});
+	
+	//set the default option to the active tournament
+	tournamentselection.value = currenttournament;
 	
 	return tournamentselection;
 
@@ -4055,6 +4074,18 @@ let deletetournament = async (tid) => {
 	let phpresponse = await tdata.json();
 	
 	return phpresponse;
+
+}
+
+let removeoptionfromselection = (selection, value) => {
+	//loop through options
+	//delete option which matches value
+	for(let i = 0; i < selection.length; i++){
+		if(selection.options[i].value == value){
+			selection.remove(i);
+		}
+	}
+
 
 }
 
