@@ -47,8 +47,10 @@ let buildheader = async () => {
 	tournamentinformationicon.classList.add("workspaceicon");
 	headercontainer.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", async () => {
-		//await buildworkspacetournamentinformation(id, tournamentnamediv);
-		await buildworkspaceviewtournament(tournamentsdropdown.value);
+		//test if there are tournaments in the list
+		if(tournamentsdropdown.length != 0){
+			await buildworkspaceviewtournament(tournamentsdropdown.value, tournamentsdropdown);
+		}
 	})
 
 
@@ -626,13 +628,15 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 		//clear workspace
 		closeworkspace();
 		//remove releated tournament data from db
-		//await deletetournament(id);
-		//
-		console.log(dropdown.value);
-		//build tournament data
-		await buildvariablenavigation(dropdown.value);
-		//view tournament information
-		await buildworkspaceviewtournament(dropdown.value, dropdown);
+		await deletetournament(id);
+		
+		//if there are other tournaments build the first on in the list
+		if(dropdown.length != 0){
+			//build tournament data
+			await buildvariablenavigation(dropdown.value);
+			//view tournament information
+			await buildworkspaceviewtournament(dropdown.value, dropdown);
+		}
 	});
 
 	//build standard view, tournament information
