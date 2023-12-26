@@ -625,7 +625,7 @@ let buildworkspaceviewtournament = async (id) => {
 	});
 
 	//build standard view, tournament information
-	await buildworkspacetournamentinformation(id, tournamentnamediv, tournamenticon);
+	await buildworkspacetournamentinformation(id);
 
 }
 
@@ -3989,12 +3989,16 @@ let buildtournamentsdropdown = async () => {
 		//and build navigation and information for tournament
 		if(tournaments[i]["active"] = "1"){
 			tournamentselection.value = tournaments[i]["tid"];
+			//when the tournament is active, automatically build information
+
+		}
+		if(tournaments[i]["tcurrent"] == "1"){
 			//build tournament data
 			await buildvariablenavigation(tournaments[i]["tid"]);
 			//view tournament information
 			await buildworkspaceviewtournament(tournaments[i]["tid"]);
-
 		}
+
 	}
 
 	//when a tournament is selected in the drop down list
