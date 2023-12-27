@@ -272,6 +272,17 @@ let buildsettingsworkspace = () => {
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
 
+	//create icon for tournament creation
+	let createtournament = document.createElement("div");
+	createtournament.classList.add("icon-tournament");
+	createtournament.classList.add("icon");
+	createtournament.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(createtournament);
+	createtournament.addEventListener("click", async () => {
+		//build modal to createa new tournament
+		await buildmodalcreatetournament();
+	})	
+
 	//create icon for club configuration
 	let clubconfig = document.createElement("div");
 	clubconfig.classList.add("icon-club");
@@ -291,6 +302,7 @@ let buildsettingsworkspace = () => {
 	playerconfig.addEventListener("click", async () => {
 		await buildworkspaceplayerconfig();
 	})	
+
 }
 
 let buildworkspace = () => {
@@ -470,7 +482,6 @@ let createnewtournament = async (description, location) => {
 
 
 	if(phpresponse["result"] == 0){
-		
 		//set input fields initial
 		description.value = "";
 		location.value = "";
@@ -481,6 +492,8 @@ let createnewtournament = async (description, location) => {
 		//deactivate modal and overlay
 		changeelementvisibility(document.getElementById("modal-create-tournament"), false, true);
 		toggleoverlay(false);
+
+		return phpresponse;
 
 	}else{
 		alert("error");
@@ -1016,7 +1029,7 @@ let getrounds = async (tid, mid) => {
 	return response;
 }
 
-let buildmodalcreatetournament = () => {
+let buildmodalcreatetournament = async () => {
 
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -1102,8 +1115,20 @@ let buildmodalcreatetournament = () => {
 	donebuttoncontainer.appendChild(doneicon);
 
 	//add eventlistner to close button
-	donebuttoncontainer.addEventListener("click", () =>{
-		createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
+	donebuttoncontainer.addEventListener("click", async () =>{
+		let tdesc = tournamentdescriptioninput.value;
+		let newt = await createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
+		//changeelementvisibility(modalcontainer, false, true);
+		//toggleoverlay(false);
+
+		let newtid = newt["tid"];
+
+		if(newt["result"] == "0"){
+			console.log(newtid);
+			console.log(tdesc);
+			addoptiontotournamentselection(newtid, tdesc);
+		}
+
 	})
 
 	//turn in overlay
@@ -4091,6 +4116,17 @@ let removeoptionfromselection = (selection, value) => {
 	}
 
 
+}
+
+let addoptiontotournamentselection = (value, text) => {
+	let dropdown = document.getElementById("t-select-dropdown");
+	let option = document.createElement("option");
+	option.value = value;
+	option.text = text;
+	console.log(value);
+	console.log(text);
+	console.log(dropdown);
+	dropdown.add(option, dropdown.length);
 }
 
 DOMready(buildheader);

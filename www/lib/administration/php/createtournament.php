@@ -18,8 +18,11 @@
 	$sql->bindParam(":tlocation", $data["location"]);
 	$sql->bindParam(":tactive", $active);
 	$sql->execute();
+
+	$newtid = $dbconnection->lastInsertId();
 	
 	$response["result"] = 0;
+	$response["tid"] = $newtid;
 	$response["message"] = "Turnier angelegt";
 
 	echo(json_encode($response));
