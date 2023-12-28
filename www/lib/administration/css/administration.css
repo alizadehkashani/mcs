@@ -467,6 +467,24 @@
 	grid-row-gap: 5px;
 }
 
+#modal-delete-club{
+	width: 600px;
+}
+
+#modal-delete-club-body{
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 500px;
+	grid-template-rows: 25px;
+
+	grid-row-gap: 5px;
+}
+
+
 #modal-create-matchday{
 	width: 600px;
 }
@@ -826,6 +844,10 @@
 
 .startgroupsbuttoncontainer{
 	opacity: 0;
+}
+
+.delete-club-text::after{
+	content: "Soll der Verein wirklich geloescht werden?";
 }
 
 .icon-tournament{

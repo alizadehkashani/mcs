@@ -828,11 +828,13 @@ let buildmodalviewclub = async (clubid) => {
 
 	let club = await getclub(clubid);
 	
-	let modal = createbasicmodal(
-		"modal-view-club", 
-		"Verein anzeigen", 
-		"modal-view-club-body"
-	);
+	let modaldata = {
+		mainid: "modal-view-club", 
+		labeltext: "Verein anzeigen", 
+		bodyid: "modal-view-club-body"
+	}
+
+	let modal = createbasicmodal(modaldata);
 	
 	//div for description off tournmanet description button
 	creatediv({
@@ -860,14 +862,19 @@ let buildmodalviewclub = async (clubid) => {
 	deleteclubbutton.classList.add("workspaceicon");
 	deleteclubcuttoncontainer.appendChild(deleteclubbutton);
 
-	deleteclubcuttoncontainer.addEventListener("click", () => {
-		deleteclub(clubid);
+	deleteclubcuttoncontainer.addEventListener("click", async () => {
+		//await deleteclub(clubid);
+		//changeelementvisibility(modal.modalcontainer, false, true);
+		//toggleoverlay(false);
+		/*
+		*/
+		modal.modalcontainer.remove();
 		changeelementvisibility(modal.modalcontainer, false, true);
-		toggleoverlay(false);
+		let clubdeletemodal = await buildmodaldeleteclub(clubid);
 	})	
 
-	modal.acceptbutton.addEventListener("click", () => {
-		updateclub(clubid, clubname.value);
+	modal.acceptbutton.addEventListener("click", async () => {
+		await updateclub(clubid, clubname.value);
 	})
 
 	toggleoverlay(true);
@@ -1138,12 +1145,14 @@ let buildmodalcreatetournament = async () => {
 
 let buildmodalcreateclub = () => {
 	
+	//modal data
+	let modaldata = {
+		mainid: "modal-create-club", 
+		labeltext: "Verein anlegen", 
+		bodyid: "modal-create-club-body"
+	}
 	//create modal
-	let modal = createbasicmodal(
-		"modal-create-club", 
-		"Verein anlegen", 
-		"modal-create-club-body"
-	);
+	let modal = createbasicmodal(modaldata);
 	
 	//div for description off tournmanet description button
 	creatediv({
@@ -1188,7 +1197,11 @@ let createnewmatchday = async (tid) => {
 }
 
 
-let createbasicmodal = (mainid, labeltext, bodyid) => {
+let createbasicmodal = (modaldata) => {
+	//mainid
+	//labeltext
+	//bodyid
+	
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
 
@@ -1196,7 +1209,7 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	let modalcontainer = creatediv({
 		appendto: administrationcontainer,
 		divclass: ["modal"],
-		divid: mainid
+		divid: modaldata.mainid
 	})
 
 	//create modal head 
@@ -1209,7 +1222,7 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	let modallabel = creatediv({
 		appendto: modalhead,
 		divclass: ["flexleft"],
-		divtext: labeltext
+		divtext: modaldata.labeltext
 	})
 
 	//create close button
@@ -1218,18 +1231,23 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	closeicon.classList.add("icon");
 	modalhead.appendChild(closeicon);
 
-	//make modal invsible
+	//behaviour for close button
+	//in standard behaviour close the modal and remove it from dom
+	//if set to false, the behaviour as to be set manually
 	closeicon.addEventListener("click", () => {
-		modalcontainer.remove();		
-		//changeelementvisibility(modalcontainer, false, true);
-		toggleoverlay(false);
+		if(modaldata.onclose == undefined || modaldata.conclose == true){
+			//on close remove the modal from dom
+			modalcontainer.remove();		
+			//turn off the overlay
+			toggleoverlay(false);
+		}
 	});
 
 	//create modal body
 	let modalbody = creatediv({
 		appendto: modalcontainer,
 		divclass: ["modal-body"],
-		divid: bodyid
+		divid: modaldata.bodyid
 	})
 
 	//create modal foot
@@ -1253,7 +1271,8 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 	return {
 		modalcontainer: modalcontainer,
 		modalbody: modalbody,
-		acceptbutton: donebuttoncontainer
+		acceptbutton: donebuttoncontainer,
+		closebutton: closeicon
 	}
 }
 
@@ -1658,12 +1677,15 @@ let buildsingletrack = (container, trackdata, tid) => {
 
 let buildmodalcreatetrack = async (tid) => {
 
+	//modaldata
+	let modaldata = {
+		mainid: "modal-create-track",
+		labeltext: "Bahn anlegen",
+		bodyid: "modal-create-track-body"
+	}
+
 	//create modal
-	let modal = createbasicmodal(
-		"modal-create-track",
-		"Bahn anlegen",
-		"modal-create-track-body"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//create label for label
 	let tracklabellabel = creatediv({
@@ -1744,12 +1766,14 @@ let buildmodaledittrack = async (tid, trackid) => {
 	//get track
 	let trackdata = await gettrack(tid, trackid);
 
+	let modaldata = {
+		mainid: "modal-edit-track",
+		labeltext: "Bahn",
+		bodyid: "modal-edit-track-body"
+	}
+
 	//create modal
-	let modal = createbasicmodal(
-		"modal-edit-track",
-		"Bahn",
-		"modal-edit-track-body"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//create label for label
 	let tracklabellabel = creatediv({
@@ -1971,12 +1995,15 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 	//turn on overlay
 	toggleoverlay(true);
 
+	//modal data
+	let modaldata = {
+		mainid: "modal-add-player-to-group",
+		labeltext: "Spieler Turnier hinzufuegen",
+		bodyid: "modal-add-player-to-tournament-layout"
+	}
+	
 	//create modal
-	let modal = createbasicmodal(
-		"modal-add-player-to-group",
-		"Spieler Turnier hinzufuegen",
-		"modal-add-player-to-tournament-layout"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//get all players which are not in the tournament from global list
 	let playersnotintournament = await await getplayersnotintournament(tid) 
@@ -2264,12 +2291,15 @@ let buildsingleplayerintournament = async (container, playerdata) => {
 
 let buildmodalcreateplayer = async (playerstable) => {
 
+	//modal data
+	let modaldata = {
+		mainid: "modal-create-player",
+		labeltext: "Spieler anlegen",
+		bodyid: "modal-create-player-body"
+	}
+
 	//create modal
-	let modal = createbasicmodal(
-		"modal-create-player",
-		"Spieler anlegen",
-		"modal-create-player-body"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//create label for club selection
 	let clubsellabel = creatediv({
@@ -2381,12 +2411,15 @@ let buildmodalcreateplayer = async (playerstable) => {
 
 let buildmodaleditplayer = async (playernumber) => {
 
+	//modaldata
+	let modaldata = {
+		mainid: "modal-edit-player",
+		labeltext: "Spieler",
+		bodyid: "modal-edit-player-layout"
+	}
+
 	//create modal
-	let modal = createbasicmodal(
-		"modal-edit-player",
-		"Spieler",
-		"modal-edit-player-layout"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//get playerdata from db
 	let playerdata = await getplayer(playernumber);
@@ -3682,12 +3715,15 @@ let addplayertogroupmodal = async (groupsdata, playerscontainer, groupid) => {
 	//turn on overlay
 	toggleoverlay(true);
 
+	//modal data
+	let modaldata = {
+		mainid: "modal-add-player-to-group",
+		labeltext: "Spieler Gruppe hinzufuegen",
+		bodyid: "modal-add-player-to-group-layout"
+	}
+
 	//create modal
-	let modal = createbasicmodal(
-		"modal-add-player-to-group",
-		"Spieler Gruppe hinzufuegen",
-		"modal-add-player-to-group-layout"
-	);
+	let modal = createbasicmodal(modaldata);
 
 	//get all players which are currently not in a group for that track
 	let players = await getplayersnotingroup(groupsdata)
@@ -4148,6 +4184,48 @@ let tracksfortournamentexist = async (tid) => {
 	}else{
 		return false;
 	}
+
+
+}
+
+let buildmodaldeleteclub = async (clubid) => {
+
+	//modal data
+	let modaldata = {
+		mainid: "modal-delete-club", 
+		labeltext: "Verein loeschen", 
+		bodyid: "modal-delete-club-body",
+		onclose: false
+	}
+	
+	//create modal
+	let modal = createbasicmodal(modaldata);
+
+	//create text for question
+	creatediv({
+		type: "span",
+		appendto: modal.modalbody,
+		divclass: ["delete-club-text"]
+	});
+
+	//when user decides not to delete the club
+	modal.closebutton.addEventListener("click", async () => {
+
+		//close the delete modal
+		modal.modalcontainer.remove();
+		//build the club edit modal
+		await buildmodalviewclub(clubid);	
+	});
+
+	modal.acceptbutton.addEventListener("click", async () => {
+		//delete the club on db
+		await deleteclub(clubid);
+		//remove the modal
+		modal.modalcontainer.remove();
+		//turn off overlay
+		toggleoverlay(false);	
+	});
+
 
 
 }
