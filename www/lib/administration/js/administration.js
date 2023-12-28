@@ -2918,9 +2918,15 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, rdata, rou
 	roundstartgroupsicon.classList.add("icon");
 	roundstartgroupsicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(roundstartgroupsicon);
-	roundstartgroupsicon.addEventListener("click", () => {
+	roundstartgroupsicon.addEventListener("click", async () => {
+
+		let tracks = await tracksfortournamentexist(rdata["tid"]);
 		//displays round information
-		buildworkspaceroundstartgroups(rdata);
+		if(tracks){
+			await buildworkspaceroundstartgroups(rdata);
+		}else{
+			alert("Turnier hat keine Bahnen");
+		}
 	})
 
 	//create icon for round deletion 
@@ -4128,6 +4134,21 @@ let addoptiontotournamentselection = (value, text) => {
 	option.text = text;
 	////set option text
 	dropdown.add(option, dropdown.length);
+}
+
+let tracksfortournamentexist = async (tid) => {
+	//get tracks from tournament
+	let tracks = await gettracks(tid);	
+	//if tournament has track return true
+	//if tournament has no tracks return false
+	console.log(tracks.length);
+	if(tracks.length > 0){
+		return true;
+	}else{
+		return false;
+	}
+
+
 }
 
 DOMready(buildheader);
