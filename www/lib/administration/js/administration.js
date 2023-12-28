@@ -599,7 +599,7 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 	tournamentinformationicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentinformationicon);
 	tournamentinformationicon.addEventListener("click", async () => {
-		await buildworkspacetournamentinformation(id, tournamentnamediv);
+		await buildworkspacetournamentinformation(id);
 	})
 
 	//create icon for track configuration
@@ -659,7 +659,7 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 
 }
 
-let buildworkspacetournamentinformation = async (id, tournamentnamediv, tournamenticon) => {
+let buildworkspacetournamentinformation = async (id) => {
 
 	//get workspace foot
 	let workspacefoot = getworkspacefoot();
