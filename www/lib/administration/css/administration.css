@@ -850,6 +850,17 @@
 	content: "Soll der Verein wirklich geloescht werden?";
 }
 
+.workspace-settings-tournament-config{
+	display: grid;
+
+	height: 600px;
+	min-width: 600px;
+	
+
+	grid-template-columns: 1fr;
+	grid-template-rows: 50px 1fr;
+}
+
 .icon-tournament{
 	background: no-repeat center url("/../lib/administration/assets/tournament.svg");
 }

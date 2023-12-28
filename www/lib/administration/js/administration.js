@@ -274,15 +274,16 @@ let buildsettingsworkspace = () => {
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
 
-	//create icon for tournament creation
-	let createtournament = document.createElement("div");
-	createtournament.classList.add("icon-tournament");
-	createtournament.classList.add("icon");
-	createtournament.classList.add("workspaceicon");
-	workspaceheadvariable.appendChild(createtournament);
-	createtournament.addEventListener("click", async () => {
+	//create icon for tournament settings
+	let tournamentsettings = document.createElement("div");
+	tournamentsettings.classList.add("icon-tournament");
+	tournamentsettings.classList.add("icon");
+	tournamentsettings.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(tournamentsettings);
+	tournamentsettings.addEventListener("click", async () => {
 		//build modal to createa new tournament
-		await buildmodalcreatetournament();
+		//await buildmodaltournamentsettings();
+		await buildworkspacetournamentconfig();
 	})	
 
 	//create icon for club configuration
@@ -4227,6 +4228,46 @@ let buildmodaldeleteclub = async (clubid) => {
 	});
 
 
+
+}
+
+let buildworkspacetournamentconfig = async () => {
+	
+	//get tournaments data
+	let tournaments = await gettournaments();	
+	
+	//get workspace body
+	let workspacebody = getworkspacebody();
+	
+	//get workspace foot
+	let workspacefoot = getworkspacefoot();
+
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-settings-tournament-config");
+
+	//create container for tournament create button
+	let tournamentcreatebuttoncontainer = creatediv({
+		appendto: workspacebody
+	});
+
+	tournamentcreatebuttoncontainer .style.padding = "10px";
+
+	//add button to create new tournament
+	let createtournamentbutton = document.createElement("div");
+	createtournamentbutton.classList.add("icon-plus");
+	createtournamentbutton.classList.add("icon");
+	createtournamentbutton.classList.add("workspaceicon");
+	tournamentcreatebuttoncontainer.appendChild(createtournamentbutton);
+	createtournamentbutton.addEventListener("click", async () => {
+		//build modal to createa new tournament
+		await buildmodalcreatetournament();
+	})	
+
+	//TODO build table with tournaments
 
 }
 
