@@ -1220,7 +1220,8 @@ let createbasicmodal = (mainid, labeltext, bodyid) => {
 
 	//make modal invsible
 	closeicon.addEventListener("click", () => {
-		changeelementvisibility(modalcontainer, false, true);
+		modalcontainer.remove();		
+		//changeelementvisibility(modalcontainer, false, true);
 		toggleoverlay(false);
 	});
 
