@@ -239,7 +239,9 @@ let buildconstantnavigation = (maincontainer) => {
 	})
 
 	settingsinconanddescription.addEventListener("click", () => { 
+		//mark settings as selected
 		setselectednavigation(settingscontainer, "navigation");
+		//display settings workspace
 		buildsettingsworkspace();
 	})
 
@@ -1124,8 +1126,7 @@ let buildmodalcreatetournament = async () => {
 		let newtid = newt["tid"];
 
 		if(newt["result"] == "0"){
-			console.log(newtid);
-			console.log(tdesc);
+			//if tournament was successfully created add it to drop down list
 			addoptiontotournamentselection(newtid, tdesc);
 		}
 
@@ -1965,7 +1966,6 @@ let buildworkspaceplayerintconfig = async (tid) => {
 }
 
 let buildmodaladdplayertotournament = async (tid, playerstable) => {
-	console.log(await getplayersnotintournament(tid)); 
 	
 	//turn on overlay
 	toggleoverlay(true);
@@ -2006,7 +2006,6 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		//behaviour if add player button is clicked
 		addplayertotournamentbutton.addEventListener("click", async () => {
 			//add player to current group
-			console.log(tid, playersnotintournament[i]["playernumber"]);	
 			await addplayertotournament(tid, playersnotintournament[i]["playernumber"]);
 
 			//rebuild list of players in background
@@ -3091,7 +3090,7 @@ let buildworkspaceroundinformation = async (rdata, roundicon) => {
 	roundinfoinputcontainer.appendChild(initbutton);
 
 	initbutton.addEventListener("click", async () => {
-		initround(tid, mid, rid);	
+		initround(rdata["tid"], rdata["mid"], rdata["rid"]);	
 	});
 
 	//create container for done button
@@ -4119,13 +4118,15 @@ let removeoptionfromselection = (selection, value) => {
 }
 
 let addoptiontotournamentselection = (value, text) => {
+	//get tournament selection
 	let dropdown = document.getElementById("t-select-dropdown");
+	//create new option for selection
 	let option = document.createElement("option");
+	//set option value
 	option.value = value;
+	//set option text
 	option.text = text;
-	console.log(value);
-	console.log(text);
-	console.log(dropdown);
+	////set option text
 	dropdown.add(option, dropdown.length);
 }
 
