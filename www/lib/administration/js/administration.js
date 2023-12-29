@@ -241,13 +241,10 @@ let buildconstantnavigation = (maincontainer) => {
 	})
 
 	//event listner for the settingscontainer
-	tournamentinconanddescription.addEventListener("click", () => { 
+	tournamentinconanddescription.addEventListener("click", async () => { 
 		//mark settings as selected
 		setselectednavigation(tournamentcontainer, "navigation");
-		/*
-		//display settings workspace
-		buildsettingsworkspace();
-		*/
+		await buildworkspacetournamentconfig();
 	})
 
 	let tournamenticon = document.createElement("div");
@@ -321,8 +318,6 @@ let buildsettingsworkspace = () => {
 	tournamentsettings.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(tournamentsettings);
 	tournamentsettings.addEventListener("click", async () => {
-		//build modal to createa new tournament
-		//await buildmodaltournamentsettings();
 		await buildworkspacetournamentconfig();
 	})	
 
@@ -4273,18 +4268,25 @@ let buildmodaldeleteclub = async (clubid) => {
 
 let buildworkspacetournamentconfig = async () => {
 	
-	//get tournaments data
-	let tournaments = await gettournaments();	
-	
-	//get workspace body
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
 	let workspacebody = getworkspacebody();
-	
-	//get workspace foot
 	let workspacefoot = getworkspacefoot();
+	let workspaceheadvariable = getworkspaceheadvariable();
 
-	//clear workspace body and foot
+	//clear workspace
+	clearworkspace();
 	clearworkspacebody();
 	clearworkspacefoot();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+	
+	//get tournaments data
+	let tournaments = await gettournaments();	
 
 	//add class to workspace body
 	workspacebody.classList.add("workspace-settings-tournament-config");
