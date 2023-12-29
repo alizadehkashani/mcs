@@ -962,6 +962,10 @@
 	background: no-repeat center url("/../lib/assets/init.svg");
 }
 
+.icon-settings{
+	background: no-repeat center url("/../lib/assets/settings.svg");
+}
+
 .icon{
 	width: 30px;
 	height: 30px;

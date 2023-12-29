@@ -223,13 +223,52 @@ let buildconstantnavigation = (maincontainer) => {
 		divid: "navigationconstantcontainer",
 		appendto: maincontainer,
 	})
+	
+	//---TOURNAMENTS---
+	//container for settings
+	let tournamentcontainer = creatediv({
+		divclass: ["navigationitem-0", "navigationitemhover"],
+		appendto: navigationconstantcontainer
+	})
 
+	//create filler div
+	creatediv({appendto: tournamentcontainer});
+
+	//container for icon and description
+	let tournamentinconanddescription = creatediv({
+		divclass: ["navigation-icon-description"],
+		appendto: tournamentcontainer
+	})
+
+	//event listner for the settingscontainer
+	tournamentinconanddescription.addEventListener("click", () => { 
+		//mark settings as selected
+		setselectednavigation(tournamentcontainer, "navigation");
+		/*
+		//display settings workspace
+		buildsettingsworkspace();
+		*/
+	})
+
+	let tournamenticon = document.createElement("div");
+	tournamenticon.classList.add("icon-tournament");
+	tournamenticon.classList.add("icon");
+	tournamentinconanddescription.appendChild(tournamenticon);
+
+	let tournamentdescription = creatediv({
+		appendto: tournamentinconanddescription,
+		divclass: ["flexleft", "navigationdescription"],
+		divtext: "Turniere"
+	})
+	
+	//---SETTINGS---
 	//container for settings
 	let settingscontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationitemhover"],
 		appendto: navigationconstantcontainer
 	})
 
+	//create filler div
 	creatediv({appendto: settingscontainer});
 
 	//container for icon and description
@@ -238,6 +277,7 @@ let buildconstantnavigation = (maincontainer) => {
 		appendto: settingscontainer
 	})
 
+	//event listner for the settingscontainer
 	settingsinconanddescription.addEventListener("click", () => { 
 		//mark settings as selected
 		setselectednavigation(settingscontainer, "navigation");
@@ -245,9 +285,9 @@ let buildconstantnavigation = (maincontainer) => {
 		buildsettingsworkspace();
 	})
 
-	let settingsicon = document.createElement("img");
-	settingsicon.setAttribute("src", "lib/administration/assets/settings.svg");
-	settingsicon.classList.add("navigationicon");
+	let settingsicon = document.createElement("div");
+	settingsicon.classList.add("icon-settings");
+	settingsicon.classList.add("icon");
 	settingsinconanddescription.appendChild(settingsicon);
 
 	let settingsdescription = creatediv({
