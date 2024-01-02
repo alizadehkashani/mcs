@@ -225,7 +225,7 @@ let buildconstantnavigation = (maincontainer) => {
 	})
 	
 	//---TOURNAMENTS---
-	//container for settings
+	//container for tournaments
 	let tournamentcontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationitemhover"],
 		appendto: navigationconstantcontainer
@@ -256,6 +256,76 @@ let buildconstantnavigation = (maincontainer) => {
 		appendto: tournamentinconanddescription,
 		divclass: ["flexleft", "navigationdescription"],
 		divtext: "Turniere"
+	})
+
+	//---Clubs
+	//container for clubs
+	let clubcontainer = creatediv({
+		divclass: ["navigationitem-0", "navigationitemhover"],
+		appendto: navigationconstantcontainer
+	})
+
+	//create filler div
+	creatediv({appendto: clubcontainer});
+
+	//container for icon and description
+	let clubinconanddescription = creatediv({
+		divclass: ["navigation-icon-description"],
+		appendto: clubcontainer
+	})
+
+	//event listner for the settingscontainer
+	clubinconanddescription.addEventListener("click", async () => { 
+		//mark settings as selected
+		setselectednavigation(clubcontainer, "navigation");
+		console.log("clubs");
+		//await buildworkspaceclubconfig();
+	})
+
+	let clubicon = document.createElement("div");
+	clubicon.classList.add("icon-club");
+	clubicon.classList.add("icon");
+	clubinconanddescription.appendChild(clubicon);
+
+	let clubdescription = creatediv({
+		appendto: clubinconanddescription,
+		divclass: ["flexleft", "navigationdescription"],
+		divtext: "Vereine"
+	})
+	
+	//---Players---
+	//container for players
+	let playercontainer = creatediv({
+		divclass: ["navigationitem-0", "navigationitemhover"],
+		appendto: navigationconstantcontainer
+	})
+
+	//create filler div
+	creatediv({appendto: playercontainer});
+
+	//container for icon and description
+	let playerinconanddescription = creatediv({
+		divclass: ["navigation-icon-description"],
+		appendto: playercontainer
+	})
+
+	//event listner for the settingscontainer
+	playerinconanddescription.addEventListener("click", async () => { 
+		//mark settings as selected
+		setselectednavigation(playercontainer, "navigation");
+		console.log("players");
+		//await buildworkspaceplayerconfig();
+	})
+
+	let playericon = document.createElement("div");
+	playericon.classList.add("icon-player");
+	playericon.classList.add("icon");
+	playerinconanddescription.appendChild(playericon);
+
+	let playerdescription = creatediv({
+		appendto: playerinconanddescription,
+		divclass: ["flexleft", "navigationdescription"],
+		divtext: "Spieler"
 	})
 	
 	//---SETTINGS---
