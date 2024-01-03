@@ -861,6 +861,26 @@
 	grid-template-rows: 50px 1fr;
 }
 
+.tournament-table{
+	padding: 10px;
+
+	display: grid;
+	grid-auto-rows: 30px;
+}
+.tournament-row{
+	display: grid;
+	grid-template-columns: 150px 1fr;
+}
+
+.tournament-row:hover{
+	cursor: pointer;
+}
+
+.not-selectable{
+	user-select: none;
+}
+
+/*---ICONS---*/
 .icon-tournament{
 	background: no-repeat center url("/../lib/administration/assets/tournament.svg");
 }

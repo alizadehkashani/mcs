@@ -4355,8 +4355,6 @@ let buildworkspacetournamentconfig = async () => {
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
 	
-	//get tournaments data
-	let tournaments = await gettournaments();	
 
 	//add class to workspace body
 	workspacebody.classList.add("workspace-settings-tournament-config");
@@ -4365,7 +4363,6 @@ let buildworkspacetournamentconfig = async () => {
 	let tournamentcreatebuttoncontainer = creatediv({
 		appendto: workspacebody
 	});
-
 	tournamentcreatebuttoncontainer .style.padding = "10px";
 
 	//add button to create new tournament
@@ -4379,8 +4376,45 @@ let buildworkspacetournamentconfig = async () => {
 		await buildmodalcreatetournament();
 	})	
 
-	//TODO build table with tournaments
+	//create container for tournaments table
+	let tournamentstable = creatediv({
+		appendto: workspacebody,
+		divclass: ["tournament-table"]
+	});
 
+	//build table of tournaments
+	buildtournamentstable(tournaments, tournamentstable);
+
+}
+
+let buildtournamentstable = (container) => async {
+	//get tournaments data
+	//let tdata = await gettournaments();
+	//clear table
+	//
+	//loop through tournaments and build table
+	for(let i = 0; i < tdata.length; i++){
+		let tournament = creatediv({
+			appendto: container,
+			divclass: ["tournament-row", "not-selectable"]
+		});
+
+		//tournament name
+		creatediv({
+			appendto: tournament,
+			divtext: tdata[i].tname
+		})
+		//tournmanet location
+		creatediv({
+			appendto: tournament,
+			divtext: tdata[i].tlocation
+		})
+
+		tournament.addEventListener("click", async () => {
+			let dropdown = document.getElementById("t-select-dropdown");
+			await buildworkspaceviewtournament(tdata[i].tid, dropdown);
+		});
+	}
 }
 
 DOMready(buildheader);
