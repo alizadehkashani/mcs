@@ -258,7 +258,7 @@ let buildconstantnavigation = (maincontainer) => {
 		divtext: "Turniere"
 	})
 
-	//---Clubs
+	//---Clubs---
 	//container for clubs
 	let clubcontainer = creatediv({
 		divclass: ["navigationitem-0", "navigationitemhover"],
@@ -278,8 +278,7 @@ let buildconstantnavigation = (maincontainer) => {
 	clubinconanddescription.addEventListener("click", async () => { 
 		//mark settings as selected
 		setselectednavigation(clubcontainer, "navigation");
-		console.log("clubs");
-		//await buildworkspaceclubconfig();
+		await buildworkspaceclubconfig();
 	})
 
 	let clubicon = document.createElement("div");
@@ -313,8 +312,7 @@ let buildconstantnavigation = (maincontainer) => {
 	playerinconanddescription.addEventListener("click", async () => { 
 		//mark settings as selected
 		setselectednavigation(playercontainer, "navigation");
-		console.log("players");
-		//await buildworkspaceplayerconfig();
+		await buildworkspaceplayerconfig();
 	})
 
 	let playericon = document.createElement("div");
@@ -380,36 +378,6 @@ let buildsettingsworkspace = () => {
 
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
-
-	//create icon for tournament settings
-	let tournamentsettings = document.createElement("div");
-	tournamentsettings.classList.add("icon-tournament");
-	tournamentsettings.classList.add("icon");
-	tournamentsettings.classList.add("workspaceicon");
-	workspaceheadvariable.appendChild(tournamentsettings);
-	tournamentsettings.addEventListener("click", async () => {
-		await buildworkspacetournamentconfig();
-	})	
-
-	//create icon for club configuration
-	let clubconfig = document.createElement("div");
-	clubconfig.classList.add("icon-club");
-	clubconfig.classList.add("icon");
-	clubconfig.classList.add("workspaceicon");
-	workspaceheadvariable.appendChild(clubconfig);
-	clubconfig.addEventListener("click", async () => {
-		await buildworkspaceclubinformation();
-	})
-
-	//create icon for player configuration
-	let playerconfig = document.createElement("div");
-	playerconfig.classList.add("icon-player");
-	playerconfig.classList.add("icon");
-	playerconfig.classList.add("workspaceicon");
-	workspaceheadvariable.appendChild(playerconfig);
-	playerconfig.addEventListener("click", async () => {
-		await buildworkspaceplayerconfig();
-	})	
 
 }
 
@@ -697,6 +665,17 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
+
+	//add icon to go back to tournament overview
+	let backbutton = document.createElement("div");
+	backbutton.classList.add("icon-arrow-back");
+	backbutton.classList.add("icon");
+	backbutton.classList.add("workspaceicon");
+	workspaceheadvariable.appendChild(backbutton);
+	backbutton.addEventListener("click", async () => {
+		//TODO build tournmaent over view workspace
+		await buildworkspacetournamentconfig();
+	})
 
 	//create icon for tournament information
 	let tournamentinformationicon = document.createElement("div");
@@ -1144,7 +1123,7 @@ let getrounds = async (tid, mid) => {
 	return response;
 }
 
-let buildmodalcreatetournament = async () => {
+let buildmodalcreatetournament = async (tournamentstable) => {
 
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -1238,10 +1217,16 @@ let buildmodalcreatetournament = async () => {
 
 		let newtid = newt["tid"];
 
+		//if tournmanet was successfully created
 		if(newt["result"] == "0"){
 			//if tournament was successfully created add it to drop down list
 			addoptiontotournamentselection(newtid, tdesc);
+			//rebuild tournaments table
+			buildtournamentstable(tournamentstable);
 		}
+		
+
+
 
 	})
 
@@ -2011,47 +1996,6 @@ let deletetrack = async (tid, trackid) => {
 	});
 
 	return await phpresponse.json();
-}
-
-let buildworkspaceplayerconfig = async () => {
-	
-	//get workspace foot
-	let workspacefoot = getworkspacefoot();
-
-	//get workspace body
-	let workspacebody = getworkspacebody();
-	
-	//clear workspace body and foot
-	clearworkspacebody();
-	clearworkspacefoot();
-
-	//add class to workspace body
-	workspacebody.classList.add("workspace-player-config");
-
-	//create player button container
-	let addplayercontainer = creatediv({
-		divclass: ["flexcenter"],
-		appendto: workspacebody
-	});
-
-	//add container for players table
-	let playerstable = creatediv({
-		appendto: workspacebody,
-		divid: "workspace-players-table"
-	});
-
-	//add button to create new player
-	let addplayersvg = document.createElement("div");
-	addplayersvg.classList.add("icon-playerplus");
-	addplayersvg.classList.add("icon");
-	addplayersvg.classList.add("workspaceicon");
-	addplayercontainer.appendChild(addplayersvg);
-	addplayersvg.addEventListener("click", async () => {
-		buildmodalcreateplayer(playerstable); 
-		toggleoverlay(true);
-	})
-
-	await buildplayerstable(playerstable);
 }
 
 let buildworkspaceplayerintconfig = async (tid) => {
@@ -4373,7 +4317,7 @@ let buildworkspacetournamentconfig = async () => {
 	tournamentcreatebuttoncontainer.appendChild(createtournamentbutton);
 	createtournamentbutton.addEventListener("click", async () => {
 		//build modal to createa new tournament
-		await buildmodalcreatetournament();
+		await buildmodalcreatetournament(tournamentstable);
 	})	
 
 	//create container for tournaments table
@@ -4383,15 +4327,16 @@ let buildworkspacetournamentconfig = async () => {
 	});
 
 	//build table of tournaments
-	buildtournamentstable(tournaments, tournamentstable);
+	buildtournamentstable(tournamentstable);
 
 }
 
-let buildtournamentstable = (container) => async {
+let buildtournamentstable = async (container) => {
 	//get tournaments data
-	//let tdata = await gettournaments();
+	let tdata = await gettournaments();
 	//clear table
-	//
+	clearelement(container);
+	
 	//loop through tournaments and build table
 	for(let i = 0; i < tdata.length; i++){
 		let tournament = creatediv({
@@ -4415,6 +4360,76 @@ let buildtournamentstable = (container) => async {
 			await buildworkspaceviewtournament(tdata[i].tid, dropdown);
 		});
 	}
+}
+
+let buildworkspaceclubconfig = async () => {
+
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+
+	//clear workspace
+	clearworkspace();
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+	
+	await buildworkspaceclubinformation();
+}
+
+let buildworkspaceplayerconfig = async () => {
+	//get elements for workspace and workspace body
+	let workspace = getworkspace();
+
+	//clear workspace
+	clearworkspace();
+	clearworkspacebody();
+	clearworkspacefoot();
+	
+	//remove width limit
+	workspace.style.width = "";
+
+	//make workspace visible
+	changeelementvisibility(workspace, true, false);
+
+	//get workspace body
+	let workspacebody = getworkspacebody();
+	
+	//clear workspace body and foot
+	clearworkspacebody();
+	clearworkspacefoot();
+
+	//add class to workspace body
+	workspacebody.classList.add("workspace-player-config");
+
+	//create player button container
+	let addplayercontainer = creatediv({
+		divclass: ["flexcenter"],
+		appendto: workspacebody
+	});
+
+	//add container for players table
+	let playerstable = creatediv({
+		appendto: workspacebody,
+		divid: "workspace-players-table"
+	});
+
+	//add button to create new player
+	let addplayersvg = document.createElement("div");
+	addplayersvg.classList.add("icon-playerplus");
+	addplayersvg.classList.add("icon");
+	addplayersvg.classList.add("workspaceicon");
+	addplayercontainer.appendChild(addplayersvg);
+	addplayersvg.addEventListener("click", async () => {
+		buildmodalcreateplayer(playerstable); 
+		toggleoverlay(true);
+	})
+
+	await buildplayerstable(playerstable);
 }
 
 DOMready(buildheader);

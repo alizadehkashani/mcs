@@ -986,6 +986,14 @@
 	background: no-repeat center url("/../lib/assets/settings.svg");
 }
 
+.icon-arrow-back{
+	background: no-repeat center url("/../lib/assets/arrow_back.svg");
+}
+
+.icon-arrow-forward{
+	background: no-repeat center url("/../lib/assets/arrow_forward.svg");
+}
+
 .icon{
 	width: 30px;
 	height: 30px;
