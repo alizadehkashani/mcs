@@ -848,6 +848,10 @@
 	content: "Soll der Verein wirklich geloescht werden?";
 }
 
+.delete-tournament-text::after{
+	content: "Soll das Turnier wirklich geloescht werden?";
+}
+
 .workspace-settings-tournament-config{
 	display: grid;
 
@@ -876,6 +880,23 @@
 
 .not-selectable{
 	user-select: none;
+}
+
+#modal-delete-tournament{
+	width: 600px;
+}
+
+#modal-delete-tournament-body{
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 500px;
+	grid-template-rows: 25px;
+
+	grid-row-gap: 5px;
 }
 
 /*---ICONS---*/

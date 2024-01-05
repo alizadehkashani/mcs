@@ -645,7 +645,7 @@ let updatetournament = async (tid, description, location) => {
 	return phpresponse;
 }
 
-let buildworkspaceviewtournament = async (id, dropdown) => {
+let buildworkspaceviewtournament = async (id) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
@@ -718,14 +718,62 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 	deleteicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(deleteicon);
 	deleteicon.addEventListener("click", async () => {
+		//build modal to confirm deletion of tournament	
+		buildmodaldeletetournament(id);
+		//turn on overlay
+		toggleoverlay(true);
+	});
+
+	//build standard view, tournament information
+	await buildworkspacetournamentinformation(id);
+
+}
+
+let buildmodaldeletetournament = async (tid) => {
+
+	let modaldata = {
+		mainid: "modal-delete-tournament",
+		labeltext: "Turnier loeschen",
+		bodyid: "modal-delete-tournament-body"
+	}
+
+	let modal = createbasicmodal(modaldata);
+	
+	//create text for question
+	creatediv({
+		type: "span",
+		appendto: modal.modalbody,
+		divclass: ["delete-tournament-text"]
+	});
+
+	//when user decides not to delete the club
+	modal.closebutton.addEventListener("click", async () => {
+
+		//close the delete modal
+		modal.modalcontainer.remove();
+		//turn off overlay
+		toggleoverlay(false);
+	});
+
+	modal.acceptbutton.addEventListener("click", async () => {
+
+		//remove the modal
+		modal.modalcontainer.remove();
+
+		//turn off overlay
+		toggleoverlay(false);	
+
+		//get tournament dropdown
+		let dropdown = document.getElementById("t-select-dropdown");
+
 		//remove option from dropdown
-		removeoptionfromselection(dropdown, id);
+		removeoptionfromselection(dropdown, tid);
 		//clear variable navigation
 		clearid("navigationvariablecontainer");
 		//clear workspace
 		closeworkspace();
 		//remove releated tournament data from db
-		await deletetournament(id);
+		await deletetournament(tid);
 		
 		//if there are other tournaments build the first on in the list
 		if(dropdown.length != 0){
@@ -734,11 +782,8 @@ let buildworkspaceviewtournament = async (id, dropdown) => {
 			//view tournament information
 			await buildworkspaceviewtournament(dropdown.value, dropdown);
 		}
+		
 	});
-
-	//build standard view, tournament information
-	await buildworkspacetournamentinformation(id);
-
 }
 
 let buildworkspacetournamentinformation = async (id) => {
@@ -945,13 +990,9 @@ let buildmodalviewclub = async (clubid) => {
 	deleteclubcuttoncontainer.appendChild(deleteclubbutton);
 
 	deleteclubcuttoncontainer.addEventListener("click", async () => {
-		//await deleteclub(clubid);
-		//changeelementvisibility(modal.modalcontainer, false, true);
-		//toggleoverlay(false);
-		/*
-		*/
+		//remove original view club modall
 		modal.modalcontainer.remove();
-		changeelementvisibility(modal.modalcontainer, false, true);
+		//create modal to delete club
 		let clubdeletemodal = await buildmodaldeleteclub(clubid);
 	})	
 
@@ -4224,8 +4265,6 @@ let buildmodaldeleteclub = async (clubid) => {
 		//turn off overlay
 		toggleoverlay(false);	
 	});
-
-
 
 }
 
