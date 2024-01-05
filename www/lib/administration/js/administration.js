@@ -563,7 +563,7 @@ let createnewtournament = async (description, location) => {
 		location.value = "";
 
 		//refresh variable navigation
-		buildvariablenavigation(document.getElementById("navigationvariablecontainer"));
+		buildvariablenavigation(phpresponse.tid);
 
 		//deactivate modal and overlay
 		changeelementvisibility(document.getElementById("modal-create-tournament"), false, true);
@@ -1214,12 +1214,10 @@ let buildmodalcreatetournament = async (tournamentstable) => {
 			//remove modal from dom
 			modal.modalcontainer.remove();
 		}
-		
-
-
 
 	})
 
+	//turn on overlay
 	toggleoverlay(true);
 
 }
@@ -4209,7 +4207,7 @@ let addoptiontotournamentselection = (value, text) => {
 	option.value = value;
 	//set option text
 	option.text = text;
-	////set option text
+	//set option text
 	dropdown.add(option, dropdown.length);
 }
 
