@@ -670,7 +670,7 @@ let buildworkspaceviewtournament = async (id) => {
 	backbutton.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(backbutton);
 	backbutton.addEventListener("click", async () => {
-		//TODO build tournmaent over view workspace
+		//go back to tournament overview	
 		await buildworkspacetournamentconfig();
 	})
 
@@ -701,6 +701,7 @@ let buildworkspaceviewtournament = async (id) => {
 	playerconfig.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(playerconfig);
 	playerconfig.addEventListener("click", async () => {
+		
 		await buildworkspaceplayerintconfig(id);
 	})	
 
@@ -1988,9 +1989,6 @@ let deletetrack = async (tid, trackid) => {
 
 let buildworkspaceplayerintconfig = async (tid) => {
 	
-	//get workspace foot
-	let workspacefoot = getworkspacefoot();
-
 	//get workspace body
 	let workspacebody = getworkspacebody();
 	
@@ -2003,9 +2001,9 @@ let buildworkspaceplayerintconfig = async (tid) => {
 
 	//create player button container
 	let addplayercontainer = creatediv({
-		divclass: ["flexcenter"],
 		appendto: workspacebody
 	});
+	addplayercontainer.style = "padding: 10px";
 
 	//add container for players table
 	let playerstable = creatediv({
