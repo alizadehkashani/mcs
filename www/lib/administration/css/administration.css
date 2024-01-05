@@ -583,12 +583,8 @@
 	
 	display: grid;
 
-	padding: 10px;
-	padding-left: 10px;
-	padding-right: 10px;
-
 	grid-template-columns: 1fr;
-	grid-template-rows: 25px 1fr;
+	grid-template-rows: 50px 1fr;
 }
 
 #container-player-select{
@@ -606,6 +602,8 @@
 
 
 #workspace-players-table{
+	padding: 10px;
+
 	display: grid;
 	grid-template-columns: 1fr; 
 	grid-auto-rows: 25px;

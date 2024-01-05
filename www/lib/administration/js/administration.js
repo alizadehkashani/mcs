@@ -4357,9 +4357,10 @@ let buildworkspaceplayerconfig = async () => {
 
 	//create player button container
 	let addplayercontainer = creatediv({
-		divclass: ["flexcenter"],
 		appendto: workspacebody
 	});
+	addplayercontainer.style = "padding: 10px";
+
 
 	//add container for players table
 	let playerstable = creatediv({
