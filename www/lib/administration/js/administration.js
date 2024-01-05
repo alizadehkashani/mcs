@@ -620,13 +620,16 @@ let createnewclub = async (clubnameinput, modalcontainer) => {
 
 }
 
-let updatetournament = async (tid, description, location, tournamentnamediv) => {
+let updatetournament = async (tid, description, location) => {
+	
+	//data for php script
 	let postdata = {
 		tid: tid,
 		description: description.value, 
 		location: location.value
 	};
 
+	//call php script
 	let response = await fetch("/lib/administration/php/updatetournament.php", {
 		method: 'POST',
 		headers: {
@@ -639,19 +642,13 @@ let updatetournament = async (tid, description, location, tournamentnamediv) => 
 	//get data from response
 	let phpresponse = await response.json();
 
-	//update tournament name in navigation
-	if(phpresponse["result"] == 0){
-		tournamentnamediv.innerText = description.value;
-	}
-
+	return phpresponse;
 }
 
 let buildworkspaceviewtournament = async (id, dropdown) => {
 	
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
-	let workspacebody = getworkspacebody();
-	let workspacefoot = getworkspacefoot();
 	let workspaceheadvariable = getworkspaceheadvariable();
 
 	//clear workspace
@@ -842,7 +839,7 @@ let buildworkspacetournamentinformation = async (id) => {
 
 	//add eventlistner to close button
 	donebuttoncontainer.addEventListener("click", () =>{
-		updatetournament(id, tournamentnameinput, tournamentlocationinput, tournamentnamediv);
+		updatetournament(id, tournamentnameinput, tournamentlocationinput);
 	})
 
 }
@@ -1125,95 +1122,43 @@ let getrounds = async (tid, mid) => {
 
 let buildmodalcreatetournament = async (tournamentstable) => {
 
-	//get main administration container
-	let administrationcontainer = document.getElementById("administration");
+	let modaldata = {
 
-	//create modal container
-	let modalcontainer = creatediv({
-		appendto: administrationcontainer,
-		divclass: ["modal"],
-		divid: "modal-create-tournament"
-	})
-
-	//create modal head 
-	let modalhead = creatediv({
-		appendto: modalcontainer,
-		divclass: ["modal-head"],
-	})
-
-	//create modal label
-	let modallabel = creatediv({
-		appendto: modalhead,
-		divclass: ["flexleft"],
-		divtext: "Turnier anlegen"
-	})
-
-	//create close button
-	let closeicon = document.createElement("img");
-	closeicon.setAttribute("src", "lib/assets/close.svg");
-	closeicon.classList.add("workspaceicon");
-	modalhead.appendChild(closeicon);
-
-	//make modal invsible
-	closeicon.addEventListener("click", () => {
-		changeelementvisibility(modalcontainer, false, true);
-		toggleoverlay(false);
-	});
-
-	//create modal body
-	let modalbody = creatediv({
-		appendto: modalcontainer,
-		divclass: ["modal-body"],
-		divid: "modal-create-tournament-body"
-	})
+		mainid: "modal-create-tournament",
+		labeltext: "Turnier anlegen",
+		bodyid: "modal-create-tournament-body"
+	}
+	
+	let modal = createbasicmodal(modaldata);
 
 	//div for description off tournmanet description button
 	creatediv({
 		divtext: "Name",
-		appendto: modalbody
+		appendto: modal.modalbody
 	})
 
 	//input for tournament description
 	let tournamentdescriptioninput = creatediv({
 		type: "INPUT",
-		appendto: modalbody
+		appendto: modal.modalbody
 	})
 
 	//description for tournament location input
 	creatediv({
 		divtext: "Austragungsort",
-		appendto: modalbody
+		appendto: modal.modalbody
 	})
 
 	//input for tournamentlocationinput
 	let tournamentlocationinput = creatediv({
 		type: "INPUT",
-		appendto: modalbody
+		appendto: modal.modalbody
 	})
 
-	//create modal foot
-	let modalfoot = creatediv({
-		appendto: modalcontainer,
-		divclass: ["modal-foot"],
-	})
-
-	//create container for accept button
-	let donebuttoncontainer = creatediv({
-		appendto: modalfoot,
-	})
-
-	//add accept button
-	let doneicon = document.createElement("img");
-	doneicon.setAttribute("src", "lib/assets/done.svg");
-	doneicon.classList.add("workspaceicon");
-	donebuttoncontainer.appendChild(doneicon);
-
-	//add eventlistner to close button
-	donebuttoncontainer.addEventListener("click", async () =>{
+	//add eventlistner to accept button
+	modal.acceptbutton.addEventListener("click", async () =>{
 		let tdesc = tournamentdescriptioninput.value;
 		let newt = await createnewtournament(tournamentdescriptioninput, tournamentlocationinput);
-		//changeelementvisibility(modalcontainer, false, true);
-		//toggleoverlay(false);
 
 		let newtid = newt["tid"];
 
@@ -1223,6 +1168,10 @@ let buildmodalcreatetournament = async (tournamentstable) => {
 			addoptiontotournamentselection(newtid, tdesc);
 			//rebuild tournaments table
 			buildtournamentstable(tournamentstable);
+			//turn off overlay
+			toggleoverlay(false);
+			//remove modal from dom
+			modal.modalcontainer.remove();
 		}
 		
 
@@ -1230,8 +1179,8 @@ let buildmodalcreatetournament = async (tournamentstable) => {
 
 	})
 
-	//turn in overlay
 	toggleoverlay(true);
+
 }
 
 let buildmodalcreateclub = () => {
