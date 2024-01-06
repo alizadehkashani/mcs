@@ -2084,7 +2084,7 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 	
 	//make modal invsible if checkmark is clicked
 	modal.acceptbutton.addEventListener("click", () => {
-		changeelementvisibility(modal.modalcontainer, false, true);
+		modal.modalcontainer.remove();
 		toggleoverlay(false);
 	});
 }
