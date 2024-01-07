@@ -2544,7 +2544,7 @@ let buildmodaleditplayer = async (playernumber) => {
 		firstnameinput.value = limitinput(20, firstnameinput);
 	});
 
-	//add button to delete user
+	//add button to delete player
 	//create container for deletion button
 	let deleteplayerbuttoncontainer = creatediv({
 		appendto: modal.modalbody,
@@ -2588,9 +2588,20 @@ let buildmodaleditplayer = async (playernumber) => {
 			firstname: firstnameinput.value
 		}
 
-		updateplayer(playerdata, modal.modalcontainer);
+		let updateplayerresponse = await updateplayer(playerdata, modal.modalcontainer);
 
-		
+		if(updateplayerresponse.result == 1){
+			alert(phpresponse["message"]);
+		}else if(updateplayerresponse.result == 0){
+			let tableid = "workspace-players-table";
+			let table = document.getElementById(tableid);
+			await buildplayerstable(table, playerdata.tid, playerdata.cid); 
+			//close modal turn off overlay
+			modal.modalcontainer.remove();
+			toggleoverlay(false);
+		}
+
+
 	});
 }
 
@@ -2872,17 +2883,9 @@ let updateplayer = async (playerdata, modalcontainer) => {
 
 	//php response
 	let phpresponse = await updateplayer.json();
+
+	return phpresponse;
 	
-	if(phpresponse["result"] == 1){
-		alert(phpresponse["message"]);
-	}else{
-		//close modal turn off overlay
-		let tableid = "workspace-players-table";
-		let table = document.getElementById(tableid);
-		await buildplayerstable(table, playerdata.tid, playerdata.cid); 
-		changeelementvisibility(modalcontainer, false, true);
-		toggleoverlay(false);
-	}
 
 }
 
