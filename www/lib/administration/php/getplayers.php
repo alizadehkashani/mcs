@@ -11,6 +11,8 @@
 	$query = "
 		SELECT *
 		FROM players
+		INNER JOIN clubs ON players.cid = clubs.cid
+		ORDER BY players.playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);

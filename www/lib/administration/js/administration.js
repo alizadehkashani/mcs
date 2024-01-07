@@ -2283,6 +2283,12 @@ let buildsingleplayer = async (container, playerdata) => {
 		divtext: playerdata.firstname,
 		appendto: row
 	});
+	
+	//add player club name
+	creatediv({
+		divtext: playerdata.cname,
+		appendto: row
+	});
 }
 
 let buildsingleplayerintournament = async (container, tid, playerdata) => {
