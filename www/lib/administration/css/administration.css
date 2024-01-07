@@ -618,8 +618,8 @@
 
 .player-row-tournament{
 	display: grid;
-	grid-template-columns: 50px 50px 50px 200px 200px;
-	grid-template-rows: 1fr;
+	grid-template-columns: 50px 50px 25px 200px 200px 200px 50px;
+	grid-template-rows: 25px;
 }
 
 #modal-create-player{

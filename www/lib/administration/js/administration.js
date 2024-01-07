@@ -2143,7 +2143,7 @@ let genderdropdown = () => {
 
 	let options = {
 		0: {id: "M", text: "M\u00e4nnlich"},
-		1: {id: "M", text: "Weiblich"},
+		1: {id: "W", text: "Weiblich"},
 		2: {id: "D", text: "Divers"}
 	}
 
@@ -2180,7 +2180,7 @@ let buildplayersintournamenttable = async (container, tid) => {
 
 	//loop through players and insert into tables
 	for(let i = 0; i < players.length; i++){
-		buildsingleplayerintournament(container, players[i]);
+		buildsingleplayerintournament(container, tid, players[i]);
 	}
 }
 
@@ -2285,7 +2285,14 @@ let buildsingleplayer = async (container, playerdata) => {
 	});
 }
 
-let buildsingleplayerintournament = async (container, playerdata) => {
+let buildsingleplayerintournament = async (container, tid, playerdata) => {
+	//playernumber
+	//startnumber
+	//gender
+	//firstname
+	//lastname
+	//clubname
+	
 	//create row
 	let row = creatediv({
 		appendto: container,
@@ -2303,13 +2310,12 @@ let buildsingleplayerintournament = async (container, playerdata) => {
 		appendto: row
 	});
 	
-	//add playernumber
+	//add startnumber
 	creatediv({
 		divtext: playerdata.startnumber,
 		appendto: row
 	});
 
-	/*
 	//add player gender
 	creatediv({
 		divtext: playerdata.gender,
@@ -2327,7 +2333,27 @@ let buildsingleplayerintournament = async (container, playerdata) => {
 		divtext: playerdata.firstname,
 		appendto: row
 	});
-	*/
+
+	//add player clubname
+	creatediv({
+		divtext: playerdata.cname,
+		appendto: row
+	});
+
+	//div for button to remove player from tournament		
+	let removeplayerfromtbutton = creatediv({
+		appendto: row,
+		divclass: ["icon", "workspaceicon", "icon-playerminus"]
+	});
+
+	removeplayerfromtbutton.addEventListener("click", async () => {
+		let phpresponse = await removeplayerfromtournament(tid, playerdata.playernumber);
+		if(phpresponse.result == "0"){
+			row.remove();
+		}
+	})
+	
+		
 }
 
 let buildmodalcreateplayer = async (playerstable) => {
@@ -2868,7 +2894,7 @@ let updatematchday = async (mddata) => {
 
 }
 
-let updateplayer = async (playerdata, modalcontainer) => {
+let updateplayer = async (playerdata) => {
 
 	//call php script
 	let phppath = "/lib/administration/php/updateplayer.php";
@@ -2885,7 +2911,6 @@ let updateplayer = async (playerdata, modalcontainer) => {
 	let phpresponse = await updateplayer.json();
 
 	return phpresponse;
-	
 
 }
 
@@ -4425,6 +4450,32 @@ let buildworkspaceplayerconfig = async () => {
 	})
 
 	await buildplayerstable(playerstable);
+}
+
+let removeplayerfromtournament = async (tid, playernumber) => {
+	
+	//data of player which should be removed from tournament
+	playerdata = {
+		tid: tid,
+		playernumber: playernumber
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/removeplayerfromtournament.php";
+	let deleteplayer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
+
+	//php response
+	let phpresponse = await deleteplayer.json();
+	
+	return phpresponse;
+
 }
 
 DOMready(buildheader);

@@ -9,9 +9,17 @@
 
 	//change select to new table
 	$query = "
-		SELECT *
+		SELECT 
+		players.playernumber,
+		playersintournament.startnumber,
+		players.gender,
+		players.firstname,
+		players.surname,
+		clubs.cname
 		FROM playersintournament
-		WHERE tid = :tid
+		INNER JOIN players ON playersintournament.playernumber = players.playernumber
+		INNER JOIN clubs ON players.cid = clubs.cid
+		WHERE playersintournament.tid = :tid
 	";
 
 	$sql = $dbconnection->prepare($query);
