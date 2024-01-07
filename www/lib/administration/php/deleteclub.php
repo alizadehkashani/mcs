@@ -6,6 +6,32 @@
 
 	$response = [];
 
+	//delete from players in groups
+	$query = "
+		DELETE FROM groupplayers
+		WHERE playernumber IN 
+				(SELECT playernumber
+					FROM players
+					WHERE cid = :cid)
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":cid", $data["cid"]);
+	$sql->execute();
+	
+	//delete from players in tournament
+	$query = "
+		DELETE FROM playersintournament
+		WHERE playernumber IN 
+				(SELECT playernumber
+					FROM players
+					WHERE cid = :cid)
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":cid", $data["cid"]);
+	$sql->execute();
+	
 	//delte players
 	$query = "
 		DELETE FROM players

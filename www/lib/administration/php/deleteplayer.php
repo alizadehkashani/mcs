@@ -6,12 +6,20 @@
 
 	$response = [];
 
-	print_r($input);
-
 	//delete player from any existing groups
 	$query = "
 		DELETE FROM groupplayers
-		AND playernumber = :playernumber
+		WHERE playernumber = :playernumber
+	";
+
+	$sql = $dbconnection->prepare($query);
+	$sql->bindParam(":playernumber", $input["playernumber"]);
+	$sql->execute();
+
+	//delete player assigned to tournaments
+	$query = "
+		DELETE FROM playersintournament
+		WHERE playernumber = :playernumber
 	";
 
 	$sql = $dbconnection->prepare($query);

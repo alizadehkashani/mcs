@@ -605,13 +605,13 @@ let createnewclub = async (clubnameinput, modalcontainer) => {
 	if(phpresponse["result"] == 0){
 		
 		//set input fields initial
-		clubnameinput.value = "";
+		//clubnameinput.value = "";
 		
 		//rebuild clubs table
 		await fillclubstable();
 
 		//deactivate modal and overlay
-		changeelementvisibility(modalcontainer, false, true);
+		modalcontainer.remove();
 		toggleoverlay(false);
 
 	}else{
@@ -998,7 +998,12 @@ let buildmodalviewclub = async (clubid) => {
 	})	
 
 	modal.acceptbutton.addEventListener("click", async () => {
+		//update club name on db
 		await updateclub(clubid, clubname.value);
+		//remove modal from dom
+		modal.modalcontainer.remove();
+		//turn off overlay
+		toggleoverlay(false);
 	})
 
 	toggleoverlay(true);
@@ -1828,10 +1833,10 @@ let buildmodalcreatetrack = async (tid) => {
 		//if track was successfully created, close modal and turn off overlay and build table
 		if(response["result"] == 0){
 			await buildtrackstable(tid, document.getElementById("tracks-table"), true);			
-			changeelementvisibility(modal.modalcontainer, false, true);
+			modal.modalcontainer.remove();
 			toggleoverlay(false);
 		}else if(response["result"] == 1){
-			changeelementvisibility(modal.modalcontainer, false, true);
+			modal.modalcontainer.remove();
 			toggleoverlay(false);
 
 			alert(response["message"]);
@@ -1892,8 +1897,8 @@ let buildmodaledittrack = async (tid, trackid) => {
 		//REBUILD TRACK TABLE
 		await buildtrackstable(tid, document.getElementById("tracks-table"), true);			
 
-		//TOGGLE MODAL
-		changeelementvisibility(modal.modalcontainer, false, true);
+		//remove modal
+		modal.modalcontainer.remove();
 
 		//TOGGLE OVERLAY
 		toggleoverlay(false);
@@ -1942,10 +1947,10 @@ let buildmodaledittrack = async (tid, trackid) => {
 		//response of php script
 		response = await response.json();
 
-		//if track was successfully created, close modal and turn off overlay
+		//if track was successfully updated, close modal and turn off overlay
 		if(response["result"] == 0){
 			buildtrackstable(tid, document.getElementById("tracks-table"), true);			
-			changeelementvisibility(modal.modalcontainer, false, true);
+			modal.modalcontainer.remove();
 			toggleoverlay(false);
 		}
 	});
@@ -2555,7 +2560,20 @@ let buildmodaleditplayer = async (playernumber) => {
 	//add eventlistener to deletebutton
 	deleteplayerbuttoncontainer.addEventListener("click", async () => {
 		//delete player
-		deleteplayer(modal.modalcontainer, playerdata.playernumber);
+		let delplayer = await deleteplayer(playerdata.playernumber);
+
+		if(delplayer.result == 0){
+			let tableid = "workspace-players-table";
+			let table = document.getElementById(tableid);
+			await buildplayerstable(table); 
+			//close modal turn off overlay
+			modal.modalcontainer.remove();
+			toggleoverlay(false);
+
+		}else if(delplayer.result == 1){
+			alert(phpresponse["message"]);
+		}
+
 	});
 
 	//add event listner to accept button
@@ -2868,12 +2886,10 @@ let updateplayer = async (playerdata, modalcontainer) => {
 
 }
 
-let deleteplayer = async (modal, tid, cid, playernumber) => {
+let deleteplayer = async (playernumber) => {
 
 	//data of player which should be deleted
 	playerdata = {
-		tid: tid,
-		cid: cid,
 		playernumber: playernumber
 	}
 
@@ -2891,16 +2907,7 @@ let deleteplayer = async (modal, tid, cid, playernumber) => {
 	//php response
 	let phpresponse = await deleteplayer.json();
 	
-	if(phpresponse["result"] == 1){
-		alert(phpresponse["message"]);
-	}else{
-		let tableid = "workspace-players-table";
-		let table = document.getElementById(tableid);
-		await buildplayerstable(table, playerdata.tid, playerdata.cid); 
-		//close modal turn off overlay
-		changeelementvisibility(modal, false, true);
-		toggleoverlay(false);
-	}
+	return phpresponse;
 
 }
 
