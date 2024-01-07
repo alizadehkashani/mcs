@@ -2023,7 +2023,7 @@ let buildworkspaceplayerintconfig = async (tid) => {
 	addplayersvg.classList.add("workspaceicon");
 	addplayercontainer.appendChild(addplayersvg);
 	addplayersvg.addEventListener("click", async () => {
-		buildmodaladdplayertotournament(tid, playerstable); 
+		await buildmodaladdplayertotournament(tid, playerstable); 
 	})
 
 	await buildplayersintournamenttable(playerstable, tid);
@@ -2047,7 +2047,7 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 	let modal = createbasicmodal(modaldata);
 
 	//get all players which are not in the tournament from global list
-	let playersnotintournament = await await getplayersnotintournament(tid) 
+	let playersnotintournament = await getplayersnotintournament(tid) 
 
 	for(let i = 0; i < playersnotintournament.length; i++){
 		let playercontainer = creatediv({
@@ -2056,7 +2056,7 @@ let buildmodaladdplayertotournament = async (tid, playerstable) => {
 		});
 
 		//playernumber, surname, firstname
-		for(let j = 0; j < 3; j++){
+		for(let j = 0; j < 4; j++){
 
 			creatediv({
 				appendto: playercontainer,

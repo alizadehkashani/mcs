@@ -9,9 +9,10 @@
 
 	//change select to new table
 	$query = "
-		SELECT playernumber, surname, firstname
+		SELECT players.playernumber, players.surname, players.firstname, clubs.cname
 		FROM players
-		WHERE playernumber NOT IN
+		INNER JOIN clubs ON players.cid = clubs.cid
+		WHERE players.playernumber NOT IN
 			(SELECT playernumber
 				FROM playersintournament
 				WHERE tid = :tid)
