@@ -11,7 +11,7 @@
 	//array for response
 	$response = [];
 
-//check if the tournament of the matchday is active
+	//check if the tournament of the matchday is active
 	$query = "SELECT *
 		FROM tournaments
 		WHERE tid = :tid

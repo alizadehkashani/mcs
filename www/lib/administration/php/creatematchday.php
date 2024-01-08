@@ -58,6 +58,7 @@
 	$newmid = $dbconnection->lastInsertId();
 
 	$response["result"] = 0;
+	$response["tid"] = $data["tid"];
 	$response["mid"] = $newmid;
 	$response["mdorder"] = $nextmatchday;
 	$response["numberofmatchdays"] = $numberofmatchdays;

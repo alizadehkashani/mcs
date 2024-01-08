@@ -2654,7 +2654,7 @@ let buildworkspaceviewmatchday = (matchdayscontainer, mdcontainer, tid, mid, mat
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
 
-	//create icon for tournament information
+	//create icon for matchdays information
 	let matchdayinformationicon = document.createElement("div");
 	matchdayinformationicon.classList.add("icon-info");
 	matchdayinformationicon.classList.add("icon");
@@ -2794,7 +2794,7 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 	setcurrentbuttoncontainer.appendChild(setcurrentbutton);
 	setcurrentbutton.addEventListener("click", async () => {
 
-		//if md is not actifve, allows to activate
+		//if md is not active, allow to activate
 		if(matchdayinformation.mdcurrent == 0){
 			let activate = await setmdactive(tid, mid);
 			//if md was succsessfully activated
@@ -2805,10 +2805,26 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 				setcurrentbutton.classList.add("icon-toggleon");
 				activemd.innerHTML = "X";
 
+				//currently active matchdays and rounds get inactive icon
 				replaceclassindoc("icon-matchday-active", "icon-matchday");
 				replaceclassindoc("icon-round-active", "icon-round");
+				//new active matchday gets active matchday icon
 				matchdayicon.classList.remove("icon-matchday");
 				matchdayicon.classList.add("icon-matchday-active");
+
+			}else if(activate == 1){
+				console.log("turnier nicht aktiv");
+				//TODO create warning, if the current tournament is not active
+				/*
+				let modaldata = {
+					mainid:
+					laleltext: "Spieltag aktivieren",
+					bodyid:
+					
+				}
+
+				let modalwarning = createbasicmodal(modaldata);
+				*/
 
 			}
 		}
