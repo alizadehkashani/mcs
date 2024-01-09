@@ -1286,6 +1286,11 @@ let createbasicmodal = (modaldata) => {
 	//mainid
 	//labeltext
 	//bodyid
+	//mainclass
+	//bodyclass
+	//
+	//onclose
+	//onaccept
 	
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -1296,6 +1301,18 @@ let createbasicmodal = (modaldata) => {
 		divclass: ["modal"],
 		divid: modaldata.mainid
 	})
+	
+	//set id of maincontainer if id for main container is set in arguments
+	if(modaldata.mainid != undefined){
+		modalcontainer.setAttribute("id", modaldata.mainid);
+	}
+
+	//add additional classes to body according to arguments if defined
+	if(modaldata.mainclass != undefined){
+ 		for(let i = 0; i < modaldata.mainclass.length; i++){
+			modalcontainer.classList.add(modaldata.mainclass[i]);
+		}
+	}
 
 	//create modal head 
 	let modalhead = creatediv({
@@ -1319,21 +1336,32 @@ let createbasicmodal = (modaldata) => {
 	//behaviour for close button
 	//in standard behaviour close the modal and remove it from dom
 	//if set to false, the behaviour as to be set manually
-	closeicon.addEventListener("click", () => {
-		if(modaldata.onclose == undefined || modaldata.conclose == true){
+	if(modaldata.onclose == undefined || modaldata.onclose == true){
+		closeicon.addEventListener("click", () => {
 			//on close remove the modal from dom
 			modalcontainer.remove();		
 			//turn off the overlay
 			toggleoverlay(false);
-		}
-	});
+		});
+	}
 
 	//create modal body
 	let modalbody = creatediv({
 		appendto: modalcontainer,
 		divclass: ["modal-body"],
-		divid: modaldata.bodyid
 	})
+	
+	//add additional classes to body according to arguments
+	if(modaldata.bodyclass != undefined){
+ 		for(let i = 0; i < modaldata.bodyclass.length; i++){
+			modalbody.classList.add(modaldata.bodyclass[i]);
+		}
+	}
+
+	//set id of maincontainer if id for main container is set in arguments
+	if(modaldata.bodyid != undefined){
+		modalbody.setAttribute("id", modaldata.bodyid);
+	}
 
 	//create modal foot
 	let modalfoot = creatediv({
@@ -1352,6 +1380,18 @@ let createbasicmodal = (modaldata) => {
 	doneicon.classList.add("icon");
 	doneicon.classList.add("workspaceicon");
 	donebuttoncontainer.appendChild(doneicon);
+	
+	//behaviour for accept button
+	//in standard behaviour close the modal and remove it from dom
+	//if set to false, the behaviour as to be set manually
+	if(modaldata.onaccept == undefined || modaldata.onaccept == true){
+		doneicon.addEventListener("click", () => {
+			//on close remove the modal from dom
+			modalcontainer.remove();		
+			//turn off the overlay
+			toggleoverlay(false);
+		});
+	}
 
 	return {
 		modalcontainer: modalcontainer,
@@ -2814,17 +2854,18 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 
 			}else if(activate == 1){
 				console.log("turnier nicht aktiv");
+
 				//TODO create warning, if the current tournament is not active
-				/*
 				let modaldata = {
-					mainid:
 					laleltext: "Spieltag aktivieren",
-					bodyid:
+					mainclass: ["modal-message"],
+					bodyclass: [ "modal-message-body", "activate-matchday-text"] 
 					
 				}
 
 				let modalwarning = createbasicmodal(modaldata);
-				*/
+
+				toggleoverlay(true);
 
 			}
 		}

@@ -844,13 +844,6 @@
 	opacity: 0;
 }
 
-.delete-club-text::after{
-	content: "Soll der Verein wirklich geloescht werden?";
-}
-
-.delete-tournament-text::after{
-	content: "Soll das Turnier wirklich geloescht werden?";
-}
 
 .workspace-settings-tournament-config{
 	display: grid;
@@ -898,6 +891,37 @@
 
 	grid-row-gap: 5px;
 }
+
+.modal-message{
+	width: 600px;
+}
+
+.modal-message-body{
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 500px;
+	grid-template-rows: 25px;
+
+	grid-row-gap: 5px;
+
+}
+/*---Messages Text---*/
+.activate-matchday-text::after{
+	content: "Das Turnier zu diesem Spieltag ist nicht aktiv";	
+}
+
+.delete-club-text::after{
+	content: "Soll der Verein wirklich geloescht werden?";
+}
+
+.delete-tournament-text::after{
+	content: "Soll das Turnier wirklich geloescht werden?";
+}
+
 
 /*---ICONS---*/
 .icon-tournament{
