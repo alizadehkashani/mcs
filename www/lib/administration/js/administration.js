@@ -2183,7 +2183,7 @@ let genderdropdown = () => {
 
 	let options = {
 		0: {id: "M", text: "M\u00e4nnlich"},
-		1: {id: "W", text: "Weiblich"},
+		1: {id: "F", text: "Weiblich"},
 		2: {id: "D", text: "Divers"}
 	}
 
@@ -2408,7 +2408,8 @@ let buildmodalcreateplayer = async (playerstable) => {
 	let modaldata = {
 		mainid: "modal-create-player",
 		labeltext: "Spieler anlegen",
-		bodyid: "modal-create-player-body"
+		bodyid: "modal-create-player-body",
+		onaccept: false
 	}
 
 	//create modal
@@ -2572,15 +2573,11 @@ let buildmodaleditplayer = async (playernumber) => {
 	});
 
 	//create input for gender 
-	let genderinput = creatediv({
-		type: "INPUT",
-		appendto: playerinfo
-	});
-	genderinput.value = playerdata["gender"];
-	//limit input length gender
-	genderinput.addEventListener("input", () => {
-		genderinput.value = limitinput(1, genderinput);
-	});
+	let genderinput = genderdropdown();
+	//set the dropdown to the current gender of the player
+	genderinput.value = playerdata.gender;
+	playerinfo.appendChild(genderinput);
+
 
 	//create label for surname 
 	let surnamelabel = creatediv({
@@ -2855,7 +2852,7 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 			}else if(activate == 1){
 				console.log("turnier nicht aktiv");
 
-				//TODO create warning, if the current tournament is not active
+				//create modal for warning
 				let modaldata = {
 					laleltext: "Spieltag aktivieren",
 					mainclass: ["modal-message"],
