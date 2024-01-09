@@ -705,12 +705,14 @@ let buildworkspaceviewtournament = async (id) => {
 		await buildworkspaceplayerintconfig(id);
 	})	
 
+	/*---currently not used---
 	//create icon for tournament archive
 	let archiveicon = document.createElement("div");
 	archiveicon.classList.add("icon-archive");
 	archiveicon.classList.add("icon");
 	archiveicon.classList.add("workspaceicon");
 	workspaceheadvariable.appendChild(archiveicon);
+	*/
 
 	//create icon for tournament deletion
 	let deleteicon = document.createElement("div");
@@ -2068,7 +2070,6 @@ let buildworkspaceplayerintconfig = async (tid) => {
 
 	await buildplayersintournamenttable(playerstable, tid);
 
-
 }
 
 let buildmodaladdplayertotournament = async (tid, playerstable) => {
@@ -2386,9 +2387,15 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 		appendto: row
 	});
 
+	//create container for remove player button
+	let removebuttoncontainer = creatediv({
+		appendto: row
+	});
+	removebuttoncontainer.style = "opacity: 0;";
+
 	//div for button to remove player from tournament		
 	let removeplayerfromtbutton = creatediv({
-		appendto: row,
+		appendto: removebuttoncontainer,
 		divclass: ["icon", "workspaceicon", "icon-playerminus"]
 	});
 
@@ -2398,6 +2405,9 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 			row.remove();
 		}
 	})
+
+	//when hovering over the row, display the button to remove player
+	changeopacityonhover(row, removebuttoncontainer);
 	
 		
 }
@@ -2516,7 +2526,7 @@ let buildmodalcreateplayer = async (playerstable) => {
 			surnameinput.value = "";
 			firstnameinput.value = "";
 
-			//build table again
+			//rebuild players table
 			await buildplayerstable(playerstable); 
 		}
 	});
