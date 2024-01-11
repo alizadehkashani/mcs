@@ -918,6 +918,10 @@
 	content: "Das Turnier ist nicht aktiv";	
 }
 
+.tournament-no-tracks-text::after{
+	content: "Das Turnier hat keine Bahnen";	
+}
+
 .delete-club-text::after{
 	content: "Soll der Verein wirklich geloescht werden?";
 }

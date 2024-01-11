@@ -2860,13 +2860,12 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 				matchdayicon.classList.add("icon-matchday-active");
 
 			}else if(activate == 1){
-				console.log("turnier nicht aktiv");
 
 				//create modal for warning
 				let modaldata = {
 					laleltext: "Spieltag aktivieren",
 					mainclass: ["modal-message"],
-					bodyclass: [ "modal-message-body", "activate-matchday-text"] 
+					bodyclass: ["modal-message-body", "activate-matchday-text"] 
 					
 				}
 
@@ -3100,7 +3099,20 @@ let buildworkspaceviewround = async (roundscontainer, roundcontainer, rdata, rou
 		if(tracks){
 			await buildworkspaceroundstartgroups(rdata);
 		}else{
-			alert("Turnier hat keine Bahnen");
+			//if the tournament has no tracks
+			//displau a message to the user
+
+			//data for modal creation
+			let modaldata = {
+				labeltext: "Gruppen",
+				mainclass: ["modal-message"],
+				bodyclass: ["modal-message-body", "tournament-no-tracks-text"]
+			}
+
+			let modalwarning = createbasicmodal(modaldata);
+
+			//turn on overlay
+			toggleoverlay(true);
 		}
 	})
 
