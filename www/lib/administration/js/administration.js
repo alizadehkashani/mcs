@@ -3526,6 +3526,7 @@ var trackgroupsbeingbuild = false;
 
 let buildstartgroupstable = async (groupsdata) => {
 	
+	//debugger;
 	if(trackgroupsbeingbuild){
 		return;
 	};
@@ -3537,6 +3538,9 @@ let buildstartgroupstable = async (groupsdata) => {
 
 	//get groups from db
 	let groups = await getstartgroups(groupsdata);
+
+	//create new docfrag for the group
+	let docfrag = new DocumentFragment();
 
 	//loop through groups and build table
 	for(let i = 0; i < groups.length; i++){
@@ -3552,14 +3556,13 @@ let buildstartgroupstable = async (groupsdata) => {
 
 		//container showing group basic data
 		let groupcontainer = creatediv({
-			appendto: groupsdata.groupslistcontainer,
 			divclass: ["trackstartgroupcontainer"]
 		});
+		docfrag.append(groupcontainer);
 
-		//contaienr showing players withing group
-		let playerscontainer = creatediv({
-			appendto: groupsdata.groupslistcontainer,
-		});
+		//contaienr showing players within group
+		let playerscontainer = creatediv({});
+		docfrag.append(playerscontainer);
 
 		//create container for expand/collapse control
 		let expandcontainer = creatediv({
@@ -3719,7 +3722,10 @@ let buildstartgroupstable = async (groupsdata) => {
 		//add players to group
 		await buildgroupplayers(playerscontainer, groups[i]["groupid"]);
 
+
 	}
+
+	groupsdata.groupslistcontainer.append(docfrag);
 
 	trackgroupsbeingbuild = false;
 
