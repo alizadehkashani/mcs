@@ -919,7 +919,7 @@
 }
 
 .tournament-no-tracks-text::after{
-	content: "Das Turnier hat keine Bahnen";	
+	content: "Das Turnier hat keine Bahn
 }
 
 .delete-club-text::after{
@@ -934,6 +934,10 @@
 /*---ICONS---*/
 .icon-tournament{
 	background: no-repeat center url("/../lib/administration/assets/tournament.svg");
+}
+
+.icon-tournament-add{
+	background: no-repeat center url("/../lib/assets/tournamentadd.svg");
 }
 
 .icon-tournament-active{

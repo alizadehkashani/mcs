@@ -4392,8 +4392,6 @@ let buildworkspacetournamentconfig = async () => {
 	//get elements for workspace and workspace body
 	let workspace = getworkspace();
 	let workspacebody = getworkspacebody();
-	let workspacefoot = getworkspacefoot();
-	let workspaceheadvariable = getworkspaceheadvariable();
 
 	//clear workspace
 	clearworkspace();
@@ -4418,7 +4416,7 @@ let buildworkspacetournamentconfig = async () => {
 
 	//add button to create new tournament
 	let createtournamentbutton = document.createElement("div");
-	createtournamentbutton.classList.add("icon-plus");
+	createtournamentbutton.classList.add("icon-tournament-add");
 	createtournamentbutton.classList.add("icon");
 	createtournamentbutton.classList.add("workspaceicon");
 	tournamentcreatebuttoncontainer.appendChild(createtournamentbutton);
