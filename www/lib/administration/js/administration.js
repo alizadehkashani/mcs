@@ -2358,10 +2358,36 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 	});
 	
 	//add startnumber
-	creatediv({
-		divtext: playerdata.startnumber,
+	let startnumbercontainer = creatediv({
 		appendto: row
 	});
+
+	//if player currently does not have a startnumber
+	//add an icon to add a startnumber
+	//else add the startnumber according to db
+	if(playerdata.startnumber == null){
+		creatediv({
+			appendto: startnumbercontainer,
+			divclass: ["icon", "workspaceicon", "icon-startnumber-add"]
+
+		});
+		startnumbercontainer.style = "opacity: 0";
+
+		//when hovering over the row, display the button to add a startnumber
+		changeopacityonhover(row, startnumbercontainer);
+		
+		//if button to add startnumber is clicked, build modal
+		startnumbercontainer.addEventListener("click", async () => {
+
+			buildmodaladdstartnumber(tid, playerdata.playernumber);
+		});
+	}else{
+		creatediv({
+			divtext: playerdata.startnumber,
+			appendto: startnumbercontainer
+		});
+
+	}
 
 	//add player gender
 	creatediv({
@@ -4562,6 +4588,45 @@ let removeplayerfromtournament = async (tid, playernumber) => {
 	
 	return phpresponse;
 
+}
+
+let buildmodaladdstartnumber = async (tid, playernumber) => {
+	
+	console.log(tid);
+	console.log(playernumber);
+	
+	let modaldata = {
+
+	}
+
+
+
+}
+
+let addstartnumbertoplayer = async (tid, playernumber, startnumber) => {
+
+	//data of player which should get the startnumber
+	playerdata = {
+		tid: tid,
+		playernumber: playernumber,
+		startnumber: startnumber
+	}
+
+	//call php script
+	let phppath = "/lib/administration/php/addstartnumbertoplayer.php";
+	let deleteplayer = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
+
+	//php response
+	let phpresponse = await deleteplayer.json();
+	
+	return phpresponse;
 }
 
 DOMready(buildheader);

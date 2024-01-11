@@ -997,6 +997,10 @@
 	background: no-repeat center url("/../lib/assets/playeradd.svg");
 }
 
+.icon-startnumber-add{
+	background: no-repeat center url("/../lib/assets/startnumberadd.svg");
+}
+
 .icon-playerminus{
 	background: no-repeat center url("/../lib/assets/playerremove.svg");
 }
