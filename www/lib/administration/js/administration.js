@@ -4604,6 +4604,7 @@ let buildmodaladdstartnumber = async (container, tid, playerdata) => {
 		labeltext: "Startnummer vergeben: " + playerdata.playernumber + " " + playerdata.surname,
 		mainid: "modal-add-startnumber",
 		bodyid: "modal-add-startnumber-body",
+		onaccept: false,
 		toggleoverlay: true
 	}
 
@@ -4620,14 +4621,38 @@ let buildmodaladdstartnumber = async (container, tid, playerdata) => {
 	});
 
 	modal.acceptbutton.addEventListener("click", async () => {
+
 		//get startnumber from input field and cast into int
 		let startnumber = parseInt(startnumberinput.value);
 
+		//try adding startnumber to player
 		let addstartnumber = await addstartnumbertoplayer(tid, playerdata.playernumber, startnumber);
 		
 		//if startnumber was successfully added
 		if(addstartnumber.result == 0){
+			//rebuild player table after startnumber was successfully assinged
 			await buildplayersintournamenttable(container, tid);	
+			//remove modal
+			modal.modalcontainer.remove();
+			//turn off overlay
+			toggleoverlay(false);
+		}else if(addstartnumber.result == 1){
+
+			//remove the original modal
+			modal.modalcontainer.remove();
+
+			//build modal displaying message that startnumber was already assinged
+			let message = createbasicmodal({
+				labeltext: "Startnummer vergeben",
+				mainclass: ["modal-message"],
+				bodyclass: ["modal-message-body", "add-startnumber-text"],
+				toggleoverlay: true
+			});
+
+			message.acceptbutton.addEventListener("click", async () => {
+				//if warning is accepted, build the original modal
+				await buildmodaladdstartnumber(container, tid, playerdata);
+			});
 		}
 		
 	});

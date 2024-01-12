@@ -936,6 +936,10 @@
 	content: "Das Turnier ist nicht aktiv";	
 }
 
+.add-startnumber-text::after{
+	content: "Startnummer wurde bereits vergeben";	
+}
+
 .tournament-no-tracks-text::after{
 	content: "Das Turnier hat keine Bahn
 }

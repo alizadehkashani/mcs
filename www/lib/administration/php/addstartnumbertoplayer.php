@@ -7,23 +7,40 @@
 	$response = [];
 
 	//TODO check if startnumber was already assigned to another player in the tournament
-	
-	//add startnumber to player
 	$query = "
-		UPDATE playersintournament
-		SET startnumber = :startnumber
+		SELECT playernumber 
+		FROM playersintournament
 		WHERE tid = :tid 
-		AND playernumber = :playernumber
+		AND startnumber = :startnumber
 	";
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":startnumber", $input["startnumber"]);
 	$sql->bindParam(":tid", $input["tid"]);
-	$sql->bindParam(":playernumber", $input["playernumber"]);
 	$sql->execute();
+	$result = $sql->fetch(PDO::FETCH_ASSOC);
+	
+	if($sql->rowCount() != 0){
+		$response["result"] = 1;
+		$response["message"] = "Startnummber bereits vergeben";
+	}else{
+		//add startnumber to player
+		$query = "
+			UPDATE playersintournament
+			SET startnumber = :startnumber
+			WHERE tid = :tid 
+			AND playernumber = :playernumber
+		";
 
-	$response["result"] = 0;
-	$response["message"] = "Startnummer wurde dem Spieler hinzugefuegt";
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":startnumber", $input["startnumber"]);
+		$sql->bindParam(":tid", $input["tid"]);
+		$sql->bindParam(":playernumber", $input["playernumber"]);
+		$sql->execute();
+
+		$response["result"] = 0;
+		$response["message"] = "Startnummer wurde dem Spieler hinzugefuegt";
+	}
 	
 	echo(json_encode($response));
 
