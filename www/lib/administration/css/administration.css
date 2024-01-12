@@ -913,6 +913,24 @@
 	grid-row-gap: 5px;
 
 }
+
+#modal-add-startnumber{
+	width: 600px;
+}
+
+#modal-add-startnumber-body{
+	display: grid;
+
+	padding: 10px;
+	padding-left: 10px;
+	padding-right: 10px;
+
+	grid-template-columns: 200px 100px;
+	grid-template-rows: 25px;
+
+	grid-row-gap: 5px;
+
+}
 /*---Messages Text---*/
 .activate-matchday-text::after{
 	content: "Das Turnier ist nicht aktiv";	

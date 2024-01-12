@@ -1395,6 +1395,11 @@ let createbasicmodal = (modaldata) => {
 		});
 	}
 
+	//check if the overlay should be turned on
+	if(modaldata.toggleoverlay){
+		toggleoverlay(true);
+	}
+
 	return {
 		modalcontainer: modalcontainer,
 		modalbody: modalbody,
@@ -2379,7 +2384,7 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 		//if button to add startnumber is clicked, build modal
 		startnumbercontainer.addEventListener("click", async () => {
 
-			buildmodaladdstartnumber(tid, playerdata.playernumber);
+			buildmodaladdstartnumber(container, tid, playerdata);
 		});
 	}else{
 		creatediv({
@@ -4590,15 +4595,42 @@ let removeplayerfromtournament = async (tid, playernumber) => {
 
 }
 
-let buildmodaladdstartnumber = async (tid, playernumber) => {
+let buildmodaladdstartnumber = async (container, tid, playerdata) => {
 	
 	console.log(tid);
-	console.log(playernumber);
+	console.log(playerdata.playernumber);
 	
 	let modaldata = {
-
+		labeltext: "Startnummer vergeben: " + playerdata.playernumber + " " + playerdata.surname,
+		mainid: "modal-add-startnumber",
+		bodyid: "modal-add-startnumber-body",
+		toggleoverlay: true
 	}
 
+	let modal = createbasicmodal(modaldata);
+
+	let startnumberlabel = creatediv({
+		divtext: "Startnummer",
+		appendto: modal.modalbody
+	});
+
+	let startnumberinput = creatediv({
+		type: "INPUT",
+		appendto: modal.modalbody
+	});
+
+	modal.acceptbutton.addEventListener("click", async () => {
+		//get startnumber from input field and cast into int
+		let startnumber = parseInt(startnumberinput.value);
+
+		let addstartnumber = await addstartnumbertoplayer(tid, playerdata.playernumber, startnumber);
+		
+		//if startnumber was successfully added
+		if(addstartnumber.result == 0){
+			await buildplayersintournamenttable(container, tid);	
+		}
+		
+	});
 
 
 }
