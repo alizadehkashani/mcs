@@ -4762,7 +4762,7 @@ let buildmodaleditstartnumber = async (container, tid, playerdata) => {
 	//create button to remove startnumber
 	let removebutton = creatediv({
 		appendto: removestartnumberbuttoncontainer,
-		divclass: ["icon", "workspaceicon", "icon-garbage"]
+		divclass: ["icon", "workspaceicon", "icon-startnumber-remove"]
 	});
 
 	//add event listner to remove button

@@ -1048,6 +1048,10 @@
 	background: no-repeat center url("/../lib/assets/startnumberadd.svg");
 }
 
+.icon-startnumber-remove{
+	background: no-repeat center url("/../lib/assets/startnumberremove.svg");
+}
+
 .icon-playerminus{
 	background: no-repeat center url("/../lib/assets/playerremove.svg");
 }
