@@ -2361,6 +2361,7 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 		divtext: playerdata.playernumber,
 		appendto: row
 	});
+
 	
 	//add startnumber
 	let startnumbercontainer = creatediv({
@@ -2384,12 +2385,15 @@ let buildsingleplayerintournament = async (container, tid, playerdata) => {
 		//if button to add startnumber is clicked, build modal
 		startnumbercontainer.addEventListener("click", async () => {
 
-			buildmodaladdstartnumber(container, tid, playerdata);
+			await buildmodaladdstartnumber(container, tid, playerdata);
 		});
 	}else{
-		creatediv({
+		let startnumber = creatediv({
 			divtext: playerdata.startnumber,
 			appendto: startnumbercontainer
+		});
+		startnumber.addEventListener("click", async () => {
+			buildmodaleditstartnumber(container, tid, playerdata);
 		});
 
 	}
@@ -4597,9 +4601,6 @@ let removeplayerfromtournament = async (tid, playernumber) => {
 
 let buildmodaladdstartnumber = async (container, tid, playerdata) => {
 	
-	console.log(tid);
-	console.log(playerdata.playernumber);
-	
 	let modaldata = {
 		labeltext: "Startnummer vergeben: " + playerdata.playernumber + " " + playerdata.surname,
 		mainid: "modal-add-startnumber",
@@ -4671,7 +4672,7 @@ let addstartnumbertoplayer = async (tid, playernumber, startnumber) => {
 
 	//call php script
 	let phppath = "/lib/administration/php/addstartnumbertoplayer.php";
-	let deleteplayer = await fetch(phppath, {
+	let addstartnumber = await fetch(phppath, {
 		method: 'POST',
 		header: {
 			'Accept': 'application/json',
@@ -4681,9 +4682,131 @@ let addstartnumbertoplayer = async (tid, playernumber, startnumber) => {
 	});
 
 	//php response
-	let phpresponse = await deleteplayer.json();
+	let phpresponse = await addstartnumber.json();
 	
 	return phpresponse;
+}
+
+let updatestartnumber = async (tid, playerdata) => {
+	//add tid to playerdata
+	playerdata.tid = tid;
+
+	//call php script
+	let phppath = "/lib/administration/php/updatestartnumber.php";
+	let updatestartnumber = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
+
+	//php response
+	let phpresponse = await updatestartnumber.json();
+	
+	return phpresponse;
+}
+
+let buildmodaleditstartnumber = async (container, tid, playerdata) => {
+	//TODO define modal to edit/remove a startnumber
+	//set null
+	console.log("hi");
+	console.log(container);
+	console.log(tid);
+	console.log(playerdata);
+
+	let modaldata = {
+		labeltext: "Startnummer bearbeiten",
+		mainid: "modal-edit-startnumber",
+		bodyid: "modal-edit-startnumber-body",
+		toggleoverlay: true
+	}
+
+	let modal = createbasicmodal(modaldata);
+
+	//create main container div for player infromation
+	let playerinfocontainer = creatediv({
+		appendto: modal.modalbody,
+		divid: "modal-edit-startnumber-playerinfo"
+	});
+
+	//create container for button to remove startnumber
+	let removestartnumberbuttoncontainer = creatediv({
+		appendto: modal.modalbody,
+		divclass: ["flexcenter"]
+	});
+
+	//create button to remove startnumber
+	let removebutton = creatediv({
+		appendto: removestartnumberbuttoncontainer,
+		divclass: ["icon", "workspaceicon", "icon-garbage"]
+	});
+
+	removebutton.addEventListener("click", async () => {
+		let removeplayernumberdb = await removestartnumber(tid, playerdata);
+	});
+
+	//create label playernumber
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: "Spielernummer"
+	});
+
+	//create div to display selected playernumber
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: playerdata.playernumber
+	});
+
+	//create label playername
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: "Name"
+	});
+
+	//create div to display selected playername
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: playerdata.surname + ", " + playerdata.firstname,
+	});
+	
+	//create label club
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: "Verein"
+	});
+
+	//create div to display selected club
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: playerdata.cname
+	});
+	
+	//create label startnumber
+	creatediv({
+		appendto: playerinfocontainer,
+		divtext: "Startnummer"
+	});
+	
+	//create input for startnumber
+	let startnumberinput = creatediv({
+		type: "INPUT",
+		appendto: playerinfocontainer,
+	});
+	startnumberinput.value = playerdata.startnumber;
+
+	//add event listner for acceptbutton
+	modal.acceptbutton.addEventListener("click", async () => {
+		playerdata.startnumber = startnumberinput.value;
+		let updatestartnumberdb = await updatestartnumber(tid, playerdata);
+		if(updatestartnumberdb.result == "0"){
+
+			//if update was successfull, update the player list
+			await buildplayersintournamenttable(container, tid);	
+		}
+	});
+
 }
 
 DOMready(buildheader);
