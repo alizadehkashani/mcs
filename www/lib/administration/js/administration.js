@@ -4708,14 +4708,35 @@ let updatestartnumber = async (tid, playerdata) => {
 	return phpresponse;
 }
 
-let buildmodaleditstartnumber = async (container, tid, playerdata) => {
-	//TODO define modal to edit/remove a startnumber
-	//set null
-	console.log("hi");
-	console.log(container);
-	console.log(tid);
-	console.log(playerdata);
+let removestartnumber = async (tid, playernumber) => {
 
+	//object for php script
+	let playerdata = {
+		tid: tid,
+		playernumber: playernumber
+	}
+	
+	//call php script
+	let phppath = "/lib/administration/php/removestartnumber.php";
+	let removestartnumber = await fetch(phppath, {
+		method: 'POST',
+		header: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(playerdata)
+	});
+
+	//php response
+	let phpresponse = await removestartnumber.json();
+	
+	return phpresponse;
+
+}
+
+let buildmodaleditstartnumber = async (container, tid, playerdata) => {
+
+	//data for modal
 	let modaldata = {
 		labeltext: "Startnummer bearbeiten",
 		mainid: "modal-edit-startnumber",
@@ -4723,6 +4744,7 @@ let buildmodaleditstartnumber = async (container, tid, playerdata) => {
 		toggleoverlay: true
 	}
 
+	//create new modal
 	let modal = createbasicmodal(modaldata);
 
 	//create main container div for player infromation
@@ -4743,8 +4765,19 @@ let buildmodaleditstartnumber = async (container, tid, playerdata) => {
 		divclass: ["icon", "workspaceicon", "icon-garbage"]
 	});
 
+	//add event listner to remove button
 	removebutton.addEventListener("click", async () => {
-		let removeplayernumberdb = await removestartnumber(tid, playerdata);
+		//call fetch function
+		let removeplayernumberdb = await removestartnumber(tid, playerdata.playernumber);
+
+		//if number was succesffully removed, rebuild table
+		if(removeplayernumberdb.result == 0){
+			//if update was successfull, update the player list
+			await buildplayersintournamenttable(container, tid);	
+
+			modal.modalcontainer.remove();
+			toggleoverlay(false);
+		}
 	});
 
 	//create label playernumber
