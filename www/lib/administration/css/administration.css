@@ -806,14 +806,14 @@
 
 .addplayertogroup-playercontainer{
 	display: grid;
-	grid-template-columns: 50px 1fr 1fr 1fr 30px;
+	grid-template-columns: 50px 50px 1fr 1fr 40px;
 	grid-template-rows: 1fr;
 }
 
 .track-group-player-container{
 	display: grid;
 	grid-template-rows: 30px;
-	grid-template-columns: 55px 50px 50px 100px 1fr 50px;
+	grid-template-columns: 55px 50px 50px 50px 1fr 1fr 50px;
 }
 
 .track-group-player-container:hover{
@@ -966,7 +966,7 @@
 }
 
 .tournament-no-tracks-text::after{
-	content: "Das Turnier hat keine Bahn
+	content: "Das Turnier hat keine Bahn";
 }
 
 .delete-club-text::after{

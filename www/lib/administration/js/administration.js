@@ -3455,15 +3455,18 @@ let buildworkspaceroundstartgroups = async (rdata) => {
 	//add class to workspace body
 	workspacebody.classList.add("workspace-view-roundstartgroups-body");
 	
+	//container for individual tracks
 	let trackselectioncontainer = creatediv({
 		appendto: workspacebody,
 		divclass: ["workspace-trackselection-container"]
 	});
 
+	//container for button to create new startgroup
 	let trackstartgroupscreatecontainer = creatediv({
 		appendto: workspacebody,
 	})
 
+	//contianer for list of startgroups
 	let trackstartgroupslist = creatediv({
 		appendto: workspacebody,
 		divid: "trackstartgroupslist"
@@ -3573,11 +3576,11 @@ var trackgroupsbeingbuild = false;
 
 let buildstartgroupstable = async (groupsdata) => {
 	
-	//debugger;
 	if(trackgroupsbeingbuild){
 		return;
 	};
 
+	//set variable which tracks if list is currently beeing build to true
 	trackgroupsbeingbuild = true;
 	
 	//clear list
@@ -3790,6 +3793,7 @@ let buildgroupplayers = async (container, groupid) => {
 			playerstartorder: j+1,
 			playerorderdb: groupplayers[j]["playerorder"],
 			playernumber: groupplayers[j]["playernumber"],
+			playerstartnumber: groupplayers[j]["startnumber"],
 			surname: groupplayers[j]["surname"],
 			firstname: groupplayers[j]["firstname"],
 			groupid: groupid
@@ -3869,6 +3873,12 @@ let startgroupsinsertplayer = async (container, groupid, playerdata) => {
 		divtext: playerdata.playernumber
 	});
 
+	//startnumber
+	creatediv({
+		appendto: playercontainer,
+		divtext: playerdata.playerstartnumber
+	});
+
 	//surname
 	creatediv({
 		appendto: playercontainer,
@@ -3928,8 +3938,8 @@ let addplayertogroupmodal = async (groupsdata, playerscontainer, groupid) => {
 			divclass: ["addplayertogroup-playercontainer"]
 		});
 
-		//playernumber, surname, firstname
-		for(let j = 0; j < 3; j++){
+		//playernumber, startnumber, surname, firstname
+		for(let j = 0; j < 4; j++){
 
 			creatediv({
 				appendto: playercontainer,

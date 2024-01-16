@@ -8,10 +8,18 @@
 	$response = [];
 
 	$query = "
-		SELECT players.playernumber, players.surname, players.firstname, groupplayers.playerorder
+		SELECT 
+			players.playernumber, 
+			playersintournament.startnumber, 
+			players.surname, 
+			players.firstname, 
+			groupplayers.playerorder
 		FROM players 
 		INNER JOIN groupplayers
 		ON groupplayers.playernumber = players.playernumber
+		INNER JOIN playersintournament
+		ON groupplayers.playernumber = playersintournament.playernumber
+		AND groupplayers.tid = playersintournament.tid
 		WHERE groupplayers.groupid = :groupid
 		ORDER BY groupplayers.playerorder ASC
 	";

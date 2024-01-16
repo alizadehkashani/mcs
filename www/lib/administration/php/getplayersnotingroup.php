@@ -8,7 +8,7 @@
 	$response = [];
 
 	$query = "
-	SELECT players.playernumber, players.surname, players.firstname 
+	SELECT players.playernumber, playersintournament.startnumber, players.surname, players.firstname 
 	FROM players 
 	INNER JOIN playersintournament
 	ON players.playernumber = playersintournament.playernumber
