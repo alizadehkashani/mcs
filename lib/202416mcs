@@ -1,0 +1,319 @@
+-- MariaDB dump 10.19  Distrib 10.6.12-MariaDB, for debian-linux-gnu (x86_64)
+--
+-- Host: localhost    Database: mcs
+-- ------------------------------------------------------
+-- Server version	10.6.12-MariaDB-0ubuntu0.22.04.1
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `clubs`
+--
+
+DROP TABLE IF EXISTS `clubs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `clubs` (
+  `cid` int(3) NOT NULL AUTO_INCREMENT,
+  `cname` char(40) NOT NULL,
+  PRIMARY KEY (`cid`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `clubs`
+--
+
+LOCK TABLES `clubs` WRITE;
+/*!40000 ALTER TABLE `clubs` DISABLE KEYS */;
+INSERT INTO `clubs` VALUES (21,'MC Schriesheim'),(22,'MC Mannheim');
+/*!40000 ALTER TABLE `clubs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `comptypes`
+--
+
+DROP TABLE IF EXISTS `comptypes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `comptypes` (
+  `id` int(1) NOT NULL,
+  `description` char(20) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comptypes`
+--
+
+LOCK TABLES `comptypes` WRITE;
+/*!40000 ALTER TABLE `comptypes` DISABLE KEYS */;
+INSERT INTO `comptypes` VALUES (1,'Mannschaft'),(2,'Einzel'),(3,'Mannschaft + Einzel');
+/*!40000 ALTER TABLE `comptypes` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `groupplayers`
+--
+
+DROP TABLE IF EXISTS `groupplayers`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `groupplayers` (
+  `tid` int(3) NOT NULL,
+  `groupid` int(11) NOT NULL,
+  `playernumber` int(3) NOT NULL,
+  `playerorder` int(3) DEFAULT NULL,
+  PRIMARY KEY (`tid`,`groupid`,`playernumber`),
+  KEY `tid` (`tid`,`playernumber`),
+  CONSTRAINT `groupplayers_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tournaments` (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `groupplayers`
+--
+
+LOCK TABLES `groupplayers` WRITE;
+/*!40000 ALTER TABLE `groupplayers` DISABLE KEYS */;
+INSERT INTO `groupplayers` VALUES (53,10,777,2),(53,11,888,1),(53,11,999,2),(53,12,1000,1),(53,13,777,1),(53,15,888,1),(53,16,999,1),(53,18,654,1),(53,19,1000,1),(53,20,3453,1),(53,21,64356,1),(53,22,6643,1),(53,22,7865,2),(53,23,3464,1),(53,24,654,2),(53,24,777,3),(53,24,888,4),(53,24,999,5),(53,24,1000,6),(53,24,3453,7),(53,24,3464,8),(53,24,6643,9),(53,24,7865,10),(53,24,64356,11),(53,35,68,1),(53,36,123,1),(53,37,654,1);
+/*!40000 ALTER TABLE `groupplayers` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `groups` (
+  `tid` int(3) NOT NULL,
+  `trackid` int(3) NOT NULL,
+  `groupid` int(11) NOT NULL AUTO_INCREMENT,
+  `grouporder` int(3) DEFAULT NULL,
+  `currentgroup` int(1) DEFAULT 0,
+  `mid` int(11) DEFAULT NULL,
+  `rid` int(11) DEFAULT NULL,
+  PRIMARY KEY (`tid`,`groupid`),
+  UNIQUE KEY `groupid` (`groupid`)
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `groups`
+--
+
+LOCK TABLES `groups` WRITE;
+/*!40000 ALTER TABLE `groups` DISABLE KEYS */;
+INSERT INTO `groups` VALUES (52,15,8,1,0,55,51),(52,15,9,2,0,55,51),(53,16,10,1,1,57,53),(53,16,11,2,0,57,53),(53,16,12,3,0,57,53),(53,16,13,1,1,57,54),(53,16,14,2,0,57,54),(53,16,15,3,0,57,54),(53,16,16,4,0,57,54),(53,16,18,5,0,57,54),(53,16,19,6,0,57,54),(53,16,20,7,0,57,54),(53,16,21,8,0,57,54),(53,16,22,9,0,57,54),(53,16,23,10,0,57,54),(53,17,24,1,1,57,54),(53,16,25,11,0,57,54),(53,16,26,12,0,57,54),(53,16,27,13,0,57,54),(53,16,28,14,0,57,54),(53,16,29,15,0,57,54),(53,16,30,16,0,57,54),(53,16,31,17,0,57,54),(53,16,32,18,0,57,54),(53,16,35,2,0,60,55),(53,16,36,3,0,60,55),(53,16,37,4,0,60,55),(53,16,39,5,0,60,55),(53,16,40,6,0,60,55),(53,16,41,7,0,60,55),(53,16,42,8,0,60,55),(53,16,43,9,0,60,55),(53,16,44,10,0,60,55),(53,16,45,11,0,60,55),(53,16,46,12,0,60,55),(53,16,47,13,0,60,55),(53,16,48,14,0,60,55),(53,16,49,15,0,60,55),(53,16,50,16,0,60,55);
+/*!40000 ALTER TABLE `groups` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `matchdays`
+--
+
+DROP TABLE IF EXISTS `matchdays`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `matchdays` (
+  `tid` int(3) NOT NULL,
+  `mdnumber` int(3) NOT NULL,
+  `mddescription` char(40) NOT NULL DEFAULT '',
+  `mdcurrent` int(1) DEFAULT 0,
+  `mid` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`mid`,`tid`,`mdnumber`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `matchdays`
+--
+
+LOCK TABLES `matchdays` WRITE;
+/*!40000 ALTER TABLE `matchdays` DISABLE KEYS */;
+INSERT INTO `matchdays` VALUES (52,1,'',0,55),(52,2,'',0,56),(53,1,'',0,57),(53,2,'',0,60),(52,3,'',0,61);
+/*!40000 ALTER TABLE `matchdays` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `players`
+--
+
+DROP TABLE IF EXISTS `players`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `players` (
+  `cid` int(3) NOT NULL,
+  `playernumber` int(5) NOT NULL,
+  `gender` char(1) NOT NULL,
+  `surname` char(20) NOT NULL,
+  `firstname` char(20) NOT NULL,
+  PRIMARY KEY (`playernumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `players`
+--
+
+LOCK TABLES `players` WRITE;
+/*!40000 ALTER TABLE `players` DISABLE KEYS */;
+INSERT INTO `players` VALUES (22,68,'F','Alizadeh Kashani','Aniara Jasmin'),(22,123,'D','Alizadeh Kashani','Ramin Tim'),(22,654,'F','test','test'),(22,777,'F','Ehrmann','Aniara'),(21,888,'M','Ramin','Kashani'),(22,999,'M','test','test'),(21,1000,'D','test0','test0'),(22,3453,'M','test','test'),(21,3464,'D','test','test'),(22,6643,'F','test','test'),(22,7865,'M','test','test'),(22,64356,'F','test','test');
+/*!40000 ALTER TABLE `players` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `playersintournament`
+--
+
+DROP TABLE IF EXISTS `playersintournament`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `playersintournament` (
+  `tid` int(5) DEFAULT NULL,
+  `playernumber` int(5) DEFAULT NULL,
+  `startnumber` int(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `playersintournament`
+--
+
+LOCK TABLES `playersintournament` WRITE;
+/*!40000 ALTER TABLE `playersintournament` DISABLE KEYS */;
+INSERT INTO `playersintournament` VALUES (53,777,NULL),(53,888,111),(53,999,NULL),(53,1000,123),(53,654,NULL),(53,3453,NULL),(53,3464,445),(53,6643,NULL),(53,7865,NULL),(53,64356,444),(53,68,1),(52,68,111),(52,123,NULL),(53,123,3423);
+/*!40000 ALTER TABLE `playersintournament` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rounds`
+--
+
+DROP TABLE IF EXISTS `rounds`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `rounds` (
+  `tid` int(3) NOT NULL,
+  `rnumber` int(3) NOT NULL,
+  `rdescription` char(40) NOT NULL DEFAULT '',
+  `rcurrent` int(1) NOT NULL DEFAULT 0,
+  `rid` int(11) NOT NULL AUTO_INCREMENT,
+  `mid` int(11) NOT NULL,
+  PRIMARY KEY (`rid`,`tid`,`mid`,`rcurrent`)
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rounds`
+--
+
+LOCK TABLES `rounds` WRITE;
+/*!40000 ALTER TABLE `rounds` DISABLE KEYS */;
+INSERT INTO `rounds` VALUES (52,1,'',0,51,55),(53,1,'',0,53,57),(53,2,'',0,54,57),(53,1,'',0,55,60);
+/*!40000 ALTER TABLE `rounds` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tournaments`
+--
+
+DROP TABLE IF EXISTS `tournaments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tournaments` (
+  `tid` int(3) NOT NULL AUTO_INCREMENT,
+  `tname` char(20) NOT NULL,
+  `tlocation` char(20) NOT NULL,
+  `tactive` tinyint(1) NOT NULL,
+  `tcurrent` int(1) DEFAULT 0,
+  PRIMARY KEY (`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tournaments`
+--
+
+LOCK TABLES `tournaments` WRITE;
+/*!40000 ALTER TABLE `tournaments` DISABLE KEYS */;
+INSERT INTO `tournaments` VALUES (52,'DM 2024','Schriesheim',1,0),(53,'DM 2025','Schriesheim',1,1);
+/*!40000 ALTER TABLE `tournaments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `tracks`
+--
+
+DROP TABLE IF EXISTS `tracks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tracks` (
+  `tid` int(3) NOT NULL,
+  `trackid` int(3) NOT NULL AUTO_INCREMENT,
+  `currentgroup` int(2) DEFAULT NULL,
+  `label` char(1) NOT NULL,
+  `trackdescription` char(40) NOT NULL,
+  PRIMARY KEY (`tid`,`trackid`),
+  UNIQUE KEY `trackid` (`trackid`),
+  CONSTRAINT `tracks_ibfk_1` FOREIGN KEY (`tid`) REFERENCES `tournaments` (`tid`)
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `tracks`
+--
+
+LOCK TABLES `tracks` WRITE;
+/*!40000 ALTER TABLE `tracks` DISABLE KEYS */;
+INSERT INTO `tracks` VALUES (53,16,NULL,'M','Minigolf'),(53,17,NULL,'F','Filz');
+/*!40000 ALTER TABLE `tracks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `username` char(20) NOT NULL,
+  `userpassword` varchar(60) NOT NULL,
+  PRIMARY KEY (`username`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `user`
+--
+
+LOCK TABLES `user` WRITE;
+/*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('asd','$2y$10$jWrDiQtGqUoae8YGOO39fOoYdg5g5y3pGvlwjAsSpLSxFnjsywuQ6'),('ralizadeh','$2y$10$IthUcaqvb2jGe0Pu2K1NfekyPKAcRwB.yrzWpFk0DJiO6Yr6s4IJm');
+/*!40000 ALTER TABLE `user` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2024-01-16 16:56:14

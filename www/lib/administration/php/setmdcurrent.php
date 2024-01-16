@@ -16,6 +16,7 @@
 		FROM tournaments
 		WHERE tid = :tid
 		";
+
 	$sql = $dbconnection->prepare($query);
 	$sql->bindParam(":tid", $input["tid"]);
 	$sql->execute();
