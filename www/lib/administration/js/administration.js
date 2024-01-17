@@ -3303,6 +3303,8 @@ let buildworkspaceroundinformation = async (rdata, roundicon) => {
 
 			}else if(activate == 1){
 				//create modal with message, that the matchday is not active
+
+				//modaldata
 				let modaldata = {
 					labeltext: "Runde aktivieren",
 					mainclass: ["modal-message"],
@@ -3311,7 +3313,8 @@ let buildworkspaceroundinformation = async (rdata, roundicon) => {
 
 				}
 
-				let modalwarning = createbasicmodal(modaldata);
+				//create modal with message
+				createbasicmodal(modaldata);
 
 			}
 		}
