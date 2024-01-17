@@ -1293,6 +1293,8 @@ let createbasicmodal = (modaldata) => {
 	//
 	//onclose
 	//onaccept
+	//
+	//toggleoverlay
 	
 	//get main administration container
 	let administrationcontainer = document.getElementById("administration");
@@ -2898,7 +2900,7 @@ let buildworkspacematchdayinformation = async (tid, mid, matchdayicon) => {
 
 				//create modal for warning
 				let modaldata = {
-					laleltext: "Spieltag aktivieren",
+					labletext: "Spieltag aktivieren",
 					mainclass: ["modal-message"],
 					bodyclass: ["modal-message-body", "activate-matchday-text"] 
 					
@@ -3298,6 +3300,18 @@ let buildworkspaceroundinformation = async (rdata, roundicon) => {
 				replaceclassindoc("icon-round-active", "icon-round");
 				roundicon.classList.remove("icon-round");
 				roundicon.classList.add("icon-round-active");
+
+			}else if(activate == 1){
+				//create modal with message, that the matchday is not active
+				let modaldata = {
+					labeltext: "Runde aktivieren",
+					mainclass: ["modal-message"],
+					bodyclass: ["modal-message-body", "activate-round-text"],
+					toggleoverlay: true
+
+				}
+
+				let modalwarning = createbasicmodal(modaldata);
 
 			}
 		}

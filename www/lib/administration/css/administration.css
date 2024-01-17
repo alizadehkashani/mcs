@@ -958,7 +958,11 @@
 }
 /*---Messages Text---*/
 .activate-matchday-text::after{
-	content: "Das Turnier ist nicht aktiv";	
+	content: "Das Turnier dieses Spieltages ist nicht aktiv";	
+}
+
+.activate-round-text::after{
+	content: "Der Spieltag dieser Runde ist nicht aktiv";	
 }
 
 .add-startnumber-text::after{
