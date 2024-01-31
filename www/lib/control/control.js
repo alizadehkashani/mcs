@@ -103,8 +103,12 @@ let buildgroups = async () => {
 
 	//get current data from database
 	let groupsdata = await getcurrentdata();	
-	
+
 	for(i = 0; i < groupsdata.tracks.length; i++){
+
+		let groupnumber = groupsdata["currentgroupnumber"][i]["COUNT(groupid)"];
+		let nextgroupnumber = groupnumber + 1;
+
 		//create main container for track header and groups
 		let trackmaincontainer = createtrackmaincontainer(groupscontainer);
 
@@ -115,7 +119,6 @@ let buildgroups = async () => {
 		//create control for control and group
 		let groupcontrolcontainer = creategroupcontrolcontainer(trackmaincontainer);
 
-		//tinfo.trackid = groupsdata["tracks"][i].trackid;
 		let trackid = groupsdata["tracks"][i].trackid;
 
 		//create container for current and next groups
@@ -127,13 +130,13 @@ let buildgroups = async () => {
 		createarrow(tinfo, trackid, groupcontrolcontainer, 1, startgroupscontainer);
 
 		if(groupsdata["current"][i] != undefined){
-			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0);
+			createsinglegroup(startgroupscontainer, groupsdata["current"][i], 0, groupnumber);
 		}else{
 			break;
 		}
 
 		if(groupsdata["next"][i].length != 0){
-			createsinglegroup(startgroupscontainer, groupsdata["next"][i], 1);
+			createsinglegroup(startgroupscontainer, groupsdata["next"][i], 1, nextgroupnumber);
 		}
 	}
 
@@ -201,7 +204,9 @@ let changegroup = async (tinfo, trackid, direction) => {
 
 }
 
-let createsinglegroup = (parent, groupdata, order) => {	
+let createsinglegroup = (parent, groupdata, order, groupnumber) => {	
+
+	console.log(groupnumber);
 
 	let groupclass;
 	switch(order){
@@ -219,7 +224,7 @@ let createsinglegroup = (parent, groupdata, order) => {
 	});
 
 	//add groupd description
-	creategroupdescription(groupcontainer, order);
+	creategroupdescription(groupcontainer, order, groupnumber);
 
 	//add players
 	for(j = 0; j < groupdata.length; j++){
@@ -252,7 +257,7 @@ let createplayer = (parent, playerdata) => {
 	});
 }
 
-let creategroupdescription = (parent, order) => {
+let creategroupdescription = (parent, order, groupnumber) => {
 	let descriptioncontainer = creatediv({
 		appendto: parent,
 		divclass: ["group-description", "flexcenter"],
@@ -273,6 +278,8 @@ let creategroupdescription = (parent, order) => {
 		appendto: descriptioncontainer,
 		divclass: spanclass
 	});
+
+	grouptext.innerHTML += " " + groupnumber + " ";
 }
 
 let creategroupcontrolcontainer = (parent) => {

@@ -33,6 +33,7 @@
 	$sql->bindValue(":one", 1);
 	$sql->execute();
 	$tracks = $sql->fetchAll(PDO::FETCH_ASSOC);	
+	//$tracks = $sql->fetch(PDO::FETCH_ASSOC);	
 
 	$response["tracks"] = $tracks;
 
@@ -50,7 +51,6 @@
 		AND groups.currentgroup = :one
 		ORDER BY tracks.trackid
 		";
-
 
 	$sql = $dbconnection->prepare($query);
 	$sql->bindValue(":one", 1);
@@ -76,6 +76,27 @@
 		$players = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 		$response["current"][$i] = $players;
+
+		//count number of groups bewlow this group according to order
+		//this will give information which group number this group has
+		$query = "
+				SELECT COUNT(groupid) 
+				FROM groups
+				WHERE tid = :tid
+				AND trackid = :trackid
+				AND rid = :rid
+				AND grouporder < :grouporder
+				";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":tid", $groups[$i]["tid"]);
+		$sql->bindParam(":trackid", $groups[$i]["trackid"]);
+		$sql->bindParam(":rid", $groups[$i]["rid"]);
+		$sql->bindParam(":grouporder", $groups[$i]["grouporder"]);
+		$sql->execute();
+		$groupnumber = $sql->fetch(PDO::FETCH_ASSOC);
+
+		$response["currentgroupnumber"][$i] = $groupnumber;
 
 		//get next group
 		$query = "
