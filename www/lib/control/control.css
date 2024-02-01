@@ -85,6 +85,11 @@
 	grid-template-rows: 1fr;
 }
 
+.group-head{
+	display: grid;
+	grid-template-columns: 2fr 1fr;
+	grid-template-rows: 1fr;
+}
 .group-description{
 	color: white;
 	font-weight: bolder;

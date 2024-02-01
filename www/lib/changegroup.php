@@ -82,6 +82,27 @@
 		$response["result"] = 0;
 		$response["message"] = "group changed";
 
+		//TODO
+		//get the number of the new current group
+		$query = "
+				SELECT COUNT(groupid) 
+				FROM groups
+				WHERE tid = :tid
+				AND trackid = :trackid
+				AND rid = :rid
+				AND grouporder < :grouporder
+				";
+
+		$sql = $dbconnection->prepare($query);
+		$sql->bindParam(":tid", $currentgroupdata["tid"]);
+		$sql->bindParam(":trackid", $currentgroupdata["trackid"]);
+		$sql->bindParam(":rid", $currentgroupdata["rid"]);
+		$sql->bindParam(":grouporder", $result["grouporder"]);
+		$sql->execute();
+		$groupnumber = $sql->fetch(PDO::FETCH_ASSOC);
+
+		$response["currentgroupnumber"] = $groupnumber["COUNT(groupid)"];
+
 		//get players from new current group
 		$query = "
 			SELECT players.playernumber, players.surname, players.firstname

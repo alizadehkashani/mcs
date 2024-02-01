@@ -106,7 +106,7 @@ let buildgroups = async () => {
 
 	for(i = 0; i < groupsdata.tracks.length; i++){
 
-		let groupnumber = groupsdata["currentgroupnumber"][i]["COUNT(groupid)"];
+		let groupnumber = groupsdata["currentgroupnumber"][i]["COUNT(groupid)"] + 1;
 		let nextgroupnumber = groupnumber + 1;
 
 		//create main container for track header and groups
@@ -163,14 +163,17 @@ let createarrow = async (tinfo, trackid, parent, direction, groupscontainer) => 
 
 		let newgroup = await changegroup(tinfo, trackid, direction);
 		
+		let = newcurrentgroupnumber = newgroup["currentgroupnumber"] + 1;
+		let = nextgroupnumber = newcurrentgroupnumber + 1;
+		
 		if(newgroup["current"] != undefined){
 
 			clearelement(groupscontainer);
 			
-			createsinglegroup(groupscontainer, newgroup["current"], 0);
+			createsinglegroup(groupscontainer, newgroup["current"], 0, newcurrentgroupnumber)
 
 			if(newgroup["next"].length != 0){
-				createsinglegroup(groupscontainer, newgroup["next"], 1);
+				createsinglegroup(groupscontainer, newgroup["next"], 1, nextgroupnumber);
 			}
 		}
 
@@ -258,8 +261,13 @@ let createplayer = (parent, playerdata) => {
 }
 
 let creategroupdescription = (parent, order, groupnumber) => {
-	let descriptioncontainer = creatediv({
+	let groupheadcontainer = creatediv({
 		appendto: parent,
+		divclass: ["group-head"]
+	});
+
+	let descriptioncontainer = creatediv({
+		appendto: groupheadcontainer,
 		divclass: ["group-description", "flexcenter"],
 	});
 
@@ -279,7 +287,12 @@ let creategroupdescription = (parent, order, groupnumber) => {
 		divclass: spanclass
 	});
 
-	grouptext.innerHTML += " " + groupnumber + " ";
+	let groupnumbercontainer = creatediv({
+		appendto: groupheadcontainer,
+		divclass: ["flexcenter", "group-description"],
+		divtext: groupnumber
+	});
+
 }
 
 let creategroupcontrolcontainer = (parent) => {
