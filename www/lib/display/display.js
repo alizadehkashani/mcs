@@ -273,6 +273,7 @@ let getcurrentgrouptrack = async () => {
 	return response;
 
 }
+
 let rebuild = async () => {
 	let rebuild = window.setInterval(async function(){
 		await checkifrebuild();
@@ -282,5 +283,3 @@ let rebuild = async () => {
 DOMready(buildgroups);
 DOMready(rebuild);
 DOMready(createfoot);
-
-//DOMready(rebuild);

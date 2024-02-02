@@ -4465,7 +4465,6 @@ let buildworkspacetournamentconfig = async () => {
 
 	//make workspace visible
 	changeelementvisibility(workspace, true, false);
-	
 
 	//add class to workspace body
 	workspacebody.classList.add("workspace-settings-tournament-config");
@@ -4494,7 +4493,7 @@ let buildworkspacetournamentconfig = async () => {
 	});
 
 	//build table of tournaments
-	buildtournamentstable(tournamentstable);
+	await buildtournamentstable(tournamentstable);
 
 }
 
@@ -4510,6 +4509,10 @@ let buildtournamentstable = async (container) => {
 			appendto: container,
 			divclass: ["tournament-row", "not-selectable"]
 		});
+
+		if(tdata[i].tcurrent == 1){
+			tournament.classList.add("config-active-tournament");
+		}
 
 		//tournament name
 		creatediv({

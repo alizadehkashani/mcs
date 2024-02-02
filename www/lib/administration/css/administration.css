@@ -956,6 +956,11 @@
 
 	row-gap: 5px;
 }
+
+.config-active-tournament{
+	background-color: var(--mcscolorlight);
+	border-radius: 0px 20px 20px 0px;
+}
 /*---Messages Text---*/
 .activate-matchday-text::after{
 	content: "Das Turnier dieses Spieltages ist nicht aktiv";	
